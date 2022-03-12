@@ -10,7 +10,7 @@ def make_val(Feature_train, target_train, Feature_val, target_val, device, num):
     target_train = torch.from_numpy(target_train).to(device)
     Feature_val = torch.from_numpy(Feature_val).to(device)
     target_val = torch.from_numpy(target_val).to(device)
-    with tqdm(total=len(target_val), postfix=dict, file=sys.stdout) as pbar:
+    with tqdm(total=len(target_val), postfix=dict, file=sys.stdout) as pbar2:
         Score = 0
         for item in range(len(target_val)):
             output = F.cosine_similarity(
@@ -23,8 +23,8 @@ def make_val(Feature_train, target_train, Feature_val, target_val, device, num):
             sorted, indices = torch.sort(kind, descending=True)
             if sum(indices[:5].to(device) == target_val[item].to(device)).to(device) != 0:
                 Score = Score + 1
-            pbar.update(1)
-            pbar.set_postfix(**{'val_Score': Score / (item + 1)})
+            pbar2.update(1)
+            pbar2.set_postfix(**{'val_Score': Score / (item + 1)})
     #             if item>100:
     #                 break
     return Score / len(target_val)

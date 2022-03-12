@@ -9,7 +9,7 @@ def get_feature(model, dataloader, device):
     model.eval()
     model.to(device)
     val = 0
-    with tqdm(total=len(dataloader), file=sys.stdout) as pbar:
+    with tqdm(total=len(dataloader), file=sys.stdout) as pbar3:
         for iteration, (image_tensor, target_t) in enumerate(dataloader):
             image_tensor = image_tensor.type(torch.FloatTensor).to(device)
             feature = model(image_tensor.to(device))
@@ -24,5 +24,5 @@ def get_feature(model, dataloader, device):
             else:
                 Feature = np.concatenate((Feature, feature), axis=0)
                 target = np.concatenate((target, target_t), axis=0)
-            pbar.update(1)
+            pbar3.update(1)
     return Feature, target
