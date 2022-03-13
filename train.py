@@ -8,9 +8,9 @@ def go_train(a, data_root_path, save_root_path, low, high, val_number):
     opt.data_csv_path = os.path.join(data_root_path, "train.csv")
     opt.data_test_path = os.path.join(data_root_path, "test")
     opt.checkpoints_path = save_root_path
-    opt.low = low
-    opt.high = high
-    opt.val_number = val_number
+    opt.low = int(low)
+    opt.high = int(high)
+    opt.val_number = int(val_number)
     # 训练设备
     print(torch.cuda.is_available())
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
