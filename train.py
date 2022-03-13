@@ -55,7 +55,7 @@ def go_train(a, data_root_path, save_root_path, low, high, val_number):
 
     # 开始训练
     make_train(model_Sph, metric_fc_Sph, criterion, optimizer_Sph, scheduler_Sph, train_dataloader,
-               val_dataloader, opt, device, len(dict_id_all), "Sph")
+                opt, device, len(dict_id_all), "Sph")
 
 
 if __name__ == '__main__':

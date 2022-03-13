@@ -7,7 +7,7 @@ from utils.make_val import make_val
 from utils.save_model import save_model
 
 
-def make_train(model, metric_fc, criterion, optimizer, scheduler, train_loader, val_loader,
+def make_train(model, metric_fc, criterion, optimizer, scheduler, train_loader,
                opt, device, num, Str):
     with tqdm(total=opt.max_epoch * (len(train_loader)), postfix=dict, file=sys.stdout) as pbar:
         for i in range(opt.max_epoch):
