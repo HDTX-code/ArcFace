@@ -39,3 +39,5 @@ class Config(object):
     # 选取数据量范围的上下限
     low = 15
     high = 30
+    # 验证集每类的数量
+    val_number = 2

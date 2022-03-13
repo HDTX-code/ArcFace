@@ -1,13 +1,16 @@
 from __init__ import *
 
 
-def go_train(a, data_root_path, save_root_path):
+def go_train(a, data_root_path, save_root_path, low, high, val_number):
     # 生成公共参数类
     opt = Config()
     opt.data_train_path = os.path.join(data_root_path, "train")
     opt.data_csv_path = os.path.join(data_root_path, "train.csv")
     opt.data_test_path = os.path.join(data_root_path, "test")
     opt.checkpoints_path = save_root_path
+    opt.low = low
+    opt.high = high
+    opt.val_number = val_number
     # 训练设备
     print(torch.cuda.is_available())
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
