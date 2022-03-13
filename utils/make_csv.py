@@ -21,8 +21,8 @@ def make_csv(opt):
     train_csv_all.index = range(len(train_csv_all))
 
     for item in train_csv_all_id:
-        train_csv_train = pd.concat([train_csv_train, train_csv_all.loc[train_csv_all[train_csv_all["Id"] == item].index.tolist()[2:], :]], ignore_index=True)
-        train_csv_val = pd.concat([train_csv_val, train_csv_all.loc[train_csv_all[train_csv_all["Id"] == item].index.tolist()[:2], :]], ignore_index=True)
+        train_csv_train = pd.concat([train_csv_train, train_csv_all.loc[train_csv_all[train_csv_all["Id"] == item].index.tolist()[opt.val_number:], :]], ignore_index=True)
+        train_csv_val = pd.concat([train_csv_val, train_csv_all.loc[train_csv_all[train_csv_all["Id"] == item].index.tolist()[:opt.val_number], :]], ignore_index=True)
 
     dict_id_all = dict(zip(train_csv_all_id, range(len(train_csv_all_id))))
     new_d_all = {v: k for k, v in dict_id_all.items()}
