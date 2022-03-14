@@ -54,8 +54,8 @@ def get_th(a, data_root_path, save_root_path, low, high, val_number, model_url):
             kind = kind.cpu().detach().numpy()
             if kind <= th:
                 th = kind
-        pbar2.set_postfix(**{'th:': th})
-        pbar2.update(1)
+            pbar2.set_postfix(**{'th:': th})
+            pbar2.update(1)
     return th
 
 
