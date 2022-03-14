@@ -45,11 +45,14 @@ def make_train(model, metric_fc, criterion, optimizer, scheduler, train_loader, 
             print("第{}轮 : Loss_{} = {}".format(i, Str, Loss))
 
             if i % opt.save_interval == 0 or i == opt.max_epoch - 1:
-                # 开始验证，获取特征矩阵
-                Feature_train, target_train = get_feature(model, train_loader, device)
-                Feature_val, target_val = get_feature(model, val_loader, device)
-                # 计算验证得分
-                Score = make_val(Feature_train, target_train, Feature_val, target_val, device, num)
+                if i == opt.max_epoch - 1:
+                    # 开始验证，获取特征矩阵
+                    Feature_train, target_train = get_feature(model, train_loader, device)
+                    Feature_val, target_val = get_feature(model, val_loader, device)
+                    # 计算验证得分
+                    Score = make_val(Feature_train, target_train, Feature_val, target_val, device, num)
+                else:
+                    Score = 0
                 save_model(model, opt.checkpoints_path, str(opt.backbone) + Str, i, Loss, Score)
 
                 print("第{}轮 : Score={}".format(i, Score))
