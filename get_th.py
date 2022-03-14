@@ -61,4 +61,4 @@ def get_th(a, data_root_path, save_root_path, low, high, val_number, model_url):
 
 
 if __name__ == '__main__':
-    get_th(sys.argv[0], sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[5])
+    get_th(sys.argv[0], sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6])
