@@ -58,7 +58,7 @@ def get_th(a, data_root_path, save_root_path, low, high, val_number, model_url):
                     torch.zeros(output.shape).reshape(-1).to(device)).to(device)).to(device) / sum(
                     target_train.reshape(-1).to(device) == j * torch.ones(target_train.shape).reshape(-1).to(device))
             sorted, indices = torch.sort(kind, descending=True)
-            kind = sorted[0].cpu().detach().numpy()
+            kind = sorted[4].cpu().detach().numpy()
             if kind <= th:
                 th = kind
         pbar2.update(1)
