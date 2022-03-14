@@ -46,15 +46,11 @@ def get_th(a, data_root_path, save_root_path, low, high, val_number, model_url):
     with tqdm(total=len(target_val), postfix=dict, file=sys.stdout) as pbar2:
         th = 10
         for item in range(len(target_val)):
+            Feature_train_item = Feature_train[target_train == target_val[item], :]
             output = F.cosine_similarity(
-                torch.mul(torch.ones(Feature_train.shape).to(device), Feature_val[item, :].T.to(device)),
-                Feature_train.to(device), dim=1).to(device)
-            kind = sum(torch.where(
-                target_train.reshape(-1).to(device) == target_val[item] * torch.ones(target_train.shape).reshape(-1).to(
-                    device), output.reshape(-1).to(device), torch.zeros(output.shape).reshape(-1).to(device)).to(
-                device)).to(device) / sum(
-                target_train.reshape(-1).to(device) == target_val[item] * torch.ones(target_train.shape).reshape(-1).to(
-                    device))
+                torch.mul(torch.ones(Feature_train_item.shape).to(device), Feature_val[item, :].T.to(device)),
+                Feature_train_item.to(device), dim=1).to(device)
+            kind = output.mean().to(device)
             if kind <= th:
                 th = kind
         pbar2.update(1)
