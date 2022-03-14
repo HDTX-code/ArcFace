@@ -27,6 +27,7 @@ def get_th(a, data_root_path, save_root_path, low, high, val_number, model_url):
 
     # 加载backbone
     model_Sph = torchvision.models.resnet50(pretrained=None)
+    model_Sph.fc = torch.nn.Linear(model_Sph.fc.in_features, 512)
     model_Sph.load_state_dict(torch.load(model_url, map_location=device), False)
 
     model_Sph.to(device)
