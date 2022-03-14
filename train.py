@@ -23,9 +23,10 @@ def go_train(a, data_root_path, save_root_path, low, high, val_number):
     train_dataset = ArcDataset(opt, train_csv_train, dict_id_all)
     train_dataloader = DataLoader(dataset=train_dataset, batch_size=opt.batch_size, shuffle=True,
                                   num_workers=opt.num_workers)
-    val_dataset = ArcDataset(opt, train_csv_val, dict_id_all)
-    val_dataloader = DataLoader(dataset=val_dataset, batch_size=opt.batch_size, shuffle=True,
-                                num_workers=opt.num_workers)
+    if opt.val_number != 0:
+        val_dataset = ArcDataset(opt, train_csv_val, dict_id_all)
+        val_dataloader = DataLoader(dataset=val_dataset, batch_size=opt.batch_size, shuffle=True,
+                                    num_workers=opt.num_workers)
 
     # 加载模型的loss函数类型
     criterion = FocalLoss(gamma=2)
@@ -54,7 +55,7 @@ def go_train(a, data_root_path, save_root_path, low, high, val_number):
 
     # 开始训练
     make_train(model_Sph, metric_fc_Sph, criterion, optimizer_Sph, scheduler_Sph, train_dataloader,
-               val_dataloader, opt, device, len(dict_id_all), "Sph")
+                opt, device, len(dict_id_all), "Sph")
 
 
 if __name__ == '__main__':
