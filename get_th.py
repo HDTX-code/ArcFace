@@ -43,7 +43,7 @@ def get_th(a, data_root_path, save_root_path, low, high, val_number, model_url):
     target_val = torch.from_numpy(target_val).to(device)
 
     with tqdm(total=len(target_val), postfix=dict, file=sys.stdout) as pbar2:
-        th = 0
+        th = 10
         for item in range(len(target_val)):
             output = F.cosine_similarity(
                 torch.mul(torch.ones(Feature_train.shape).to(device), Feature_val[item, :].T.to(device)),
