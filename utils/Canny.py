@@ -62,6 +62,9 @@ def get_img(th1, th2, path, opt):
     img = draw_min_rect_circle(image, contours, opt)
     # 改变格式成规定的框和高
     if len(img.shape) != 3:
+        print(img.shape)
+        print(img.dtype)
+        print(img)
         img = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
     img_0 = cv2.resize(img, (opt.w, opt.h))
     img1 = np.zeros([3, opt.w, opt.h])  # 改变img1的时候不改变img
