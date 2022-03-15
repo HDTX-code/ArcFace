@@ -25,6 +25,5 @@ def get_feature(model, dataloader, device):
                 else:
                     Feature = np.concatenate((Feature, feature), axis=0)
                     target = np.concatenate((target, target_t), axis=0)
-                break
                 pbar3.update(1)
     return Feature, target
