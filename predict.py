@@ -47,7 +47,9 @@ def go_predict(a, data_root_path, save_root_path, model_30_url, model_15_30_url,
         l10 = 0
         l7 = 0
         l5 = 0
-        for item in path_list:
+        l0 = 0
+        submission = pd.DataFrame(columns=['Image', 'Id'])
+        for index, item in enumerate(path_list):
             top4_30, top4_index_30 = get_pre(item, dict_id, dict_id_all_30, new_d_all_30, Feature_train_30,
                                              target_train_30, opt_30, model_30, device, th)
             l30 = l30 + len(top4_30)
@@ -71,8 +73,37 @@ def go_predict(a, data_root_path, save_root_path, model_30_url, model_15_30_url,
                 if len(Top4) < 4:
                     top4_5_6, top4_index_5_6 = get_pre(item, dict_id, dict_id_all_5_6, new_d_all_5_6,
                                                        Feature_train_5_6,
-                                                       target_train_5_6, opt_5_6, model_5_6, device, -100, len(Top4) - 4)
+                                                       target_train_5_6, opt_5_6, model_5_6, device, th, len(Top4) - 4)
                     Top4 = np.concatenate((Top4, top4_5_6), axis=1)
                     Top4_index = np.concatenate((Top4_index, top4_index_5_6), axis=1)
                     l5 = l5 + len(top4_index_5_6)
+                    if len(Top4) < 4:
+                        top4_0_4, top4_index_0_4 = get_pre(item, dict_id, dict_id_all_0_4, new_d_all_0_4,
+                                                           Feature_train_0_4,
+                                                           target_train_0_4, opt_0_4, model_0_4, device, -100,
+                                                           len(Top4) - 4)
+                        l0 = l0 + len(top4_0_4)
+                        Top4 = np.concatenate((Top4, top4_0_4), axis=1)
+                        Top4_index = np.concatenate((Top4_index, top4_index_0_4), axis=1)
+            print(Top4)
+            pbar.set_postfix(
+                **{'model_30': l30, 'model_15-30': l15, 'model_10-14': l10, 'model_7-9': l7, 'model_5-6': l5,
+                   'model_0-4': l0})
+            submission.loc[index, "Image"] = item
+            submission.loc[index, "Id"] = new_d[Top4_index[0]] + '\n' + new_d[Top4_index[1]] + '\n' + new_d[
+                Top4_index[2]] + '\n' + new_d[Top4_index[3]] + '\n' + "new_whale"
+        submission.to_csv(save_root_path, index=False)
 
+
+if __name__ == '__main__':
+    go_predict(sys.argv[0], sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6],
+               sys.argv[7], sys.argv[8], sys.argv[9])
+    # go_predict(0, "D:\\project\\humpWhale\\data\\humpback-whale-identification",
+    #            "D:\\project\\humpWhale\\data\\humpback-whale-identification",
+    #            "D:\\edge\\gt30_model.pth",
+    #            "D:\\edge\\resnet50_15-30_loss_ 0.7051018987383161score_ 0.9230769230769231.pth",
+    #            "D:\\edge\\resnet50_10-14_loss_ 0.028108565703682278score_ 0.8936170212765957.pth",
+    #            "D:\\edge\\resnet50_7-9_loss_ 1.95732459243463score_ 0.78125.pth",
+    #            "D:\\edge\\resnet50_5-6_loss_ 2.8928167653638264score_ 0.5584415584415584.pth",
+    #            "D:\\edge\\resnet50Sph-29loss_ 8.339440341671137score_ 0.pth",
+    #            0.6)

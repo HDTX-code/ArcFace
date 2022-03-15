@@ -2,8 +2,10 @@ import os
 
 import torch
 import torchvision
+from torch.utils.data import DataLoader
 
 from config.config import Config
+from dataset.dataset import ArcDataset
 from utils.get_feature import get_feature
 from utils.make_csv import make_csv
 
@@ -24,6 +26,10 @@ def get_pre_need(data_root_path, save_root_path, model_url, low, high, val_numbe
 
     train_csv_train, train_csv_val, dict_id_all, new_d_all = make_csv(opt)
 
-    Feature_train, target_train = get_feature(model, train_csv_train, device)
+    train_dataset = ArcDataset(opt, train_csv_train, dict_id_all)
+    train_dataloader = DataLoader(dataset=train_dataset, batch_size=opt.batch_size, shuffle=True,
+                                  num_workers=opt.num_workers)
+
+    Feature_train, target_train = get_feature(model, train_dataloader, device)
 
     return dict_id_all, new_d_all, Feature_train, target_train, opt, model
