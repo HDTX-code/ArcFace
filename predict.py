@@ -49,22 +49,22 @@ def go_predict(a, data_root_path, save_root_path, model_30_url, model_15_30_url,
         l5 = 0
         l0 = 0
         submission = pd.DataFrame(columns=['Image', 'Id'])
-        for index, item in enumerate(path_list):
-            top4_30, top4_index_30 = get_pre(item, dict_id, dict_id_all_30, new_d_all_30, Feature_train_30,
+        for item in range(len(path_list)):
+            top4_30, top4_index_30 = get_pre(path_list[item], dict_id, dict_id_all_30, new_d_all_30, Feature_train_30,
                                              target_train_30, opt_30, model_30, device, float(th))
             l30 = l30 + len(top4_30)
-            top4_15_30, top4_index_15_30 = get_pre(item, dict_id, dict_id_all_15_30, new_d_all_15_30,
+            top4_15_30, top4_index_15_30 = get_pre(path_list[item], dict_id, dict_id_all_15_30, new_d_all_15_30,
                                                    Feature_train_15_30,
                                                    target_train_15_30, opt_15_30, model_15_30, device, float(th))
             l15 = l15 + len(top4_15_30)
-            top4_10_14, top4_index_10_14 = get_pre(item, dict_id, dict_id_all_10_14, new_d_all_10_14,
+            top4_10_14, top4_index_10_14 = get_pre(path_list[item], dict_id, dict_id_all_10_14, new_d_all_10_14,
                                                    Feature_train_10_14,
                                                    target_train_10_14, opt_10_14, model_10_14, device, float(th))
             l10 = l10 + len(top4_10_14)
             Top4 = np.concatenate((top4_30, top4_15_30, top4_10_14), axis=1)
             Top4_index = np.concatenate((top4_index_30, top4_index_15_30, top4_index_10_14), axis=1)
             if len(Top4) < 4:
-                top4_7_9, top4_index_7_9 = get_pre(item, dict_id, dict_id_all_7_9, new_d_all_7_9,
+                top4_7_9, top4_index_7_9 = get_pre(path_list[item], dict_id, dict_id_all_7_9, new_d_all_7_9,
                                                    Feature_train_7_9,
                                                    target_train_7_9, opt_7_9, model_7_9, device, float(th),
                                                    len(Top4) - 4)
@@ -72,7 +72,7 @@ def go_predict(a, data_root_path, save_root_path, model_30_url, model_15_30_url,
                 Top4_index = np.concatenate((Top4_index, top4_index_7_9), axis=1)
                 l7 = l7 + len(top4_7_9)
                 if len(Top4) < 4:
-                    top4_5_6, top4_index_5_6 = get_pre(item, dict_id, dict_id_all_5_6, new_d_all_5_6,
+                    top4_5_6, top4_index_5_6 = get_pre(path_list[item], dict_id, dict_id_all_5_6, new_d_all_5_6,
                                                        Feature_train_5_6,
                                                        target_train_5_6, opt_5_6, model_5_6, device, float(th),
                                                        len(Top4) - 4)
@@ -80,7 +80,7 @@ def go_predict(a, data_root_path, save_root_path, model_30_url, model_15_30_url,
                     Top4_index = np.concatenate((Top4_index, top4_index_5_6), axis=1)
                     l5 = l5 + len(top4_index_5_6)
                     if len(Top4) < 4:
-                        top4_0_4, top4_index_0_4 = get_pre(item, dict_id, dict_id_all_0_4, new_d_all_0_4,
+                        top4_0_4, top4_index_0_4 = get_pre(path_list[item], dict_id, dict_id_all_0_4, new_d_all_0_4,
                                                            Feature_train_0_4,
                                                            target_train_0_4, opt_0_4, model_0_4, device, -100,
                                                            len(Top4) - 4)
@@ -91,8 +91,8 @@ def go_predict(a, data_root_path, save_root_path, model_30_url, model_15_30_url,
             pbar.set_postfix(
                 **{'model_30': l30, 'model_15-30': l15, 'model_10-14': l10, 'model_7-9': l7, 'model_5-6': l5,
                    'model_0-4': l0})
-            submission.loc[index, "Image"] = item
-            submission.loc[index, "Id"] = new_d[Top4_index[0]] + '\n' + new_d[Top4_index[1]] + '\n' + new_d[
+            submission.loc[item, "Image"] = item
+            submission.loc[item, "Id"] = new_d[Top4_index[0]] + '\n' + new_d[Top4_index[1]] + '\n' + new_d[
                 Top4_index[2]] + '\n' + new_d[Top4_index[3]] + '\n' + "new_whale"
         submission.to_csv(save_root_path, index=False)
 
