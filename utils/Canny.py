@@ -61,6 +61,8 @@ def get_img(th1, th2, path, opt):
     contours, hierarchy = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     img = draw_min_rect_circle(image, contours, opt)
     # 改变格式成规定的框和高
+    if img.shape[0] != 3:
+        img = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
     img_0 = cv2.resize(img, (opt.w, opt.h))
     img1 = np.zeros([3, opt.w, opt.h])  # 改变img1的时候不改变img
     img1[0, :, :] = img_0[:, :, 2]
