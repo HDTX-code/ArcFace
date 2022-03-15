@@ -66,14 +66,16 @@ def go_predict(a, data_root_path, save_root_path, model_30_url, model_15_30_url,
             if len(Top4) < 4:
                 top4_7_9, top4_index_7_9 = get_pre(item, dict_id, dict_id_all_7_9, new_d_all_7_9,
                                                    Feature_train_7_9,
-                                                   target_train_7_9, opt_7_9, model_7_9, device, float(th), len(Top4) - 4)
+                                                   target_train_7_9, opt_7_9, model_7_9, device, float(th),
+                                                   len(Top4) - 4)
                 Top4 = np.concatenate((Top4, top4_7_9), axis=1)
                 Top4_index = np.concatenate((Top4_index, top4_index_7_9), axis=1)
                 l7 = l7 + len(top4_7_9)
                 if len(Top4) < 4:
                     top4_5_6, top4_index_5_6 = get_pre(item, dict_id, dict_id_all_5_6, new_d_all_5_6,
                                                        Feature_train_5_6,
-                                                       target_train_5_6, opt_5_6, model_5_6, device, float(th), len(Top4) - 4)
+                                                       target_train_5_6, opt_5_6, model_5_6, device, float(th),
+                                                       len(Top4) - 4)
                     Top4 = np.concatenate((Top4, top4_5_6), axis=1)
                     Top4_index = np.concatenate((Top4_index, top4_index_5_6), axis=1)
                     l5 = l5 + len(top4_index_5_6)
