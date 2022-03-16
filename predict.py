@@ -2,7 +2,7 @@ from __init__ import *
 
 
 def go_predict(a, data_root_path, save_root_path, model_30_url, model_15_30_url, model_10_14_url, model_7_9_url,
-               model_5_6_url, model_0_4_url, th, th2):
+               model_5_6_url, model_0_4_url, th, th1, th2):
     print(torch.cuda.is_available())
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     dict_id_all_30, new_d_all_30, Feature_train_30, target_train_30, opt_30, model_30 = get_pre_need(data_root_path,
@@ -67,7 +67,7 @@ def go_predict(a, data_root_path, save_root_path, model_30_url, model_15_30_url,
             if len(Top4) < 4:
                 top4_7_9, top4_index_7_9 = get_pre(path, dict_id, dict_id_all_7_9, new_d_all_7_9,
                                                    Feature_train_7_9,
-                                                   target_train_7_9, opt_7_9, model_7_9, device, float(th2),
+                                                   target_train_7_9, opt_7_9, model_7_9, device, float(th1),
                                                    len(Top4) - 4)
                 Top4 = np.concatenate((Top4, top4_7_9), axis=0)
                 Top4_index = np.concatenate((Top4_index, top4_index_7_9), axis=0)
@@ -102,7 +102,7 @@ def go_predict(a, data_root_path, save_root_path, model_30_url, model_15_30_url,
 
 if __name__ == '__main__':
     go_predict(sys.argv[0], sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6],
-               sys.argv[7], sys.argv[8], sys.argv[9], sys.argv[10])
+               sys.argv[7], sys.argv[8], sys.argv[9], sys.argv[10], sys.argv[11])
     # go_predict(0, "D:\\project\\humpWhale\\data\\humpback-whale-identification",
     #            "D:\\project\\humpWhale\\data\\humpback-whale-identification",
     #            "D:\\edge\\gt30_model.pth",
