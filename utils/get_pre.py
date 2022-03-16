@@ -30,7 +30,7 @@ def get_pre(test_path, dict_id, dict_id_all, new_d_all, Feature_train, target_tr
             score = output.cpu().detach().numpy()
             Score[j] = sum(score) / len(score)
         top4_index = Score.argsort()[it:]
-        top4 = Score.sort()[it:]
+        top4 = Score[top4_index]
         top4 = top4[top4 > th]
         top4_index = top4_index[top4 > th]
         f1 = np.frompyfunc(lambda x: dict_id(new_d_all(x)), 1, 1)
