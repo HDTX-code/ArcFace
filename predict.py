@@ -93,7 +93,7 @@ def go_predict(a, data_root_path, save_root_path, model_30_url, model_15_30_url,
                 Top4 = Top4[Top4_index]
             pbar.update(1)
             pbar.set_postfix(
-                **{'model_num': [l7, l5, l0], 'Top4': Top4[4]})
+                **{'model_num': [l7, l5, l0], 'Top4': Top4[3]})
             submission.loc[item, "Image"] = item
             submission.loc[item, "Id"] = new_d[Top4_index[0]] + '\n' + new_d[Top4_index[1]] + '\n' + new_d[
                 Top4_index[2]] + '\n' + new_d[Top4_index[3]] + '\n' + "new_whale"
