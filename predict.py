@@ -41,7 +41,7 @@ def go_predict(a, data_root_path, save_root_path, model_30_url, model_15_30_url,
     new_d = {v: k for k, v in dict_id.items()}
 
     path_list = os.listdir(os.path.join(data_root_path, "test"))
-    with tqdm(total=len(path_list), postfix=dict, file=sys.stdout) as pbar:
+    with tqdm(total=len(path_list), postfix=dict) as pbar:
         l30 = 0
         l15 = 0
         l10 = 0
