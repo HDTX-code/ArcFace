@@ -28,7 +28,7 @@ def get_pre(test_path, dict_id, dict_id_all, new_d_all, Feature_train, target_tr
                 torch.mul(torch.ones(Feature_train_F.shape).to(device), feature_test[0, :].T.to(device)),
                 Feature_train_F.to(device), dim=1).to(device)
             score = output.cpu().detach().numpy()
-            Score[j] = sum(score) / len(sum)
+            Score[j] = sum(score) / len(score)
         top4_index = Score.argsort()[it:]
         top4 = Score.sort()[it:]
         top4 = top4[top4 > th]
