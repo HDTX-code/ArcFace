@@ -89,6 +89,7 @@ def go_predict(a, data_root_path, save_root_path, model_30_url, model_15_30_url,
                         Top4 = np.concatenate((Top4, top4_0_4), axis=0)
                         Top4_index = np.concatenate((Top4_index, top4_index_0_4), axis=0)
             print(Top4)
+            pbar.update(1)
             pbar.set_postfix(
                 **{'model_30': l30, 'model_15-30': l15, 'model_10-14': l10, 'model_7-9': l7, 'model_5-6': l5,
                    'model_0-4': l0})
