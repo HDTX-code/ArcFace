@@ -40,8 +40,8 @@ def get_pre(test_path, dict_id, dict_id_all, new_d_all, Feature_train, target_tr
             #     Feature_train_F.to(device), dim=1).to(device)
             # score = output.cpu().detach().numpy()
             # Score[j] = sum(score) / len(score)
-        top4_index = sorted[0:it]
-        top4 = indices[0:it]
+        top4_index = indices[0:it]
+        top4 = sorted[0:it]
         top4_index = top4_index[top4 >= th]
         top4 = top4[top4 >= th]
         f1 = np.frompyfunc(lambda x: dict_id[new_d_all[x]], 1, 1)
