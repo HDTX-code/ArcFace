@@ -97,7 +97,7 @@ def go_predict(a, data_root_path, save_root_path, model_30_url, model_15_30_url,
             submission.loc[item, "Image"] = item
             submission.loc[item, "Id"] = new_d[Top4_index[0]] + '\n' + new_d[Top4_index[1]] + '\n' + new_d[
                 Top4_index[2]] + '\n' + new_d[Top4_index[3]] + '\n' + "new_whale"
-        submission.to_csv(save_root_path, index=False)
+        submission.to_csv(os.path.join(save_root_path, "submission.csv"), index=False)
 
 
 if __name__ == '__main__':
