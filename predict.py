@@ -84,7 +84,7 @@ def go_predict(a, data_root_path, save_root_path, model_30_url, model_15_30_url,
                         top4_0_4, top4_index_0_4 = get_pre(path, dict_id, dict_id_all_0_4, new_d_all_0_4,
                                                            Feature_train_0_4,
                                                            target_train_0_4, opt_0_4, model_0_4, device, -100,
-                                                           len(Top4) - 4)
+                                                           4 - len(Top4))
                         l0 = l0 + len(top4_0_4)
                         Top4 = np.concatenate((Top4, top4_0_4), axis=0)
                         Top4_index = np.concatenate((Top4_index, top4_index_0_4), axis=0)
