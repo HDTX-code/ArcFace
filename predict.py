@@ -88,11 +88,9 @@ def go_predict(a, data_root_path, save_root_path, model_30_url, model_15_30_url,
                         l0 = l0 + len(top4_0_4)
                         Top4 = np.concatenate((Top4, top4_0_4), axis=0)
                         Top4_index = np.concatenate((Top4_index, top4_index_0_4), axis=0)
-            print(Top4)
             pbar.update(1)
             pbar.set_postfix(
-                **{'model_30': l30, 'model_15-30': l15, 'model_10-14': l10, 'model_7-9': l7, 'model_5-6': l5,
-                   'model_0-4': l0})
+                **{'model_num': [l30, l15, l10, l7, l5, l0], 'Top4': Top4})
             submission.loc[item, "Image"] = item
             submission.loc[item, "Id"] = new_d[Top4_index[0]] + '\n' + new_d[Top4_index[1]] + '\n' + new_d[
                 Top4_index[2]] + '\n' + new_d[Top4_index[3]] + '\n' + "new_whale"
