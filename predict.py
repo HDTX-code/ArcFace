@@ -7,7 +7,7 @@ def go_predict(a, data_root_path, save_root_path, model_30_url, model_15_30_url,
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     dict_id_all_30, new_d_all_30, Feature_train_30, target_train_30, opt_30, model_30 = get_pre_need(data_root_path,
                                                                                                      save_root_path,
-                                                                                                     model_30_url, 30,
+                                                                                                     model_30_url, 31,
                                                                                                      2000, 0, device)
     dict_id_all_15_30, new_d_all_15_30, Feature_train_15_30, target_train_15_30, opt_15_30, model_15_30 = get_pre_need(
         data_root_path,
