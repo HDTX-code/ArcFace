@@ -99,14 +99,14 @@ def go_predict(a, data_root_path, save_root_path, model_30_url, model_15_30_url,
 
 
 if __name__ == '__main__':
-    # go_predict(sys.argv[0], sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6],
-    #            sys.argv[7], sys.argv[8], sys.argv[9])
-    go_predict(0, "D:\\project\\humpWhale\\data\\humpback-whale-identification",
-               "D:\\project\\humpWhale\\data\\humpback-whale-identification",
-               "D:\\edge\\gt30_model.pth",
-               "D:\\edge\\resnet50_15-30_loss_ 0.7051018987383161score_ 0.9230769230769231.pth",
-               "D:\\edge\\resnet50_10-14_loss_ 0.028108565703682278score_ 0.8936170212765957.pth",
-               "D:\\edge\\resnet50_7-9_loss_ 1.95732459243463score_ 0.78125.pth",
-               "D:\\edge\\resnet50_5-6_loss_ 2.8928167653638264score_ 0.5584415584415584.pth",
-               "D:\\edge\\resnet50Sph-29loss_ 8.339440341671137score_ 0.pth",
-               0.6)
+    go_predict(sys.argv[0], sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6],
+               sys.argv[7], sys.argv[8], sys.argv[9])
+    # go_predict(0, "D:\\project\\humpWhale\\data\\humpback-whale-identification",
+    #            "D:\\project\\humpWhale\\data\\humpback-whale-identification",
+    #            "D:\\edge\\gt30_model.pth",
+    #            "D:\\edge\\resnet50_15-30_loss_ 0.7051018987383161score_ 0.9230769230769231.pth",
+    #            "D:\\edge\\resnet50_10-14_loss_ 0.028108565703682278score_ 0.8936170212765957.pth",
+    #            "D:\\edge\\resnet50_7-9_loss_ 1.95732459243463score_ 0.78125.pth",
+    #            "D:\\edge\\resnet50_5-6_loss_ 2.8928167653638264score_ 0.5584415584415584.pth",
+    #            "D:\\edge\\resnet50Sph-29loss_ 8.339440341671137score_ 0.pth",
+    #            0.6)
