@@ -55,11 +55,11 @@ def make_train(model, metric_fc, criterion, optimizer, scheduler, train_loader, 
                     # 计算验证得分
                     Score = make_val(Feature_train, target_train, Feature_val, target_val, device, num)
                     path_model = os.path.join(opt.checkpoints_path, "model")
-                    if os.path.exists(path_model):
+                    if not os.path.exists(path_model):
                         os.mkdir(path_model)
                     save_model(model, path_model, str(opt.backbone) + Str, i, Loss, Score)
                     path_featureMap = os.path.join(opt.checkpoints_path, "FeatureMap")
-                    if os.path.exists(path_featureMap):
+                    if not os.path.exists(path_featureMap):
                         os.mkdir(path_featureMap)
                     Feature_train = Feature_train.cpu().detach().numpy()
                     target_train = target_train.cpu().detach().numpy()
