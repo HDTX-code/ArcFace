@@ -1,7 +1,4 @@
-import os.path
-
-import numpy as np
-import pandas as pd
+from __init__ import *
 
 
 def make_dict(data_csv_path, dict_id_path):
