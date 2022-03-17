@@ -36,17 +36,40 @@ def Image_GaussianBlur(img):
     return img
 
 
+def Data_strength(path, num, opt):
+    image = cv2.imread(path)
+    if num == 1:
+        image = ImageRotate(image)
+    elif num == 2:
+        image = ImageRotate(image)
+    elif num == 3:
+        image = ImageRotate(image)
+    elif num == 4:
+        image = ImageRotate(image)
+    elif num == 5:
+        image = ImageNew(ImageRotate(image))
+    elif num == 6:
+        image = ImageRotate(ImageNew(image))
+    elif num == 7:
+        image = Image_GaussianBlur(ImageRotate(image))
+    elif num == 8:
+        image = ImageRotate(ImageRotate(image))
+    elif num == 9:
+        image = ImageRotate(ImageRotate(ImageRotate(image)))
+    elif num == 10:
+        image = ImageNew(ImageRotate(ImageRotate(ImageRotate(image))))
+    elif num == 11:
+        image = Image_GaussianBlur(ImageRotate(ImageRotate(ImageRotate(image))))
+    img_0 = cv2.resize(image, (opt.w, opt.h))
+    img1 = np.zeros([3, opt.w, opt.h])  # 改变img1的时候不改变img
+    img1[0, :, :] = img_0[:, :, 2]
+    img1[1, :, :] = img_0[:, :, 1]
+    img1[2, :, :] = img_0[:, :, 0]  # cv2读取的是bgr,转换成rgb就要做一下变通
+    return img1
+
+
 if __name__ == '__main__':
     image = cv2.imread(r"D:\project\humpWhale\data\humpback-whale-identification\train\00aae723d.jpg")
-    image_new = ImageNew(image)
-    image_gaussianBlur = Image_GaussianBlur(image)
-    image_rotation = ImageRotate(image_new)
-
-    # plt.subplot(1, 2, 1)
-    # plt.imshow(image)
-    # plt.subplot(1, 2, 2)
-    # plt.imshow(image_rotation)
-    cv2.imshow("image", image_rotation)
+    image_new = ImageRotate(ImageRotate(ImageRotate(image)))
     cv2.imshow("image2", image_new)
-    cv2.imshow("image2=3", image_gaussianBlur)
     cv2.waitKey()

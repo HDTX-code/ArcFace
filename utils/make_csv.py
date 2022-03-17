@@ -1,3 +1,4 @@
+import copy
 import json
 import os
 
@@ -10,8 +11,8 @@ def make_csv(opt, dict_id_path):
     dict_id = dict(zip(train_csv_id, range(len(train_csv_id))))
     # 选取数据量大于等于 low 小于等于 high 的数据
     train_csv_describe = pd.DataFrame(columns=['Id', 'num'])
-    train_csv_train = pd.DataFrame(columns=['Image', 'Id'])
-    train_csv_val = pd.DataFrame(columns=['Image', 'Id'])
+    train_csv_train = pd.DataFrame(columns=['Image', 'Id', 'd'])
+    train_csv_val = pd.DataFrame(columns=['Image', 'Id', 'd'])
     # 生成类别数量统计表
     for k, v in dict_id.items():
         train_csv_describe.loc[v] = [k, sum(train_csv['Id'] == k)]
@@ -21,6 +22,15 @@ def make_csv(opt, dict_id_path):
 
     train_csv_all = train_csv.loc[train_csv['Id'].isin(train_csv_all_id), :]
     train_csv_all.index = range(len(train_csv_all))
+
+    train_csv_all['d'] = 0
+
+    train_csv_all_0 = copy.copy(train_csv_all)
+
+    for item in range(1, 12):
+        F = copy.copy(train_csv_all_0)
+        F['d'] = item
+        train_csv_all = pd.concat([train_csv_all, F], ignore_index=True)
 
     dict_id_all = dict(zip(train_csv_all_id, range(len(train_csv_all_id))))
     info_json = json.dumps(dict_id_all, sort_keys=False, indent=4, separators=(',', ': '))

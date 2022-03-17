@@ -2,6 +2,7 @@ import os
 import torch
 from torch.utils.data import Dataset
 from utils.Canny import get_img
+from utils.DataStrength import Data_strength
 
 
 class ArcDataset(Dataset):
@@ -13,7 +14,11 @@ class ArcDataset(Dataset):
     def __getitem__(self, index):
         path = os.path.join(self.opt.data_train_path, self.csv.loc[index, 'Image'])
         target = self.dict_id[self.csv.loc[index, 'Id']]
-        image = get_img(self.opt.th1, self.opt.th2, path, self.opt)
+        num = self.csv.loc[index, 'd']
+        if num == 0:
+            image = get_img(self.opt.th1, self.opt.th2, path, self.opt)
+        else:
+            image = Data_strength(path, num, self.opt)
         img_tensor = torch.from_numpy(image)
         target_tensor = torch.ones([1])
         target_tensor[0] = target
