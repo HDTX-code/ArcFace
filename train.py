@@ -16,9 +16,9 @@ def go_train(a, dict_id_path, data_root_path, save_root_path, low, high, val_num
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     # 清洗数据，生成训练所需csv及dict
-    train_csv_train, train_csv_val, num = make_csv(opt)
     dict_id = np.load(dict_id_path).item()
     new_d = {v: k for k, v in dict_id.items()}
+    train_csv_train, train_csv_val, num = make_csv(opt, dict_id)
     opt.num_classes = len(num)
 
     # 生成train、val的dataloader
