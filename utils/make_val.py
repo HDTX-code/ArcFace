@@ -21,7 +21,7 @@ def make_val(Feature_train, target_train, Feature_val, target_val, device, num):
                 for j in range(num):
                     kind[j] = output[target_train[:, 0] == j].mean().to(device)
                 sorted, indices = torch.sort(kind, descending=True)
-                if sum(indices[:4].to(device) == target_val[item]) != 0:
+                if sum(indices[0].to(device) == target_val[item]) != 0:
                     Score = Score + 1
                 pbar2.update(1)
                 pbar2.set_postfix(**{'val_Score': Score / (item + 1)})
