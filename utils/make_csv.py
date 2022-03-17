@@ -29,7 +29,7 @@ def make_csv(opt, dict_id_path):
 
     for item in range(1, 12):
         F = copy.copy(train_csv_all_0)
-        F['d'] = item
+        F.loc[:, 'd'] = item
         train_csv_all = pd.concat([train_csv_all, F], ignore_index=True)
 
     dict_id_all = dict(zip(train_csv_all_id, range(len(train_csv_all_id))))
