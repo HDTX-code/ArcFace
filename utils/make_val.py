@@ -17,9 +17,9 @@ def make_val(Feature_train, target_train, Feature_val, target_val, device, num):
                 output = F.cosine_similarity(
                     torch.mul(torch.ones(Feature_train.shape).to(device), Feature_val[item, :].T),
                     Feature_train, dim=1).to(device)
-                kind = torch.zeros([num])
+                kind = torch.zeros([num]).to(device)
                 for j in range(num):
-                    kind[j] = output[target_train[:, 0] == j].mean()
+                    kind[j] = output[target_train[:, 0] == j].mean().to(device)
                 sorted, indices = torch.sort(kind, descending=True)
                 if sum(indices[:5].to(device) == target_val[item]) != 0:
                     Score = Score + 1
