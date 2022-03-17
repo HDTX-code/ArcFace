@@ -1,7 +1,7 @@
 from __init__ import *
 
 
-def go_train(a, data_root_path, save_root_path, low, high, val_number):
+def go_train(a, dict_id_path, data_root_path, save_root_path, low, high, val_number):
     # 生成公共参数类
     opt = Config()
     opt.data_train_path = os.path.join(data_root_path, "train")
@@ -16,14 +16,16 @@ def go_train(a, data_root_path, save_root_path, low, high, val_number):
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     # 清洗数据，生成训练所需csv及dict
-    train_csv_train, train_csv_val, dict_id_all, new_d_all = make_csv(opt)
-    opt.num_classes = len(dict_id_all)
+    train_csv_train, train_csv_val, num = make_csv(opt)
+    dict_id = np.load(dict_id_path).item()
+    new_d = {v: k for k, v in dict_id.items()}
+    opt.num_classes = len(num)
 
     # 生成train、val的dataloader
-    train_dataset = ArcDataset(opt, train_csv_train, dict_id_all)
+    train_dataset = ArcDataset(opt, train_csv_train, dict_id)
     train_dataloader = DataLoader(dataset=train_dataset, batch_size=opt.batch_size, shuffle=True,
                                   num_workers=opt.num_workers)
-    val_dataset = ArcDataset(opt, train_csv_val, dict_id_all)
+    val_dataset = ArcDataset(opt, train_csv_val, dict_id)
     val_dataloader = DataLoader(dataset=val_dataset, batch_size=opt.batch_size, shuffle=True,
                                 num_workers=opt.num_workers)
 
@@ -54,7 +56,7 @@ def go_train(a, data_root_path, save_root_path, low, high, val_number):
 
     # 开始训练
     make_train(model_Sph, metric_fc_Sph, criterion, optimizer_Sph, scheduler_Sph, train_dataloader,
-               val_dataloader, opt, device, len(dict_id_all), "Sph")
+               val_dataloader, opt, device, num, "Sph")
 
 
 if __name__ == '__main__':
