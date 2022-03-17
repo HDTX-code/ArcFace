@@ -12,7 +12,7 @@ def ImageRotate(image):
     height, width = image.shape[:2]  # 输入(H,W,C)，取 H，W 的zhi
     center = (width / 2, height / 2)  # 绕图片中心进行旋转
     angle = random.randint(-180, 180)  # 旋转方向取（-180，180）中的随机整数值，负为逆时针，正为顺势针
-    scale = 0.8  # 将图像缩放为80%
+    scale = 1  # 将图像缩放为80%
 
     # 获得旋转矩阵
     M = cv2.getRotationMatrix2D(center, angle, scale)
