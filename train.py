@@ -1,7 +1,7 @@
 from __init__ import *
 
 
-def go_train(a, dict_id_path, data_root_path, save_root_path, low, high, val_number):
+def go_train(a, data_root_path, save_root_path, low, high, val_number):
     # 生成公共参数类
     opt = Config()
     opt.data_train_path = os.path.join(data_root_path, "train")
