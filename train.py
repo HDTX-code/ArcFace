@@ -58,4 +58,4 @@ def go_train(a, data_root_path, save_root_path, low, high, val_number):
 
 
 if __name__ == '__main__':
-    go_train(sys.argv[0], sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6])
+    go_train(sys.argv[0], sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5])
