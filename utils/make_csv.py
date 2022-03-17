@@ -23,7 +23,7 @@ def make_csv(opt, dict_id_path):
     train_csv_all = train_csv.loc[train_csv['Id'].isin(train_csv_all_id), :]
     train_csv_all.index = range(len(train_csv_all))
 
-    train_csv_all['d'] = 0
+    train_csv_all.loc[:, 'd'] = 0
 
     train_csv_all_0 = copy.copy(train_csv_all)
 
