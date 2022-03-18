@@ -44,7 +44,6 @@ def make_csv(opt, dict_id_path):
         F.loc[:, 'd'] = item
         train_csv_all = pd.concat([train_csv_all, F], ignore_index=True)
 
-    print(train_csv_all.loc[:, :].isin(train_csv_val.loc[:, :]))
     train_csv_train = train_csv_all[~train_csv_all.loc[:, :].isin(train_csv_val.loc[:, :])]
     train_csv_train = train_csv_train.dropna(axis=0, how='any')
     train_csv_train.index = range(len(train_csv_train))
