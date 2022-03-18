@@ -3,7 +3,7 @@ class Config(object):
     backbone = 'resnet50'
     # 数据路径
     data_train_path = 'D:\\project\\humpWhale\\arcFace\\ArcFace-modification-\\data\\train'
-    data_csv_path = 'D:\\project\\humpWhale\\arcFace\\ArcFace-modification-\\data\\train.csv'
+    data_csv_path = r"D:\project\humpWhale\data\humpback-whale-identification\train.csv"
     data_test_path = 'D:\\project\\humpWhale\\arcFace\\ArcFace-modification-\\data\\test'
     checkpoints_path = 'D:\\project\\humpWhale\\arcFace\\ArcFace-modification-\\log'
     # 分类数量
@@ -38,6 +38,6 @@ class Config(object):
     th2 = 600
     # 选取数据量范围的上下限
     low = 0
-    high = 11
+    high = 1
     # 验证集每类的数量
     val_number = 2

@@ -4,6 +4,8 @@ import os
 
 import pandas as pd
 
+from config.config import Config
+
 
 def make_csv(opt, dict_id_path):
     train_csv = pd.read_csv(opt.data_csv_path)
@@ -36,7 +38,8 @@ def make_csv(opt, dict_id_path):
         F.loc[:, 'd'] = item
         train_csv_all = pd.concat([train_csv_all, F], ignore_index=True)
 
-    train_csv_train = train_csv_all.loc[~train_csv_all.isin(train_csv_val)]
+    print(~train_csv_all.at[:, ['image', 'Id']].isin(train_csv_val.at[:, ['image', 'Id']]))
+    train_csv_train = train_csv_all.loc[~train_csv_all.loc[:, ['image', 'Id']].isin(train_csv_val.loc[:, ['image', 'Id']])]
     train_csv_train = train_csv_train.dropna(axis=0, how='any')
 
     dict_id_all = dict(zip(train_csv_all_id, range(len(train_csv_all_id))))
@@ -44,6 +47,12 @@ def make_csv(opt, dict_id_path):
     f = open(os.path.join(dict_id_path, "dict_id"), 'w')
     f.write(info_json)
 
-    train_csv_train.to_csv(os.path.join(opt.checkpoints_path, "train_csv_train.csv"), index=False)
-    train_csv_val.to_csv(os.path.join(opt.checkpoints_path, "train_csv_val.csv"), index=False)
+    # train_csv_train.to_csv(os.path.join(opt.checkpoints_path, "train_csv_train.csv"), index=False)
+    # train_csv_val.to_csv(os.path.join(opt.checkpoints_path, "train_csv_val.csv"), index=False)
     return train_csv_train, train_csv_val, dict_id_all
+
+
+if __name__ == '__main__':
+    opt = Config()
+    train_csv_train, train_csv_val, dict_id_all = make_csv(opt, r"D:\project\humpWhale\arcFace\ArcFace-modification-\data")
+    print(train_csv_val.head())
