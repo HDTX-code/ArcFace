@@ -40,4 +40,4 @@ class Config(object):
     low = 0
     high = 1
     # 验证集每类的数量
-    val_number = 2
+    val_number = 1
