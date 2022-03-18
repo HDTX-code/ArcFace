@@ -14,11 +14,11 @@ class ArcDataset(Dataset):
     def __getitem__(self, index):
         path = os.path.join(self.opt.data_train_path, self.csv.loc[index, 'Image'])
         target = self.dict_id[self.csv.loc[index, 'Id']]
-        num = int(self.csv.loc[index, 'd'])
-        if num == 0:
+        num = self.csv.loc[index, 'd']
+        if int(num) == 0:
             image = get_img(self.opt.th1, self.opt.th2, path, self.opt)
         else:
-            image = Data_strength(path, num, self.opt)
+            image = Data_strength(path, int(num), self.opt)
         img_tensor = torch.from_numpy(image)
         target_tensor = torch.ones([1])
         target_tensor[0] = target

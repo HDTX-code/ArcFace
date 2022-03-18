@@ -47,6 +47,7 @@ def make_csv(opt, dict_id_path):
     print(train_csv_all.loc[:, :].isin(train_csv_val.loc[:, :]))
     train_csv_train = train_csv_all[~train_csv_all.loc[:, :].isin(train_csv_val.loc[:, :])]
     train_csv_train = train_csv_train.dropna(axis=0, how='any')
+    train_csv_train.index = range(len(train_csv_train))
 
     dict_id_all = dict(zip(train_csv_all_id, range(len(train_csv_all_id))))
     info_json = json.dumps(dict_id_all, sort_keys=False, indent=4, separators=(',', ': '))
