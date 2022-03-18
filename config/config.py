@@ -27,7 +27,7 @@ class Config(object):
     max_epoch = 15
     lr = 1e-1  # initial learning rate
     lr_step = 10
-    lr_decay = 0.95  # when val_loss increase, lr = lr*lr_decay
+    lr_decay = 0.75  # when val_loss increase, lr = lr*lr_decay
     weight_decay = 5e-4
     batch_size = 128
     num_workers = 2
