@@ -24,7 +24,7 @@ def make_csv(opt, dict_id_path):
 
     dict_id_all = dict(zip(train_csv_all_id, range(len(train_csv_all_id))))
     info_json = json.dumps(dict_id_all, sort_keys=False, indent=4, separators=(',', ': '))
-    f = open(os.path.join(dict_id_path, "dict_id"), 'w')
+    f = open(os.path.join(dict_id_path, "dict_id.json"), 'w')
     f.write(info_json)
 
     for item in train_csv_all_id:
