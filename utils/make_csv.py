@@ -36,7 +36,7 @@ def make_csv(opt, dict_id_path):
                                                   :opt.val_number], :]], ignore_index=True)
 
     train_csv_train.index = range(len(train_csv_train))
-    train_csv_val = range(len(train_csv_val))
+    train_csv_val.index = range(len(train_csv_val))
 
     train_csv_train.to_csv(os.path.join(opt.checkpoints_path, "train_csv_train.csv"), index=False)
     train_csv_val.to_csv(os.path.join(opt.checkpoints_path, "train_csv_val.csv"), index=False)
