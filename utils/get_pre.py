@@ -35,5 +35,5 @@ def get_pre(test_path, model, Feature_train, target_train, dict_id, opt, it, dev
         Top = sorted[:it]
         Top_index = []
         for item in range(it):
-            Top_index[item] = new_d[indices[item]]
+            Top_index.append(new_d[indices[item]])
         return Top, Top_index
