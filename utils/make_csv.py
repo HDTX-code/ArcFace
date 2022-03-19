@@ -35,7 +35,6 @@ def make_csv(opt, dict_id_path):
     train_csv_val.sort_values(by="Image", inplace=True, ascending=True)
     train_csv_val.index = range(len(train_csv_val))
     train_csv_all.sort_values(by="Image", inplace=True, ascending=True)
-    train_csv_all.index = range(len(train_csv_all))
 
     train_csv_all_0 = copy.copy(train_csv_all)
 
@@ -43,6 +42,8 @@ def make_csv(opt, dict_id_path):
         F = copy.copy(train_csv_all_0)
         F.loc[:, 'd'] = item
         train_csv_all = pd.concat([train_csv_all, F], ignore_index=True)
+
+    train_csv_all.index = range(len(train_csv_all))
 
     train_csv_train = train_csv_all[~train_csv_all.loc[:, :].isin(train_csv_val.loc[:, :])]
     train_csv_train = train_csv_train.dropna(axis=0, how='any')
