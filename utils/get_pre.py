@@ -1,5 +1,6 @@
 import sys
 
+import cv2
 import numpy as np
 import torch
 import torch.nn.functional as F
@@ -15,8 +16,13 @@ def get_pre(test_path, model, Feature_train, target_train, dict_id, opt, it, dev
     model.eval()
     model.to(device)
 
-    image = get_img(opt.th1, opt.th2, test_path, opt)
-    test_tensor = torch.from_numpy(image)
+    image = cv2.inRange(test_path)
+    img_0 = cv2.resize(image, (opt.w, opt.h))
+    img1 = np.zeros([3, opt.w, opt.h])  # 改变img1的时候不改变img
+    img1[0, :, :] = img_0[:, :, 2]
+    img1[1, :, :] = img_0[:, :, 1]
+    img1[2, :, :] = img_0[:, :, 0]  # cv2读取的是bgr,转换成rgb就要做一下变通
+    test_tensor = torch.from_numpy(img1)
     new_d = {v: k for k, v in dict_id.items()}
     num = len(dict_id)
 

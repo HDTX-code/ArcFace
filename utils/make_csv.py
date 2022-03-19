@@ -34,6 +34,10 @@ def make_csv(opt, dict_id_path):
         train_csv_val = pd.concat([train_csv_val, train_csv_all.loc[
                                                   train_csv_all[train_csv_all["Id"] == item].index.tolist()[
                                                   :opt.val_number], :]], ignore_index=True)
+
+    train_csv_train.index = range(len(train_csv_train))
+    train_csv_val = range(len(train_csv_val))
+
     train_csv_train.to_csv(os.path.join(opt.checkpoints_path, "train_csv_train.csv"), index=False)
     train_csv_val.to_csv(os.path.join(opt.checkpoints_path, "train_csv_val.csv"), index=False)
     return train_csv_train, train_csv_val, dict_id_all
