@@ -32,7 +32,7 @@ def go_predict(a, data_root_path, save_path, path_0_2, path_3_11, path_12_1000):
                                              '\n' + Top_index_12_1000[0]
                 pbar.update(1)
                 pbar.set_postfix(
-                    **{'Top4': Top.sort()})
+                    **{'Top4': Top})
         submission.to_csv(os.path.join(save_path, "submission.csv"), index=False)
 
 
