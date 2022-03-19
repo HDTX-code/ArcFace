@@ -29,7 +29,7 @@ def go_predict(a, data_root_path, save_path, path_0_2, path_3_11, path_12_1000):
                 Top = np.concatenate((Top_0_2, Top_3_11, Top_12_1000), axis=0)
                 submission.loc[item, "Image"] = path_list[item]
                 submission.loc[item, "Id"] = Top_index_0_2[0] + '\n' + Top_index_3_11[0] + '\n' + Top_index_3_11[1] + \
-                                             '\n' + Top_index_12_1000[0]
+                                             '\n' + Top_index_12_1000[0] + 'new_whale'
                 pbar.update(1)
                 pbar.set_postfix(
                     **{'Top4': Top})
