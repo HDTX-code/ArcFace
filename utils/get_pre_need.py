@@ -1,5 +1,7 @@
+import json
 import os
 
+import numpy as np
 import torch
 import torchvision
 from torch.utils.data import DataLoader
@@ -10,26 +12,26 @@ from utils.get_feature import get_feature
 from utils.make_csv import make_csv
 
 
-def get_pre_need(data_root_path, save_root_path, model_url, low, high, val_number, device):
-    opt = Config()
-    opt.data_train_path = os.path.join(data_root_path, "train")
-    opt.data_csv_path = os.path.join(data_root_path, "train.csv")
-    opt.data_test_path = os.path.join(data_root_path, "test")
-    opt.checkpoints_path = save_root_path
-    opt.low = int(low)
-    opt.high = int(high)
-    opt.val_number = int(val_number)
+def get_pre_need(root_path, device):
+    with torch.no_grad():
+        # 拼接地址
+        model_path = os.path.join(root_path, "resnet50Sph.pth")
+        Feature_train_path = os.path.join(root_path, "Feature_train.npy")
+        target_train_path = os.path.join(root_path, "target_train.npy")
+        dict_id_path = os.path.join(root_path, "dict_id.npy")
 
-    model = torchvision.models.resnet50(pretrained=None)
-    model.fc = torch.nn.Linear(model.fc.in_features, 512)
-    model.load_state_dict(torch.load(model_url, map_location=device), False)
+        # 加载模型
+        model_Sph = torchvision.models.resnet50(pretrained=False)
+        model_Sph.fc = torch.nn.Linear(model_Sph.fc.in_features, 512)
+        model_Sph.load_state_dict(torch.load(model_path, map_location=device), False)
+        model_Sph.eval()
 
-    train_csv_train, train_csv_val, dict_id_all, new_d_all = make_csv(opt)
+        # 加载字典
+        f2 = open(dict_id_path, 'r')
+        dict_id = json.load(f2)
 
-    train_dataset = ArcDataset(opt, train_csv_train, dict_id_all)
-    train_dataloader = DataLoader(dataset=train_dataset, batch_size=opt.batch_size, shuffle=True,
-                                  num_workers=opt.num_workers)
+        # 加载Feature_train
+        Feature_train = np.load(Feature_train_path)
+        target_train = np.load(target_train_path)
 
-    Feature_train, target_train = get_feature(model, train_dataloader, device)
-
-    return dict_id_all, new_d_all, Feature_train, target_train, opt, model
+    return model_Sph, dict_id, Feature_train, target_train
