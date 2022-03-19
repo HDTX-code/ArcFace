@@ -30,6 +30,8 @@ def get_pre(test_path, model, Feature_train, target_train, dict_id, opt, it, dev
         for j in range(num):
             kind[j] = output[target_train[:, 0] == j].mean().to(device)
         sorted, indices = torch.sort(kind, descending=True)
+        sorted = sorted.cpu().detach().numpy()
+        indices = indices.cpu().detach().numpy()
         Top = sorted[:it]
         Top_index = []
         for item in range(it):
