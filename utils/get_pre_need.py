@@ -19,6 +19,8 @@ def get_pre_need(root_path, device):
         Feature_train_path = os.path.join(root_path, "Feature_train.npy")
         target_train_path = os.path.join(root_path, "target_train.npy")
         dict_id_path = os.path.join(root_path, "dict_id")
+        if not os.path.exists(dict_id_path):
+            dict_id_path = os.path.join(root_path, "dict_id.txt")
 
         # 加载模型
         model_Sph = torchvision.models.resnet50(pretrained=False)
