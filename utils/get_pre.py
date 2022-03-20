@@ -16,7 +16,7 @@ def get_pre(test_path, model, Feature_train, target_train, dict_id, opt, it, dev
     model.eval()
     model.to(device)
 
-    image = cv2.inRange(test_path)
+    image = cv2.imread(test_path)
     img_0 = cv2.resize(image, (opt.w, opt.h))
     img1 = np.zeros([3, opt.w, opt.h])  # 改变img1的时候不改变img
     img1[0, :, :] = img_0[:, :, 2]
