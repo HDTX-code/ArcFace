@@ -69,3 +69,5 @@ def get_img(th1, th2, path, opt):
     img1[1, :, :] = img_0[:, :, 1]
     img1[2, :, :] = img_0[:, :, 0]  # cv2读取的是bgr,转换成rgb就要做一下变通
     return img1
+
+
