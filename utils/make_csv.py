@@ -53,10 +53,11 @@ def make_csv(opt, dict_id_path):
 
 
     train_csv_train.index = range(len(train_csv_train))
+    train_csv_val.index = range(len(train_csv_val))
 
     dict_id_all = dict(zip(train_csv_all_id, range(len(train_csv_all_id))))
     info_json = json.dumps(dict_id_all, sort_keys=False, indent=4, separators=(',', ': '))
-    f = open(os.path.join(dict_id_path, "dict_id.json"), 'w')
+    f = open(os.path.join(dict_id_path, "dict_id"), 'w')
     f.write(info_json)
 
     train_csv_train.to_csv(os.path.join(opt.checkpoints_path, "train_csv_train.csv"), index=False)
