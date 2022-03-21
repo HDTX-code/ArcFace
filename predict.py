@@ -53,7 +53,7 @@ def go_predict(a, data_root_path, save_path, path_0_2, path_3_11, path_12_1000):
                 Top_index = np.concatenate((Top_index_0_2, Top_index_3_11, Top_index_12_1000), axis=0)
                 Top_index = Top_index[np.argsort(-Top)[0:4]]
                 Top = Top[Top_index]
-                submission.loc[submission.loc['Image'] == new_d_test[target_test_0_2[item,0]], "Id"] = new_d_all[Top_index[0]] + ' ' + new_d_all[Top_index[1]] + ' ' + new_d_all[Top_index[
+                submission.loc[submission.loc['Image'] == new_d_test[target_test_0_2[item, 0]], "Id"] = new_d_all[Top_index[0]] + ' ' + new_d_all[Top_index[1]] + ' ' + new_d_all[Top_index[
                     2]] + ' ' + new_d_all[Top_index[3]] + ' ' + 'new_whale'
                 pbar.update(1)
                 pbar.set_postfix(
@@ -62,6 +62,6 @@ def go_predict(a, data_root_path, save_path, path_0_2, path_3_11, path_12_1000):
 
 
 if __name__ == '__main__':
-    go_predict(sys.argv[0], sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5])
-    # go_predict(0, r"D:\project\humpWhale\data\humpback-whale-identification", r"D:\project\humpWhale\data",
-    #            r"D:\project\humpWhale\data\0-2", r"D:\project\humpWhale\data\3-11", r"D:\project\humpWhale\data\12-1000")
+    # go_predict(sys.argv[0], sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5])
+    go_predict(0, r"D:\project\humpWhale\data\humpback-whale-identification", r"D:\project\humpWhale\data",
+               r"D:\project\humpWhale\data\0-2", r"D:\project\humpWhale\data\3-11", r"D:\project\humpWhale\data\12-1000")
