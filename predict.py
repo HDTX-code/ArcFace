@@ -39,7 +39,8 @@ def go_predict(a, data_root_path, save_path, path_0_2, path_3_11, path_12_1000):
         Feature_test_3_11, target_test_3_11 = get_feature(model_3_11, test_dataloader, device)
         Feature_test_12_1000, target_test_12_1000 = get_feature(model_12_1000, test_dataloader, device)
 
-        with tqdm(total=target_test_0_2.shape[0], postfix=dict) as pbar:
+        target_test = target_test_0_2.cpu().detach().numpy()
+        with tqdm(total=target_test.shape[0], postfix=dict) as pbar:
             for item in range(target_test_0_2.shape[0]):
 
                 Top_0_2, Top_index_0_2 = get_pre(Feature_test_0_2[item, :], Feature_train_0_2, target_train_0_2, dict_id_0_2, dict_id_all,
@@ -53,7 +54,7 @@ def go_predict(a, data_root_path, save_path, path_0_2, path_3_11, path_12_1000):
                 Top_index = np.concatenate((Top_index_0_2, Top_index_3_11, Top_index_12_1000), axis=0)
                 Top_index = Top_index[np.argsort(-Top)[0:4]]
                 Top = np.sort(Top)[-4:]
-                submission.loc[submission[submission.Image == new_d_test[target_test_0_2[item, 0]]].index.tolist(), "Id"] = new_d_all[Top_index[0]] + ' ' + new_d_all[Top_index[1]] + ' ' + new_d_all[Top_index[
+                submission.loc[submission[submission.Image == new_d_test[target_test[item, 0]]].index.tolist(), "Id"] = new_d_all[Top_index[0]] + ' ' + new_d_all[Top_index[1]] + ' ' + new_d_all[Top_index[
                     2]] + ' ' + new_d_all[Top_index[3]] + ' ' + 'new_whale'
                 pbar.update(1)
                 pbar.set_postfix(
