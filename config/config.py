@@ -5,7 +5,7 @@ class Config(object):
     data_train_path = 'D:\\project\\humpWhale\\arcFace\\ArcFace-modification-\\data\\train'
     data_csv_path = r"D:\project\humpWhale\data\humpback-whale-identification\train.csv"
     data_test_path = 'D:\\project\\humpWhale\\arcFace\\ArcFace-modification-\\data\\test'
-    checkpoints_path = 'D:\\project\\humpWhale\\arcFace\\ArcFace-modification-\\log'
+    checkpoints_path = r"D:\project\humpWhale"
     # 分类数量
     num_classes = 2
     # 转换后图片大小
@@ -38,6 +38,6 @@ class Config(object):
     th2 = 600
     # 选取数据量范围的上下限
     low = 0
-    high = 1
+    high = 2
     # 验证集每类的数量
     val_number = 1
