@@ -11,7 +11,7 @@ class TestDataset(Dataset):
         self.dict_id = dict_id
 
     def __getitem__(self, index):
-        path = os.path.join(self.opt.data_train_path, self.csv.loc[index, 'Image'])
+        path = os.path.join(self.opt.data_test_path, self.csv.loc[index, 'Image'])
         target = self.dict_id[self.csv.loc[index, 'Image']]
         image = get_img(self.opt.th1, self.opt.th2, path, self.opt)
         img_tensor = torch.from_numpy(image)
