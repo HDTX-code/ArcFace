@@ -31,7 +31,7 @@ def go_predict(a, data_root_path, save_path, path_0_2, path_3_11, path_12_1000):
         dict_id_test = dict(zip(path_list, range(len(path_list))))
         new_d_test = {v: k for k, v in dict_id_test.items()}
 
-        test_dataset = TestDataset(opt, submission, dict_id_all)
+        test_dataset = TestDataset(opt, submission, dict_id_test)
         test_dataloader = DataLoader(dataset=test_dataset, batch_size=opt.batch_size, shuffle=False,
                                      num_workers=opt.num_workers)
 
