@@ -1,7 +1,7 @@
 from __init__ import *
 
 
-def go_train(a, data_root_path, save_root_path, low, high, val_number):
+def go_train(a, data_root_path, save_root_path, low, high, val_number, max_epoch):
     # 生成公共参数类
     opt = Config()
     opt.data_train_path = os.path.join(data_root_path, "train")
@@ -11,6 +11,7 @@ def go_train(a, data_root_path, save_root_path, low, high, val_number):
     opt.low = int(low)
     opt.high = int(high)
     opt.val_number = int(val_number)
+    opt.max_epoch = int(max_epoch)
     # 训练设备
     print(torch.cuda.is_available())
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -58,4 +59,4 @@ def go_train(a, data_root_path, save_root_path, low, high, val_number):
 
 
 if __name__ == '__main__':
-    go_train(sys.argv[0], sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5])
+    go_train(sys.argv[0], sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6])
