@@ -4,6 +4,7 @@ from __init__ import *
 def go_predict(a, data_root_path, save_path, path_0_2, path_3_11, path_12_1000):
     with torch.no_grad():
         opt = Config()
+        opt.data_test_path = os.path.join(data_root_path, "test")
         print(torch.cuda.is_available())
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
