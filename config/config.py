@@ -24,7 +24,7 @@ class Config(object):
     # 优化器类型
     optimizer = 'sgd'
     # 训练参数
-    max_epoch = 45
+    max_epoch = 21
     lr = 1e-1  # initial learning rate
     lr_step = 10
     lr_decay = 0.95  # when val_loss increase, lr = lr*lr_decay
