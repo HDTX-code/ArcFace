@@ -5,8 +5,15 @@ def go_predict(a, data_root_path, save_path, path_0_2, path_3_11, path_12_1000):
     with torch.no_grad():
         opt = Config()
         opt.data_test_path = os.path.join(data_root_path, "test")
+        opt.data_csv_path = os.path.join(data_root_path, "train.csv")
         print(torch.cuda.is_available())
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+        # 建立全局字典
+        train_csv = pd.read_csv(opt.data_csv_path)
+        train_csv_id = train_csv['Id'].unique()
+        dict_id_all = dict(zip(train_csv_id, range(len(train_csv_id))))
+        new_d_all = {v: k for k, v in dict_id_all.items()}
 
         model_0_2, dict_id_0_2, Feature_train_0_2, target_train_0_2 = get_pre_need(path_0_2, device)
         model_0_2.eval()
@@ -21,11 +28,11 @@ def go_predict(a, data_root_path, save_path, path_0_2, path_3_11, path_12_1000):
         for item in range(len(path_list)):
             submission.loc[item, "Image"] = path_list[item]
         # 建立全局字典
-        dict_id_all = dict(zip(path_list, range(len(path_list))))
-        new_d_all = {v: k for k, v in dict_id_all.items()}
+        dict_id_test = dict(zip(path_list, range(len(path_list))))
+        new_d_test = {v: k for k, v in dict_id_test.items()}
 
         test_dataset = TestDataset(opt, submission, dict_id_all)
-        test_dataloader = DataLoader(dataset=test_dataset, batch_size=opt.batch_size, shuffle=True,
+        test_dataloader = DataLoader(dataset=test_dataset, batch_size=opt.batch_size, shuffle=False,
                                      num_workers=opt.num_workers)
 
         Feature_test_0_2, target_test_0_2 = get_feature(model_0_2, test_dataloader, device)
@@ -46,7 +53,7 @@ def go_predict(a, data_root_path, save_path, path_0_2, path_3_11, path_12_1000):
                 Top_index = np.concatenate((Top_index_0_2, Top_index_3_11, Top_index_12_1000), axis=0)
                 Top_index = Top_index[np.argsort(-Top)[0:4]]
                 Top = Top[Top_index]
-                submission.loc[item, "Id"] = new_d_all[Top_index[0]] + ' ' + new_d_all[Top_index[1]] + ' ' + new_d_all[Top_index[
+                submission.loc[submission.loc['Image'] == new_d_test[target_test_0_2[item,0]], "Id"] = new_d_all[Top_index[0]] + ' ' + new_d_all[Top_index[1]] + ' ' + new_d_all[Top_index[
                     2]] + ' ' + new_d_all[Top_index[3]] + ' ' + 'new_whale'
                 pbar.update(1)
                 pbar.set_postfix(
