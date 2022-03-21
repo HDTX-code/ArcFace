@@ -62,6 +62,6 @@ def go_predict(a, data_root_path, save_path, path_0_2, path_3_11, path_12_1000):
 
 
 if __name__ == '__main__':
-    # go_predict(sys.argv[0], sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5])
-    go_predict(0, r"D:\project\humpWhale\data\humpback-whale-identification", r"D:\project\humpWhale\data",
-               r"D:\project\humpWhale\data\0-2", r"D:\project\humpWhale\data\3-11", r"D:\project\humpWhale\data\12-1000")
+    go_predict(sys.argv[0], sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5])
+    # go_predict(0, r"D:\project\humpWhale\data\humpback-whale-identification", r"D:\project\humpWhale\data",
+    #            r"D:\project\humpWhale\data\0-2", r"D:\project\humpWhale\data\3-11", r"D:\project\humpWhale\data\12-1000")
