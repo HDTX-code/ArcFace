@@ -66,10 +66,3 @@ def Data_strength(path, num, opt):
     img1[1, :, :] = img_0[:, :, 1]
     img1[2, :, :] = img_0[:, :, 0]  # cv2读取的是bgr,转换成rgb就要做一下变通
     return img1
-
-
-if __name__ == '__main__':
-    image = cv2.imread(r"D:\project\humpWhale\data\humpback-whale-identification\train\00aae723d.jpg")
-    image_new = ImageRotate(ImageRotate(ImageRotate(image)))
-    cv2.imshow("image2", image_new)
-    cv2.waitKey()
