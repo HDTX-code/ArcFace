@@ -17,7 +17,7 @@ from utils.make_csv import make_csv
 def get_pre_need(root_path, device):
     with torch.no_grad():
         # 拼接地址
-        model_path = os.path.join(root_path, "resnet50Sph.pth")
+        model_path = os.path.join(root_path, "convex.pth")
         Feature_train_path = os.path.join(root_path, "Feature_train.npy")
         target_train_path = os.path.join(root_path, "target_train.npy")
         dict_id_path = os.path.join(root_path, "dict_id")
