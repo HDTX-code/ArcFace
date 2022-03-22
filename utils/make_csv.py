@@ -44,6 +44,7 @@ def make_csv(opt, dict_id_path):
         train_csv_val.to_csv(os.path.join(opt.checkpoints_path, "train_csv_val.csv"), index=False)
     else:
         train_csv_train = train_csv_all
+        train_csv_train.loc[:, 'd'] = 0
         train_csv_train.index = range(len(train_csv_train))
 
     return train_csv_train, train_csv_val, dict_id_all
