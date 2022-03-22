@@ -33,29 +33,29 @@ def go_train(a, data_root_path, save_root_path, low, high, val_number, max_epoch
     criterion = FocalLoss(gamma=2)
 
     # 加载backbone
-    model_Sph = torchvision.models.resnet50(pretrained=True)
-    model_Sph.fc = torch.nn.Linear(model_Sph.fc.in_features, 512)
+    model_Arc = torchvision.models.resnet50(pretrained=True)
+    model_Arc.fc = torch.nn.Linear(model_Arc.fc.in_features, 512)
     # model_Sph.load_state_dict( torch.load("D:\\project\\humpWhale\\arcFace\\ArcFace-modification-\\log\\gt30_model
     # .pth", map_location=device), False)
 
     # 加载模型的margin类型
-    metric_fc_Sph = SphereProduct(512, opt.num_classes, m=4)
+    metric_fc_Arc = ArcMarginProduct(512, opt.num_classes)
 
     # 选择优化器
-    optimizer_Sph = torch.optim.SGD([{'params': model_Sph.parameters()}, {'params': metric_fc_Sph.parameters()}],
+    optimizer_Arc = torch.optim.SGD([{'params': model_Arc.parameters()}, {'params': metric_fc_Arc.parameters()}],
                                     lr=opt.lr, weight_decay=opt.weight_decay)
 
     # 训练前准备
-    model_Sph.to(device)
+    model_Arc.to(device)
 
-    metric_fc_Sph.to(device)
+    metric_fc_Arc.to(device)
 
     criterion.to(device)
 
-    scheduler_Sph = StepLR(optimizer_Sph, step_size=opt.lr_step, gamma=0.1)
+    scheduler_Arc = StepLR(optimizer_Arc, step_size=opt.lr_step, gamma=0.1)
 
     # 开始训练
-    make_train(model_Sph, metric_fc_Sph, criterion, optimizer_Sph, scheduler_Sph, train_dataloader,
+    make_train(model_Arc, metric_fc_Arc, criterion, optimizer_Arc, scheduler_Arc, train_dataloader,
                val_dataloader, opt, device, len(dict_id_all), "Sph")
 
 

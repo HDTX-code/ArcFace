@@ -36,6 +36,7 @@ from utils.get_pre import get_pre
 from PIL import Image
 import json
 from dataset.test_dataset import TestDataset
+from models.metrics import ArcMarginProduct
 
 curPath = os.path.abspath(os.path.dirname(__file__))
 rootPath = os.path.split(curPath)[0]
