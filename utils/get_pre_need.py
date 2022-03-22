@@ -16,7 +16,9 @@ from utils.make_csv import make_csv
 def get_pre_need(root_path, device):
     with torch.no_grad():
         # 拼接地址
-        model_path = os.path.join(root_path, "resnet50Sph.pth")
+        model_path_Sph = os.path.join(root_path, "resnet50Sph.pth")
+        model_path_Arc = os.path.join(root_path, "resnet50Arc.pth")
+        model_path_Add = os.path.join(root_path, "resnet50Add.pth")
         Feature_train_path = os.path.join(root_path, "Feature_train.npy")
         target_train_path = os.path.join(root_path, "target_train.npy")
         dict_id_path = os.path.join(root_path, "dict_id")
@@ -26,7 +28,12 @@ def get_pre_need(root_path, device):
         # 加载模型
         model = torchvision.models.resnet50(pretrained=False)
         model.fc = torch.nn.Linear(model.fc.in_features, 512)
-        model.load_state_dict(torch.load(model_path, map_location=device), False)
+        if os.path.exists(model_path_Sph):
+            model.load_state_dict(torch.load(model_path_Sph, map_location=device), False)
+        elif os.path.exists(model_path_Arc):
+            model.load_state_dict(torch.load(model_path_Arc, map_location=device), False)
+        elif os.path.exists(model_path_Add):
+            model.load_state_dict(torch.load(model_path_Add, map_location=device), False)
         model.eval()
 
         # 加载字典
