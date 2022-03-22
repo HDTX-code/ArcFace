@@ -50,10 +50,22 @@ def go_predict(a, data_root_path, save_path, path_0_2, path_3_11, path_12_1000):
                 Top_12_1000, Top_index_12_1000 = get_pre(Feature_test_12_1000[item, :], Feature_train_12_1000,
                                                          target_train_12_1000, dict_id_12_1000, dict_id_all,
                                                          4, device)
-                Top = np.concatenate((Top_0_2, Top_3_11, Top_12_1000), axis=0)
-                Top_index = np.concatenate((Top_index_0_2, Top_index_3_11, Top_index_12_1000), axis=0)
-                Top_index = Top_index[np.argsort(-Top)[0:4]]
-                Top = np.sort(Top)[-4:]
+                Is_who = np.array([Top_0_2[0], Top_3_11[0], Top_12_1000[0]])
+                if Is_who.max() >= 0.75:
+                    if Is_who.argmax() == 0:
+                        Top = Top_0_2
+                        Top_index = Top_index_0_2
+                    elif Is_who.argmax() == 1:
+                        Top = Top_3_11
+                        Top_index = Top_index_3_11
+                    elif Is_who.argmax() == 2:
+                        Top = Top_12_1000
+                        Top_index = Top_index_12_1000
+                else:
+                    Top = np.concatenate((Top_0_2, Top_3_11, Top_12_1000), axis=0)
+                    Top_index = np.concatenate((Top_index_0_2, Top_index_3_11, Top_index_12_1000), axis=0)
+                    Top_index = Top_index[np.argsort(-Top)[0:4]]
+                    Top = np.sort(Top)[-4:]
                 submission.loc[submission[submission.Image == new_d_test[target_test[item, 0]]].index.tolist(), "Id"] = new_d_all[Top_index[0]] + ' ' + new_d_all[Top_index[1]] + ' ' + new_d_all[Top_index[
                     2]] + ' ' + new_d_all[Top_index[3]] + ' ' + 'new_whale'
                 pbar.update(1)
