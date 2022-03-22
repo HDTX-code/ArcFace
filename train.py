@@ -24,9 +24,10 @@ def go_train(a, data_root_path, save_root_path, low, high, val_number, max_epoch
     train_dataset = ArcDataset(opt, train_csv_train, dict_id_all)
     train_dataloader = DataLoader(dataset=train_dataset, batch_size=opt.batch_size, shuffle=True,
                                   num_workers=opt.num_workers)
-    val_dataset = ArcDataset(opt, train_csv_val, dict_id_all)
-    val_dataloader = DataLoader(dataset=val_dataset, batch_size=opt.batch_size, shuffle=True,
-                                num_workers=opt.num_workers)
+    # val_dataset = ArcDataset(opt, train_csv_val, dict_id_all)
+    # val_dataloader = DataLoader(dataset=val_dataset, batch_size=opt.batch_size, shuffle=True,
+    #                             num_workers=opt.num_workers)
+    val_dataloader = None
 
     # 加载模型的loss函数类型
     criterion = FocalLoss(gamma=2)
