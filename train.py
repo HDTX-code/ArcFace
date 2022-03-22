@@ -1,5 +1,4 @@
 from __init__ import *
-from models.metrics import AddMarginProduct
 
 
 def go_train(a, data_root_path, save_root_path, low, high, val_number, max_epoch, IsTrain, isArc):
@@ -37,14 +36,12 @@ def go_train(a, data_root_path, save_root_path, low, high, val_number, max_epoch
 
     # 加载backbone
     if IsTrain == "":
-        model = torchvision.models.resnet50(pretrained=True)
-        model.fc = torch.nn.Linear(model.fc.in_features, 512)
+        model = convnext_base(pretrained=True, in_22k=False, num_classes=512)
     else:
-        model = torchvision.models.resnet50(pretrained=False)
-        model.fc = torch.nn.Linear(model.fc.in_features, 512)
+        model = convnext_base(pretrained=False, in_22k=False, num_classes=512)
         model.load_state_dict(torch.load(IsTrain, map_location=device), False)
 
-        # 加载模型的margin类型
+    # 加载模型的margin类型
     if int(isArc) == 0:
         metric_fc = ArcMarginProduct(512, opt.num_classes)
         str = 'Arc'
@@ -74,4 +71,5 @@ def go_train(a, data_root_path, save_root_path, low, high, val_number, max_epoch
 
 
 if __name__ == '__main__':
-    go_train(sys.argv[0], sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6], sys.argv[7], sys.argv[8])
+    go_train(sys.argv[0], sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6], sys.argv[7],
+             sys.argv[8])
