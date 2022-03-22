@@ -27,19 +27,23 @@ def make_csv(opt, dict_id_path):
     f = open(os.path.join(dict_id_path, "dict_id"), 'w')
     f.write(info_json)
 
-    for item in train_csv_all_id:
-        train_csv_train = pd.concat([train_csv_train, train_csv_all.loc[
+    if opt.val_number != 0:
+        for item in train_csv_all_id:
+            train_csv_train = pd.concat([train_csv_train, train_csv_all.loc[
+                                                          train_csv_all[train_csv_all["Id"] == item].index.tolist()[
+                                                          opt.val_number:], :]], ignore_index=True)
+            train_csv_val = pd.concat([train_csv_val, train_csv_all.loc[
                                                       train_csv_all[train_csv_all["Id"] == item].index.tolist()[
-                                                      opt.val_number:], :]], ignore_index=True)
-        train_csv_val = pd.concat([train_csv_val, train_csv_all.loc[
-                                                  train_csv_all[train_csv_all["Id"] == item].index.tolist()[
-                                                  :opt.val_number], :]], ignore_index=True)
+                                                      :opt.val_number], :]], ignore_index=True)
 
-    train_csv_train.index = range(len(train_csv_train))
-    train_csv_val.index = range(len(train_csv_val))
-    train_csv_train.loc[:, 'd'] = 0
-    train_csv_val.loc[:, 'd'] = 0
+        train_csv_train.index = range(len(train_csv_train))
+        train_csv_val.index = range(len(train_csv_val))
+        train_csv_train.loc[:, 'd'] = 0
+        train_csv_val.loc[:, 'd'] = 0
+        train_csv_train.to_csv(os.path.join(opt.checkpoints_path, "train_csv_train.csv"), index=False)
+        train_csv_val.to_csv(os.path.join(opt.checkpoints_path, "train_csv_val.csv"), index=False)
+    else:
+        train_csv_train = train_csv_all
+        train_csv_train.index = range(len(train_csv_train))
 
-    train_csv_train.to_csv(os.path.join(opt.checkpoints_path, "train_csv_train.csv"), index=False)
-    train_csv_val.to_csv(os.path.join(opt.checkpoints_path, "train_csv_val.csv"), index=False)
     return train_csv_train, train_csv_val, dict_id_all
