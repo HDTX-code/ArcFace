@@ -51,7 +51,7 @@ def go_train(a, data_root_path, save_root_path, low, high, val_number, max_epoch
     elif int(isArc) == 1:
         metric_fc = AddMarginProduct(512, opt.num_classes)
         str = 'Add'
-    elif int(isArc) == 2:
+    else:
         metric_fc = SphereProduct(512, opt.num_classes)
         str = 'Sph'
 
@@ -74,4 +74,4 @@ def go_train(a, data_root_path, save_root_path, low, high, val_number, max_epoch
 
 
 if __name__ == '__main__':
-    go_train(sys.argv[0], sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6])
+    go_train(sys.argv[0], sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6], sys.argv[7], sys.argv[8])

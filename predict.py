@@ -23,7 +23,7 @@ def go_predict(a, data_root_path, save_path, path):
         submission = pd.DataFrame(columns=['Image', 'Id'])
         for item in range(len(path_list)):
             submission.loc[item, "Image"] = path_list[item]
-        # 建立全局字典
+        # 建立测试集地址字典
         dict_id_test = dict(zip(path_list, range(len(path_list))))
         new_d_test = {v: k for k, v in dict_id_test.items()}
 
@@ -45,7 +45,7 @@ def go_predict(a, data_root_path, save_path, path):
                         2]] + ' ' + new_d_all[Top_index[3]] + ' ' + 'new_whale'
                 pbar.update(1)
                 pbar.set_postfix(
-                    **{'Top': Top})
+                    **{'Top': Top[3]})
         submission.to_csv(os.path.join(save_path, "submission.csv"), index=False)
 
 
