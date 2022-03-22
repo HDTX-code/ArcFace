@@ -25,7 +25,7 @@ def get_pre_need(root_path, device):
             dict_id_path = os.path.join(root_path, "dict_id.txt")
 
         # 加载模型
-        model = convnext_base(pretrained=False, in_22k=False, num_classes=512)
+        model = convnext_base(pretrained=True, in_22k=False, num_classes=512)
         model.load_state_dict(torch.load(model_path, map_location=device), False)
         model.eval()
 
