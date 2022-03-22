@@ -65,7 +65,7 @@ def go_predict(a, data_root_path, save_path, path_0_2, path_3_11, path_12_1000):
                     Top = np.concatenate((Top_0_2, Top_3_11, Top_12_1000), axis=0)
                     Top_index = np.concatenate((Top_index_0_2, Top_index_3_11, Top_index_12_1000), axis=0)
                     Top_index = Top_index[np.argsort(-Top)[0:4]]
-                    Top = np.sort(Top)[-4:]
+                    Top = Top[np.argsort(-Top)[0:4]]
                 submission.loc[submission[submission.Image == new_d_test[target_test[item, 0]]].index.tolist(), "Id"] = new_d_all[Top_index[0]] + ' ' + new_d_all[Top_index[1]] + ' ' + new_d_all[Top_index[
                     2]] + ' ' + new_d_all[Top_index[3]] + ' ' + 'new_whale'
                 pbar.update(1)
