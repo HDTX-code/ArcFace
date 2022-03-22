@@ -9,8 +9,8 @@ class Config(object):
     # 分类数量
     num_classes = 2
     # 转换后图片大小
-    w = 256
-    h = 256
+    w = 384
+    h = 384
     # Loss函数类型
     loss = 'focal_loss'
     # margin类型
