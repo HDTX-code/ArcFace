@@ -56,7 +56,7 @@ def go_train(a, data_root_path, save_root_path, low, high, val_number, max_epoch
 
     # 开始训练
     make_train(model_Arc, metric_fc_Arc, criterion, optimizer_Arc, scheduler_Arc, train_dataloader,
-               val_dataloader, opt, device, len(dict_id_all), "Sph")
+               val_dataloader, opt, device, len(dict_id_all), "Arc")
 
 
 if __name__ == '__main__':
