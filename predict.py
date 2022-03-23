@@ -46,7 +46,7 @@ def go_predict(a, data_root_path, save_path, path):
                 Top, Top_index = get_pre_num(Feature_test[item, :], Feature_train_num, dict_id, dict_id_all, 5, device)
                 submission.loc[submission[submission.Image == new_d_test[target_test[item, 0]]].index.tolist(), "Id"] = \
                     new_d_all[Top_index[0]] + ' ' + new_d_all[Top_index[1]] + ' ' + new_d_all[Top_index[
-                        2]] + ' ' + new_d_all[Top_index[3]] + ' ' + 'new_whale' if Top[4] < 0.75 else new_d_all[Top_index[4]]
+                        2]] + ' ' + new_d_all[Top_index[3]] + ' ' + 'new_whale' if Top[0] < 0.75 else new_d_all[Top_index[4]]
                 pbar.update(1)
                 pbar.set_postfix(
                     **{'Top': Top[0]})
