@@ -44,7 +44,7 @@ def go_predict(a, data_root_path, save_path, path):
                 #                          dict_id_all,
                 #                          4, device)
                 Top, Top_index = get_pre_num(Feature_test[item, :], Feature_train_num, dict_id, dict_id_all, 5, device)
-                Top[4] = 0.55
+                Top[4] = 0.5
                 Top_index[4] = dict_id_all['new_whale']
                 Top_index = Top_index[np.argsort(-Top)]
                 # Is_new = 'new_whale' if Top[0] < 0.75 else new_d_all[Top_index[4]]
