@@ -38,7 +38,7 @@ def go_train(a, data_root_path, save_root_path, low, high, val_number, max_epoch
     if IsTrain == "":
         model = convnext_base(pretrained=True, in_22k=False, num_classes=512)
     else:
-        model = convnext_base(pretrained=False, in_22k=False, num_classes=512)
+        model = convnext_base(pretrained=True, in_22k=False, num_classes=512)
         model.load_state_dict(torch.load(IsTrain, map_location=device), False)
 
     # 加载模型的margin类型
