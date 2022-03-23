@@ -17,6 +17,10 @@ def go_predict(a, data_root_path, save_path, path):
 
         model, dict_id, Feature_train, target_train = get_pre_need(path, device)
         model.eval()
+        # 获取各个总类中心点
+        Feature_train_num = np.zeros([len(dict_id), 512])
+        for item in range(len(dict_id)):
+            Feature_train_num[item] = np.mean(Feature_train[target_train[:, 0] == item, :], axis=0)
 
         path_list = os.listdir(os.path.join(data_root_path, "test"))
         # 建立test_dataloader的csv文件
@@ -36,10 +40,10 @@ def go_predict(a, data_root_path, save_path, path):
         target_test = target_test.cpu().detach().numpy()
         with tqdm(total=target_test.shape[0], postfix=dict) as pbar:
             for item in range(target_test.shape[0]):
-                Top, Top_index = get_pre(Feature_test[item, :], Feature_train, target_train, dict_id,
-                                         dict_id_all,
-                                         4, device)
-
+                # Top, Top_index = get_pre(Feature_test[item, :], Feature_train, target_train, dict_id,
+                #                          dict_id_all,
+                #                          4, device)
+                Top, Top_index = get_pre_num(Feature_test[item, :], Feature_train_num, dict_id, dict_id_all, 4, device)
                 submission.loc[submission[submission.Image == new_d_test[target_test[item, 0]]].index.tolist(), "Id"] = \
                     new_d_all[Top_index[0]] + ' ' + new_d_all[Top_index[1]] + ' ' + new_d_all[Top_index[
                         2]] + ' ' + new_d_all[Top_index[3]] + ' ' + 'new_whale'
@@ -51,4 +55,4 @@ def go_predict(a, data_root_path, save_path, path):
 
 if __name__ == '__main__':
     go_predict(sys.argv[0], sys.argv[1], sys.argv[2], sys.argv[3])
-    # go_predict(0, r"D:\project\humpWhale\data\humpback-whale-identification")
+    # go_predict(0, r"D:\project\humpWhale\data\humpback-whale-identification", r"D:\project\humpWhale", r"D:\edge\Arc")
