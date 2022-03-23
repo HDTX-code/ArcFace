@@ -49,7 +49,7 @@ def go_predict(a, data_root_path, save_path, path):
                         2]] + ' ' + new_d_all[Top_index[3]] + ' ' + 'new_whale' if Top[4] < 0.75 else new_d_all[Top_index[4]]
                 pbar.update(1)
                 pbar.set_postfix(
-                    **{'Top': Top[3]})
+                    **{'Top': Top[0]})
         submission.to_csv(os.path.join(save_path, "submission.csv"), index=False)
 
 
