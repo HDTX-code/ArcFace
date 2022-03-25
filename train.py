@@ -40,7 +40,7 @@ class Train(object):
         "low": 0,
         "high": 1000,
         # 验证集每类的数量
-        "val_number": 2,
+        "val_number": 0,
     }
 
     def __init__(self, **kwargs):
