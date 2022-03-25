@@ -7,10 +7,10 @@ class Train(object):
         # 特征提取网络
         "backbone": 'resnet50',
         # 数据路径
-        "data_train_path": 'D:\\project\\humpWhale\\arcFace\\ArcFace-modification-\\data\\train',
-        "data_csv_path": 'D:\\project\\humpWhale\\arcFace\\ArcFace-modification-\\data\\train.csv',
-        "data_test_path": "D:\\project\\humpWhale\\arcFace\\ArcFace-modification-\\data\\test",
-        "save_path": 'D:\\project\\humpWhale\\arcFace\\ArcFace-modification-\\log',
+        "data_train_path": '../input/humpback-whale-identification/train',
+        "data_csv_path": '../input/humpback-whale-identification/train.csv',
+        "data_test_path": "../input/humpback-whale-identification/test",
+        "save_path": './',
         'model_path': "",
         # 分类数量
         "num_classes": 2,
