@@ -132,7 +132,7 @@ if __name__ == '__main__':
                        save_path=save_path,
                        backbone=backbone,
                        epoch_start=1,
-                       epoch_end=Freeze_Epoch + 1,
+                       epoch_end=Freeze_Epoch,
                        Str=metric)
 
     # -------------------------------#
@@ -169,5 +169,5 @@ if __name__ == '__main__':
                save_path=save_path,
                backbone=backbone,
                epoch_start=Freeze_Epoch + 1,
-               epoch_end=Freeze_Epoch + Unfreeze_Epoch + 1,
+               epoch_end=Freeze_Epoch + Unfreeze_Epoch,
                Str=metric)
