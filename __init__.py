@@ -11,7 +11,6 @@ import torchvision
 from torch import nn
 from torch.optim.lr_scheduler import StepLR
 from torch.utils.data import DataLoader
-# from config.config import Config
 from dataset.dataset import ArcDataset
 from models.focal_loss import FocalLoss
 from models.metrics import SphereProduct
@@ -31,7 +30,7 @@ import pandas as pd
 from utils.get_feature import get_feature
 from utils.make_val import make_val
 from utils.save_model import save_model
-# from utils.get_pre_need import get_pre_need
+from utils.get_pre_need import get_pre_need
 from utils.get_pre import get_pre
 from PIL import Image
 import json
