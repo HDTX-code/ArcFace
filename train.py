@@ -8,8 +8,8 @@ if __name__ == '__main__':
     # -------------------------------#
     #   数据路径
     # -------------------------------#
-    data_train_path = r'../input/unet-for-humpwhale/unet'
-    data_csv_path = r'../input/humpback-whale-identification/train.csv'
+    data_train_path = r'../input/happy-whale-and-dolphin/train_images'
+    data_csv_path = r'../input/happy-whale-and-dolphin/train.csv'
     save_path = r'./'
     # -------------------------------#
     #   model及设置
