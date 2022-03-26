@@ -5,7 +5,7 @@ if __name__ == '__main__':
     # -------------------------------#
     #   参数设置
     # -------------------------------#
-    backbone = 'resnet50'
+    backbone = 'ConvNext'
     # -------------------------------#
     #   数据路径
     # -------------------------------#
@@ -23,26 +23,26 @@ if __name__ == '__main__':
     # -------------------------------#
     #   冻结训练
     # -------------------------------#
-    Freeze_Epoch = 12
+    Freeze_Epoch = 20
     Freeze_lr = 0.2
     Freeze_lr_step = 10
     Freeze_lr_decay = 0.95  # when val_loss increase lr = lr*lr_decay
     Freeze_weight_decay = 5e-4
-    Freeze_batch_size = 256
+    Freeze_batch_size = 32
     # -------------------------------#
     #   解冻训练
     # -------------------------------#
-    Unfreeze_Epoch = 24
-    Unfreeze_lr = 1e-1  # initial learning rate
+    Unfreeze_Epoch = 40
+    Unfreeze_lr = 1e-3  # initial learning rate
     Unfreeze_lr_step = 10
     Unfreeze_lr_decay = 0.95  # when val_loss increase lr = lr*lr_decay
     Unfreeze_weight_decay = 5e-4
-    Unfreeze_batch_size = 128
+    Unfreeze_batch_size = 16
     # -------------------------------#
     #   分类数量，及输入图像设计
     # -------------------------------#
-    w = 256
-    h = 256
+    w = 224
+    h = 224
     low = 0
     high = 1000
     val_number = 0
@@ -63,9 +63,8 @@ if __name__ == '__main__':
     criterion = FocalLoss(gamma=2)
 
     # 加载backbone,默认resnet50
-    if backbone == 'resnet50':
-        model = torchvision.models.resnet50(pretrained=pretrained)
-        model.fc = torch.nn.Linear(model.fc.in_features, 512)
+    if backbone == 'ConvNext':
+        model = convnext_base(pretrained=True, in_22k=False, num_classes=512)
     else:
         model = torchvision.models.resnet50(pretrained=pretrained)
         model.fc = torch.nn.Linear(model.fc.in_features, 512)
