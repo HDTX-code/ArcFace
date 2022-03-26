@@ -15,7 +15,7 @@ if __name__ == '__main__':
     # -------------------------------#
     #   model及设置
     # -------------------------------#
-    model_path = ''
+    model_path = '../input/firstep/resnet50Arc-20loss_ 0.5483061007367886score_ 0.pth'
     metric = 'Arc'
     pretrained = True
     num_workers = 2
