@@ -15,7 +15,7 @@ if __name__ == '__main__':
     # -------------------------------#
     #   model及设置
     # -------------------------------#
-    model_path = r'../input/resnet-arc/resnet50Arc.pth'
+    model_path = r''
     metric = 'Arc'
     pretrained = True
     num_workers = 2
