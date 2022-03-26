@@ -6,8 +6,8 @@ if __name__ == '__main__':
     #   路径设置
     # -------------------------------#
     data_root_path = '../input/humpback-whale-identification'
-    save_path = './'
-    path = '../input/resnet-arc'
+    save_path = r'./'
+    path = r'../input/arc-epoth-2'
     # -------------------------------#
     #   dataloader设置
     # -------------------------------#
