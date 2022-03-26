@@ -9,13 +9,13 @@ if __name__ == '__main__':
     # -------------------------------#
     #   数据路径
     # -------------------------------#
-    data_train_path = '../input/humpback-whale-identification/train'
-    data_csv_path = '../input/humpback-whale-identification/train.csv'
-    save_path = './'
+    data_train_path = r'../input/unet-for-humpwhale/unet'
+    data_csv_path = r'../input/humpback-whale-identification/train.csv'
+    save_path = r'./'
     # -------------------------------#
     #   model及设置
     # -------------------------------#
-    model_path = '../input/firstep/resnet50Arc-20loss_ 0.5483061007367886score_ 0.pth'
+    model_path = r'../input/resnet-arc/resnet50Arc.pth'
     metric = 'Arc'
     pretrained = True
     num_workers = 2
