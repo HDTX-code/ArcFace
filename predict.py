@@ -59,16 +59,16 @@ if __name__ == '__main__':
                 #                          4, device)
                 Top, Top_index = get_pre_num(Feature_test[item, :], Feature_train_num, dict_id, dict_id_all, 5, device)
                 # Is_new = 'new_whale' if Top[0] < 0.75 else new_d_all[Top_index[4]]
-                submission.loc[submission[submission.Image == new_d_test[target_test[item, 0]]].index.tolist(), "Id"] = \
-                    new_d_all[Top_index[0]] + ' ' + 'new_whale'+ ' ' + new_d_all[Top_index[1]] + ' ' + new_d_all[Top_index[
-                        2]] + ' ' + new_d_all[Top_index[3]]
-                # Top[4] = 0.55
-                # Top_index[4] = dict_id_all['new_whale']
-                # Top_index = Top_index[np.argsort(-Top)]
-                # # Is_new = 'new_whale' if Top[0] < 0.75 else new_d_all[Top_index[4]]
                 # submission.loc[submission[submission.Image == new_d_test[target_test[item, 0]]].index.tolist(), "Id"] = \
-                #     new_d_all[Top_index[0]] + ' ' + new_d_all[Top_index[1]] + ' ' + new_d_all[Top_index[
-                #         2]] + ' ' + new_d_all[Top_index[3]] + ' ' + new_d_all[Top_index[4]]
+                #     new_d_all[Top_index[0]] + ' ' + 'new_whale'+ ' ' + new_d_all[Top_index[1]] + ' ' + new_d_all[Top_index[
+                #         2]] + ' ' + new_d_all[Top_index[3]]
+                Top[4] = 0.6
+                Top_index[4] = dict_id_all['new_whale']
+                Top_index = Top_index[np.argsort(-Top)]
+                # Is_new = 'new_whale' if Top[0] < 0.75 else new_d_all[Top_index[4]]
+                submission.loc[submission[submission.Image == new_d_test[target_test[item, 0]]].index.tolist(), "Id"] = \
+                    new_d_all[Top_index[0]] + ' ' + new_d_all[Top_index[1]] + ' ' + new_d_all[Top_index[
+                        2]] + ' ' + new_d_all[Top_index[3]] + ' ' + new_d_all[Top_index[4]]
                 pbar.update(1)
                 pbar.set_postfix(
                     **{'Top': Top[0]})
