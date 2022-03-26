@@ -16,8 +16,8 @@ class TestDataset(Dataset):
         self.dict_id = dict_id
 
     def __getitem__(self, index):
-        path = os.path.join(self.data_test_path, self.csv.loc[index, 'Image'])
-        target = self.dict_id[self.csv.loc[index, 'Image']]
+        path = os.path.join(self.data_test_path, self.csv.loc[index, 'image'])
+        target = self.dict_id[self.csv.loc[index, 'image']]
         img = cv2.imread(path)
         # 改变格式成规定的框和高
         if img.shape[2] != 3:

@@ -1,11 +1,10 @@
 from __init__ import *
-from models.metrics import AddMarginProduct
 
 if __name__ == '__main__':
     # -------------------------------#
     #   参数设置
     # -------------------------------#
-    backbone = 'resnet50'
+    backbone = 'EfficientNet-V2'
     # -------------------------------#
     #   数据路径
     # -------------------------------#
@@ -15,7 +14,7 @@ if __name__ == '__main__':
     # -------------------------------#
     #   model及设置
     # -------------------------------#
-    model_path = r'../input/arc-epoth-3/resnet50Arc.pth'
+    model_path = r''
     metric = 'Arc'
     pretrained = True
     num_workers = 2
@@ -63,8 +62,8 @@ if __name__ == '__main__':
     criterion = FocalLoss(gamma=2)
 
     # 加载backbone,默认resnet50
-    if backbone == 'resnet50':
-        model = torchvision.models.resnet50(pretrained=pretrained)
+    if backbone == 'EfficientNet-V2':
+        model = timm.create_model("EfficientNet-V2", pretrained=pretrained)
         model.fc = torch.nn.Linear(model.fc.in_features, 512)
     else:
         model = torchvision.models.resnet50(pretrained=pretrained)

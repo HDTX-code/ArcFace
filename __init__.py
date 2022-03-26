@@ -37,6 +37,8 @@ import json
 from dataset.test_dataset import TestDataset
 from models.metrics import ArcMarginProduct
 from utils.get_pre_num import get_pre_num
+from models.metrics import AddMarginProduct
+import timm
 
 curPath = os.path.abspath(os.path.dirname(__file__))
 rootPath = os.path.split(curPath)[0]
