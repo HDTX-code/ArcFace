@@ -63,7 +63,7 @@ if __name__ == '__main__':
 
     # 加载backbone,默认resnet50
     if backbone == 'EfficientNet-V2':
-        model = timm.create_model("EfficientNet-V2", pretrained=pretrained)
+        model = timm.create_model('efficientnetv2_rw_m', pretrained=pretrained)
         model.fc = torch.nn.Linear(model.fc.in_features, 512)
     else:
         model = torchvision.models.resnet50(pretrained=pretrained)
