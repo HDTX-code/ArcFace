@@ -28,7 +28,7 @@ if __name__ == '__main__':
     Freeze_lr_step = 10
     Freeze_lr_decay = 0.95  # when val_loss increase lr = lr*lr_decay
     Freeze_weight_decay = 5e-4
-    Freeze_batch_size = 32
+    Freeze_batch_size = 256
     # -------------------------------#
     #   解冻训练
     # -------------------------------#
