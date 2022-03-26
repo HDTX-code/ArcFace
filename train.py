@@ -63,7 +63,7 @@ if __name__ == '__main__':
 
     # 加载backbone,默认resnet50
     if backbone == 'ConvNext':
-        model = convnext_tiny(pretrained=True, in_22k=False, num_classes=512)
+        model = convnext_tiny(pretrained=True, num_classes=512)
     else:
         model = torchvision.models.resnet50(pretrained=pretrained)
         model.fc = torch.nn.Linear(model.fc.in_features, 512)
