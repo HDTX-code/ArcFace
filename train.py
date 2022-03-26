@@ -83,6 +83,13 @@ if __name__ == '__main__':
     # dataset
     train_dataset = ArcDataset(train_csv_train, dict_id_all, data_train_path, w,
                                h)
+    if int(val_number) != 0:
+        val_dataset = ArcDataset(train_csv_val, dict_id_all, data_train_path, w,
+                                 h)
+        val_dataloader = DataLoader(dataset=val_dataset, batch_size=Freeze_batch_size, shuffle=True,
+                                    num_workers=num_workers)
+    else:
+        val_dataloader = None
 
     # 训练前准备
     model.to(device)
@@ -106,13 +113,6 @@ if __name__ == '__main__':
     # -------------------------------#
     Freeze_train_dataloader = DataLoader(dataset=train_dataset, batch_size=Freeze_batch_size, shuffle=True,
                                          num_workers=num_workers)
-    if int(val_number) != 0:
-        val_dataset = ArcDataset(train_csv_val, dict_id_all, data_train_path, w,
-                                 h)
-        val_dataloader = DataLoader(dataset=val_dataset, batch_size=Freeze_batch_size, shuffle=True,
-                                    num_workers=num_workers)
-    else:
-        val_dataloader = None
     # -------------------------------#
     #   冻结措施
     # -------------------------------#
@@ -150,13 +150,6 @@ if __name__ == '__main__':
     # -------------------------------#
     Unfreeze_train_dataloader = DataLoader(dataset=train_dataset, batch_size=Unfreeze_batch_size, shuffle=True,
                                            num_workers=num_workers)
-    if int(val_number) != 0:
-        val_dataset = ArcDataset(train_csv_val, dict_id_all, data_train_path, w,
-                                 h)
-        val_dataloader = DataLoader(dataset=val_dataset, batch_size=Unfreeze_batch_size, shuffle=True,
-                                    num_workers=num_workers)
-    else:
-        val_dataloader = None
     # -------------------------------#
     #   解冻措施
     # -------------------------------#
