@@ -11,7 +11,6 @@ import torchvision
 from torch import nn
 from torch.optim.lr_scheduler import StepLR
 from torch.utils.data import DataLoader
-from config.config import Config
 from dataset.dataset import ArcDataset
 from models.focal_loss import FocalLoss
 from models.metrics import SphereProduct

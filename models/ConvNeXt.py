@@ -198,17 +198,3 @@ def convnext_xlarge(pretrained=False, in_22k=False, num_classes=1000, **kwargs):
         model.load_state_dict(checkpoint["model"])
         model.head = torch.nn.Linear(2048, num_classes)
     return model
-
-
-if __name__ == '__main__':
-    # 测试自定义分类数
-    model_tiny = convnext_tiny(pretrained=False, num_classes=2).to(device)
-    summary(model_tiny, (3, 48, 48))
-    # model_xlarge =convnext_xlarge(pretrained=False,num_classes=2).to(device)
-    # summary(model_xlarge, (3, 224, 224))
-    # model_large =convnext_large(pretrained=False,num_classes=2).to(device)
-    # summary(model_large, (3, 224, 224))
-    # model_base  =convnext_base(pretrained=False,num_classes=2).to(device)
-    # summary(model_base, (3, 224, 224))
-    # model_small =convnext_small(pretrained=False,num_classes=2).to(device)
-    # summary(model_small, (3, 224, 224))

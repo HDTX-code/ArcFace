@@ -2,24 +2,16 @@ import json
 import os
 
 import numpy as np
-import pandas as pd
 import torch
 import torchvision
-from torch.utils.data import DataLoader
-
-from config.config import Config
-from dataset.dataset import ArcDataset
-from models.ConvNeXt import convnext_base
-from utils.get_feature import get_feature
-from utils.make_csv import make_csv
 
 
 def get_pre_need(root_path, device):
     with torch.no_grad():
         # 拼接地址
-        model_path_Sph = os.path.join(root_path, "convexArc.pth")
-        model_path_Arc = os.path.join(root_path, "convexArc.pth")
-        model_path_Add = os.path.join(root_path, "convexAdd.pth")
+        model_path_Sph = os.path.join(root_path, "resnet50Sph.pth")
+        model_path_Arc = os.path.join(root_path, "resnet50Arc.pth")
+        model_path_Add = os.path.join(root_path, "resnet50Add.pth")
         Feature_train_path = os.path.join(root_path, "Feature_train.npy")
         target_train_path = os.path.join(root_path, "target_train.npy")
         dict_id_path = os.path.join(root_path, "dict_id")
@@ -27,7 +19,8 @@ def get_pre_need(root_path, device):
             dict_id_path = os.path.join(root_path, "dict_id.txt")
 
         # 加载模型
-        model = convnext_base(pretrained=True, in_22k=False, num_classes=512)
+        model = torchvision.models.resnet50(pretrained=False)
+        model.fc = torch.nn.Linear(model.fc.in_features, 512)
         if os.path.exists(model_path_Sph):
             model.load_state_dict(torch.load(model_path_Sph, map_location=device), False)
         elif os.path.exists(model_path_Arc):
