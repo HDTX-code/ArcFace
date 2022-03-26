@@ -23,8 +23,8 @@ if __name__ == '__main__':
     # -------------------------------#
     #   冻结训练
     # -------------------------------#
-    Freeze_Epoch = 1
-    Freeze_lr = 0.5
+    Freeze_Epoch = 12
+    Freeze_lr = 0.2
     Freeze_lr_step = 10
     Freeze_lr_decay = 0.95  # when val_loss increase lr = lr*lr_decay
     Freeze_weight_decay = 5e-4
@@ -32,7 +32,7 @@ if __name__ == '__main__':
     # -------------------------------#
     #   解冻训练
     # -------------------------------#
-    Unfreeze_Epoch = 2
+    Unfreeze_Epoch = 24
     Unfreeze_lr = 1e-1  # initial learning rate
     Unfreeze_lr_step = 10
     Unfreeze_lr_decay = 0.95  # when val_loss increase lr = lr*lr_decay
