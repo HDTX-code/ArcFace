@@ -8,7 +8,7 @@ if __name__ == '__main__':
     data_test_path = r'../input/unet-test/unet_test'
     data_csv_path = r'../input/humpback-whale-identification/train.csv'
     save_path = r'./'
-    path = r'../input/arc-epoth-3'
+    path = r'../input/arc-epoth-4'
     # -------------------------------#
     #   dataloader设置
     # -------------------------------#
