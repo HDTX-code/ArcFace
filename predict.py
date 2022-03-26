@@ -5,7 +5,8 @@ if __name__ == '__main__':
     # -------------------------------#
     #   路径设置
     # -------------------------------#
-    data_root_path = '../input/humpback-whale-identification'
+    data_test_path = r'../input/unet-test/unet_test'
+    data_csv_path = r'../input/humpback-whale-identification/train.csv'
     save_path = r'./'
     path = r'../input/arc-epoth-2'
     # -------------------------------#
@@ -19,8 +20,6 @@ if __name__ == '__main__':
     #   开始预测
     # -------------------------------#
     with torch.no_grad():
-        data_test_path = os.path.join(data_root_path, "test")
-        data_csv_path = os.path.join(data_root_path, "train.csv")
         print(torch.cuda.is_available())
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
@@ -37,7 +36,7 @@ if __name__ == '__main__':
         for item in range(len(dict_id)):
             Feature_train_num[item] = np.mean(Feature_train[target_train[:, 0] == item, :], axis=0)
 
-        path_list = os.listdir(os.path.join(data_root_path, "test"))
+        path_list = os.listdir(data_test_path)
         # 建立test_dataloader的csv文件
         submission = pd.DataFrame(columns=['Image', 'Id'])
         for item in range(len(path_list)):
