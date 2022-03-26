@@ -72,13 +72,17 @@ if __name__ == '__main__':
     if model_path != "":
         model.load_state_dict(torch.load(model_path, map_location=device), False)
 
-        # 加载模型的margin类型
+    # 加载模型的margin类型
     if metric == 'Arc':
         metric_fc = ArcMarginProduct(512, num_classes)
     elif metric == 'Add':
         metric_fc = AddMarginProduct(512, num_classes)
     else:
         metric_fc = SphereProduct(512, num_classes)
+
+    # dataset
+    train_dataset = ArcDataset(train_csv_train, dict_id_all, data_train_path, w,
+                               h)
 
     # 训练前准备
     model.to(device)
@@ -100,10 +104,8 @@ if __name__ == '__main__':
     # -------------------------------#
     #   生成冻结dataloader
     # -------------------------------#
-    train_dataset = ArcDataset(train_csv_train, dict_id_all, data_train_path, w,
-                               h)
-    train_dataloader = DataLoader(dataset=train_dataset, batch_size=Freeze_batch_size, shuffle=True,
-                                  num_workers=num_workers)
+    Freeze_train_dataloader = DataLoader(dataset=train_dataset, batch_size=Freeze_batch_size, shuffle=True,
+                                         num_workers=num_workers)
     if int(val_number) != 0:
         val_dataset = ArcDataset(train_csv_val, dict_id_all, data_train_path, w,
                                  h)
@@ -121,7 +123,7 @@ if __name__ == '__main__':
                        criterion=criterion,
                        optimizer=Freeze_optimizer,
                        scheduler=Freeze_scheduler,
-                       train_loader=train_dataloader,
+                       train_loader=Freeze_train_dataloader,
                        val_loader=val_dataloader,
                        device=device,
                        num_classes=num_classes,
@@ -146,10 +148,8 @@ if __name__ == '__main__':
     # -------------------------------#
     #   生成解冻dataloader
     # -------------------------------#
-    train_dataset = ArcDataset(train_csv_train, dict_id_all, data_train_path, w,
-                               h)
-    train_dataloader = DataLoader(dataset=train_dataset, batch_size=Unfreeze_batch_size, shuffle=True,
-                                  num_workers=num_workers)
+    Unfreeze_train_dataloader = DataLoader(dataset=train_dataset, batch_size=Unfreeze_batch_size, shuffle=True,
+                                           num_workers=num_workers)
     if int(val_number) != 0:
         val_dataset = ArcDataset(train_csv_val, dict_id_all, data_train_path, w,
                                  h)
@@ -167,7 +167,7 @@ if __name__ == '__main__':
                criterion=criterion,
                optimizer=Unfreeze_optimizer,
                scheduler=Unfreeze_scheduler,
-               train_loader=train_dataloader,
+               train_loader=Unfreeze_train_dataloader,
                val_loader=val_dataloader,
                device=device,
                num_classes=num_classes,
