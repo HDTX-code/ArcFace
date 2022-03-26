@@ -25,7 +25,7 @@ if __name__ == '__main__':
 
         # 建立全局字典
         train_csv = pd.read_csv(data_csv_path)
-        train_csv_id = train_csv['Id'].unique()
+        train_csv_id = train_csv['individual_id'].unique()
         dict_id_all = dict(zip(train_csv_id, range(len(train_csv_id))))
         new_d_all = {v: k for k, v in dict_id_all.items()}
 
@@ -38,9 +38,9 @@ if __name__ == '__main__':
 
         path_list = os.listdir(data_test_path)
         # 建立test_dataloader的csv文件
-        submission = pd.DataFrame(columns=['Image', 'Id'])
+        submission = pd.DataFrame(columns=['image', 'predictions'])
         for item in range(len(path_list)):
-            submission.loc[item, "Image"] = path_list[item]
+            submission.loc[item, "image"] = path_list[item]
         # 建立测试集地址字典
         dict_id_test = dict(zip(path_list, range(len(path_list))))
         new_d_test = {v: k for k, v in dict_id_test.items()}
@@ -59,7 +59,7 @@ if __name__ == '__main__':
                 #                          4, device)
                 Top, Top_index = get_pre_num(Feature_test[item, :], Feature_train_num, dict_id, dict_id_all, 5, device)
                 # Is_new = 'new_whale' if Top[0] < 0.75 else new_d_all[Top_index[4]]
-                submission.loc[submission[submission.Image == new_d_test[target_test[item, 0]]].index.tolist(), "Id"] = \
+                submission.loc[submission[submission.Image == new_d_test[target_test[item, 0]]].index.tolist(), "individual_id"] = \
                     new_d_all[Top_index[0]] + ' ' + 'new_whale'+ ' ' + new_d_all[Top_index[1]] + ' ' + new_d_all[Top_index[
                         2]] + ' ' + new_d_all[Top_index[3]]
                 # Top[4] = 0.575
