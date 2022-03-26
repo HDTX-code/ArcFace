@@ -1,5 +1,4 @@
 from __init__ import *
-from models.metrics import AddMarginProduct
 
 if __name__ == '__main__':
     # -------------------------------#
@@ -33,7 +32,7 @@ if __name__ == '__main__':
     #   解冻训练
     # -------------------------------#
     Unfreeze_Epoch = 60
-    Unfreeze_lr = 1e-3  # initial learning rate
+    Unfreeze_lr = 0.1  # initial learning rate
     Unfreeze_lr_step = 10
     Unfreeze_lr_decay = 0.95  # when val_loss increase lr = lr*lr_decay
     Unfreeze_weight_decay = 5e-4
@@ -64,7 +63,7 @@ if __name__ == '__main__':
 
     # 加载backbone,默认resnet50
     if backbone == 'ConvNext':
-        model = convnext_base(pretrained=True, in_22k=False, num_classes=512)
+        model = convnext_tiny(pretrained=True, in_22k=False, num_classes=512)
     else:
         model = torchvision.models.resnet50(pretrained=pretrained)
         model.fc = torch.nn.Linear(model.fc.in_features, 512)

@@ -39,6 +39,8 @@ from models.metrics import ArcMarginProduct
 from utils.get_pre_num import get_pre_num
 from models.ConvNeXt import convnext_base
 from models.metrics import AddMarginProduct
+from models.ConvNeXt import convnext_tiny
+from models.metrics import AddMarginProduct
 
 
 curPath = os.path.abspath(os.path.dirname(__file__))
