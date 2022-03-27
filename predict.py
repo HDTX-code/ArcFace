@@ -1,14 +1,13 @@
 from __init__ import *
 
-
 if __name__ == '__main__':
     # -------------------------------#
     #   路径设置
     # -------------------------------#
-    data_test_path = r'../input/unet-test/unet_test'
+    data_test_path = r'../input/humpback-whale-identification/test'
     data_csv_path = r'../input/humpback-whale-identification/train.csv'
     save_path = r'./'
-    path = r'../input/arc-epoth-4'
+    path = r'../input/arc-epoth-2'
     # -------------------------------#
     #   dataloader设置
     # -------------------------------#
@@ -34,7 +33,7 @@ if __name__ == '__main__':
         # 获取各个总类中心点
         Feature_train_num = np.zeros([len(dict_id), 512])
         for item in range(len(dict_id)):
-            Feature_train_num[item] = np.mean(Feature_train[target_train[:, 0] == item, :], axis=0)
+            Feature_train_num[item, :] = get_feature_num(np.mean(Feature_train[target_train[:, 0] == item, :], axis=0), device)
 
         path_list = os.listdir(data_test_path)
         # 建立test_dataloader的csv文件
