@@ -15,6 +15,6 @@ def get_feature_num(feature_num, device):
             feature_num_R[item, :] = output
         Weight_sum = np.sum(feature_num_R, axis=0)
         Weight = Weight_sum/sum(Weight_sum)
-        Feature_num = np.matmul(Weight, feature_num)
+        Feature_num = np.matmul(Weight.T, feature_num)
         return Feature_num
 
