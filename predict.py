@@ -4,7 +4,7 @@ if __name__ == '__main__':
     # -------------------------------#
     #   路径设置
     # -------------------------------#
-    data_test_path = r'../input/unet-test/unet_test'
+    data_test_path = r'../input/humpback-whale-identification/test'
     data_csv_path = r'../input/humpback-whale-identification/train.csv'
     save_path = r'./'
     path = r'../input/arc-epoth-3'
