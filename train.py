@@ -113,9 +113,9 @@ if __name__ == '__main__':
     # -------------------------------#
     #   选择优化器
     # -------------------------------#
-    Freeze_optimizer = torch.optim.RMSprop([{'params': model.parameters()}, {'params': metric_fc.parameters()}],
-                                           lr=Freeze_lr, weight_decay=Freeze_weight_decay)
-    Freeze_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(Freeze_optimizer, T_max=32, eta_min=4e-4, last_epoch=-1)
+    Freeze_optimizer = torch.optim.SGD([{'params': model.parameters()}, {'params': metric_fc.parameters()}],
+                                       lr=Freeze_lr, weight_decay=Freeze_weight_decay)
+    Freeze_scheduler = StepLR(Freeze_optimizer, step_size=Freeze_lr_step, gamma=0.1)
     # -------------------------------#
     #   生成冻结dataloader
     # -------------------------------#
@@ -151,9 +151,9 @@ if __name__ == '__main__':
     # -------------------------------#
     #   选择优化器
     # -------------------------------#
-    Unfreeze_optimizer = torch.optim.RMSprop([{'params': model.parameters()}, {'params': metric_fc.parameters()}],
+    Unfreeze_optimizer = torch.optim.SGD([{'params': model.parameters()}, {'params': metric_fc.parameters()}],
                                          lr=Unfreeze_lr, weight_decay=Unfreeze_weight_decay)
-    Unfreeze_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(Freeze_optimizer, T_max=64, eta_min=4e-4, last_epoch=-1)
+    Unfreeze_scheduler = StepLR(Freeze_optimizer, step_size=Unfreeze_lr_step, gamma=0.1)
     # -------------------------------#
     #   生成解冻dataloader
     # -------------------------------#
