@@ -22,7 +22,7 @@ if __name__ == '__main__':
     model_path = r''
     metric = 'Arc'
     pretrained = True
-    num_workers = 2
+    num_workers = 6
     save_interval = 3
     # -------------------------------#
     #   冻结训练
