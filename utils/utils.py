@@ -4,7 +4,7 @@ import torch.nn.functional as F
 
 
 def get_feature_num(feature_num, device):
-    with torch.no_grad:
+    with torch.no_grad():
         feature_num_R = np.zeros([feature_num.shape[0], feature_num.shape[0]])
         feature_num_tensor = torch.from_numpy(feature_num).to(device)
         for item in range(feature_num.shape[0]):
