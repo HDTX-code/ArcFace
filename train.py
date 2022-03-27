@@ -41,7 +41,7 @@ if __name__ == '__main__':
     Unfreeze_lr_step = 10
     Unfreeze_lr_decay = 0.95  # when val_loss increase lr = lr*lr_decay
     Unfreeze_weight_decay = 5e-4
-    Unfreeze_batch_size = 30
+    Unfreeze_batch_size = 24
     # -------------------------------#
     #   分类数量，及输入图像设计
     # -------------------------------#
