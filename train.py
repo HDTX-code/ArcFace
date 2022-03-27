@@ -27,7 +27,7 @@ if __name__ == '__main__':
     # -------------------------------#
     #   冻结训练
     # -------------------------------#
-    Freeze_Epoch = 6
+    Freeze_Epoch = 2
     Freeze_lr = 4e-2
     Freeze_lr_step = 10
     Freeze_lr_decay = 0.95  # when val_loss increase lr = lr*lr_decay
@@ -37,7 +37,7 @@ if __name__ == '__main__':
     #   解冻训练
     # -------------------------------#
     Unfreeze_Epoch = 36
-    Unfreeze_lr = 4e-3  # initial learning rate
+    Unfreeze_lr = 4e-4  # initial learning rate
     Unfreeze_lr_step = 10
     Unfreeze_lr_decay = 0.95  # when val_loss increase lr = lr*lr_decay
     Unfreeze_weight_decay = 5e-4
@@ -115,7 +115,7 @@ if __name__ == '__main__':
     # -------------------------------#
     Freeze_optimizer = torch.optim.RMSprop([{'params': model.parameters()}, {'params': metric_fc.parameters()}],
                                            lr=Freeze_lr, weight_decay=Freeze_weight_decay)
-    Freeze_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(Freeze_optimizer, T_max=32, eta_min=4e-4)
+    Freeze_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(Freeze_optimizer, T_max=32, eta_min=4e-4, last_epoch=-1)
     # -------------------------------#
     #   生成冻结dataloader
     # -------------------------------#
@@ -153,7 +153,7 @@ if __name__ == '__main__':
     # -------------------------------#
     Unfreeze_optimizer = torch.optim.RMSprop([{'params': model.parameters()}, {'params': metric_fc.parameters()}],
                                          lr=Unfreeze_lr, weight_decay=Unfreeze_weight_decay)
-    Unfreeze_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(Freeze_optimizer, T_max=64, eta_min=4e-4)
+    Unfreeze_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(Freeze_optimizer, T_max=64, eta_min=4e-4, last_epoch=-1)
     # -------------------------------#
     #   生成解冻dataloader
     # -------------------------------#
