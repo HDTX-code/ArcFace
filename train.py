@@ -64,7 +64,6 @@ if __name__ == '__main__':
     f2 = open(dict_id_path, 'r')
     dict_id_all = json.load(f2)
     train_csv_train = pd.read_csv(train_csv_train_path)
-    train_csv_train = train_csv_train[:10000]
     train_csv_val = None
 
     num_classes = len(dict_id_all)
