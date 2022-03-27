@@ -1,11 +1,12 @@
 from __init__ import *
+
 from models.metrics import AddMarginProduct
 
 if __name__ == '__main__':
     # -------------------------------#
     #   参数设置
     # -------------------------------#
-    backbone = 'resnet50'
+    backbone = 'EfficientNet-V2'
     # -------------------------------#
     #   数据路径
     # -------------------------------#
@@ -15,7 +16,7 @@ if __name__ == '__main__':
     # -------------------------------#
     #   model及设置
     # -------------------------------#
-    model_path = r'../input/arc-epoth-3/resnet50Arc.pth'
+    model_path = r''
     metric = 'Arc'
     pretrained = True
     num_workers = 2
@@ -24,7 +25,7 @@ if __name__ == '__main__':
     #   冻结训练
     # -------------------------------#
     Freeze_Epoch = 12
-    Freeze_lr = 0.2
+    Freeze_lr = 4e-2
     Freeze_lr_step = 10
     Freeze_lr_decay = 0.95  # when val_loss increase lr = lr*lr_decay
     Freeze_weight_decay = 5e-4
@@ -33,7 +34,7 @@ if __name__ == '__main__':
     #   解冻训练
     # -------------------------------#
     Unfreeze_Epoch = 24
-    Unfreeze_lr = 1e-1  # initial learning rate
+    Unfreeze_lr = 4e-3  # initial learning rate
     Unfreeze_lr_step = 10
     Unfreeze_lr_decay = 0.95  # when val_loss increase lr = lr*lr_decay
     Unfreeze_weight_decay = 5e-4
@@ -63,9 +64,8 @@ if __name__ == '__main__':
     criterion = FocalLoss(gamma=2)
 
     # 加载backbone,默认resnet50
-    if backbone == 'resnet50':
-        model = torchvision.models.resnet50(pretrained=pretrained)
-        model.fc = torch.nn.Linear(model.fc.in_features, 512)
+    if backbone == 'EfficientNet-V2':
+        model = timm.create_model('efficientnetv2_rw_m', pretrained=pretrained, num_classes=512)
     else:
         model = torchvision.models.resnet50(pretrained=pretrained)
         model.fc = torch.nn.Linear(model.fc.in_features, 512)
@@ -105,9 +105,9 @@ if __name__ == '__main__':
     # -------------------------------#
     #   选择优化器
     # -------------------------------#
-    Freeze_optimizer = torch.optim.SGD([{'params': model.parameters()}, {'params': metric_fc.parameters()}],
-                                       lr=Freeze_lr, weight_decay=Freeze_weight_decay)
-    Freeze_scheduler = StepLR(Freeze_optimizer, step_size=Freeze_lr_step, gamma=0.1)
+    Freeze_optimizer = torch.optim.RMSprop([{'params': model.parameters()}, {'params': metric_fc.parameters()}],
+                                           lr=Freeze_lr, weight_decay=Freeze_weight_decay)
+    Freeze_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(Freeze_optimizer, T_max=int(Freeze_Epoch/2), eta_min=4e-4)
     # -------------------------------#
     #   生成冻结dataloader
     # -------------------------------#
@@ -142,9 +142,9 @@ if __name__ == '__main__':
     # -------------------------------#
     #   选择优化器
     # -------------------------------#
-    Unfreeze_optimizer = torch.optim.SGD([{'params': model.parameters()}, {'params': metric_fc.parameters()}],
-                                         lr=Unfreeze_lr, weight_decay=Unfreeze_weight_decay)
-    Unfreeze_scheduler = StepLR(Unfreeze_optimizer, step_size=Unfreeze_lr_step, gamma=0.1)
+    Unfreeze_optimizer = torch.optim.RMSprop([{'params': model.parameters()}, {'params': metric_fc.parameters()}],
+                                             lr=Freeze_lr, weight_decay=Freeze_weight_decay)
+    Unfreeze_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(Freeze_optimizer, T_max=int(Unfreeze_Epoch/2), eta_min=4e-4)
     # -------------------------------#
     #   生成解冻dataloader
     # -------------------------------#

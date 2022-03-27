@@ -7,6 +7,7 @@ import sys
 import os
 import torch
 import sys
+import timm
 import torchvision
 from torch import nn
 from torch.optim.lr_scheduler import StepLR
