@@ -8,7 +8,7 @@ if __name__ == '__main__':
     # -------------------------------#
     #   数据路径
     # -------------------------------#
-    data_train_path = r'../input/unetforhumpwhale/unet'
+    data_train_path = r'../input/humpback-whale-identification/train'
     data_csv_path = r'../input/humpback-whale-identification/train.csv'
     save_path = r'./'
     # -------------------------------#
@@ -23,20 +23,20 @@ if __name__ == '__main__':
     #   冻结训练
     # -------------------------------#
     Freeze_Epoch = 30
-    Freeze_lr = 0.2
+    Freeze_lr = 4e-3
     Freeze_lr_step = 10
     Freeze_lr_decay = 0.95  # when val_loss increase lr = lr*lr_decay
-    Freeze_weight_decay = 5e-4
+    Freeze_weight_decay = 0.05
     Freeze_batch_size = 256
     # -------------------------------#
     #   解冻训练
     # -------------------------------#
     Unfreeze_Epoch = 60
-    Unfreeze_lr = 0.1  # initial learning rate
+    Unfreeze_lr = 4e-3  # initial learning rate
     Unfreeze_lr_step = 10
     Unfreeze_lr_decay = 0.95  # when val_loss increase lr = lr*lr_decay
-    Unfreeze_weight_decay = 5e-4
-    Unfreeze_batch_size = 64
+    Unfreeze_weight_decay = 0.05
+    Unfreeze_batch_size = 128
     # -------------------------------#
     #   分类数量，及输入图像设计
     # -------------------------------#
@@ -103,9 +103,9 @@ if __name__ == '__main__':
     # -------------------------------#
     #   选择优化器
     # -------------------------------#
-    Freeze_optimizer = torch.optim.SGD([{'params': model.parameters()}, {'params': metric_fc.parameters()}],
-                                       lr=Freeze_lr, weight_decay=Freeze_weight_decay)
-    Freeze_scheduler = StepLR(Freeze_optimizer, step_size=Freeze_lr_step, gamma=0.1)
+    Freeze_optimizer = torch.optim.AdamW([{'params': model.parameters()}, {'params': metric_fc.parameters()}],
+                                         lr=Freeze_lr, weight_decay=Freeze_weight_decay)
+    Freeze_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(Freeze_optimizer, T_max=15, eta_min=4e-5)
     # -------------------------------#
     #   生成冻结dataloader
     # -------------------------------#
@@ -140,9 +140,9 @@ if __name__ == '__main__':
     # -------------------------------#
     #   选择优化器
     # -------------------------------#
-    Unfreeze_optimizer = torch.optim.SGD([{'params': model.parameters()}, {'params': metric_fc.parameters()}],
-                                         lr=Unfreeze_lr, weight_decay=Unfreeze_weight_decay)
-    Unfreeze_scheduler = StepLR(Unfreeze_optimizer, step_size=Unfreeze_lr_step, gamma=0.1)
+    Unfreeze_optimizer = torch.optim.AdamW([{'params': model.parameters()}, {'params': metric_fc.parameters()}],
+                                           lr=Unfreeze_lr, weight_decay=Unfreeze_weight_decay)
+    Unfreeze_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(Freeze_optimizer, T_max=30, eta_min=4e-5)
     # -------------------------------#
     #   生成解冻dataloader
     # -------------------------------#
