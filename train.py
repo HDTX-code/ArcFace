@@ -10,7 +10,7 @@ if __name__ == '__main__':
     # -------------------------------#
     #   数据路径
     # -------------------------------#
-    data_train_path = r'../input/unet-for-humpwhale/unet'
+    data_train_path = r'../input/humpback-whale-identification/train'
     data_csv_path = r'../input/humpback-whale-identification/train.csv'
     save_path = r'./'
     # -------------------------------#
