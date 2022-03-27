@@ -25,19 +25,19 @@ if __name__ == '__main__':
     #   冻结训练
     # -------------------------------#
     Freeze_Epoch = 3
-    Freeze_lr = 4e-3
+    Freeze_lr = 0.2
     Freeze_lr_step = 10
     Freeze_lr_decay = 0.95  # when val_loss increase lr = lr*lr_decay
-    Freeze_weight_decay = 5e-4
+    Freeze_weight_decay = 1e-5
     Freeze_batch_size = 256
     # -------------------------------#
     #   解冻训练
     # -------------------------------#
     Unfreeze_Epoch = 57
-    Unfreeze_lr = 4e-4  # initial learning rate
+    Unfreeze_lr = 0.2  # initial learning rate
     Unfreeze_lr_step = 10
     Unfreeze_lr_decay = 0.95  # when val_loss increase lr = lr*lr_decay
-    Unfreeze_weight_decay = 5e-4
+    Unfreeze_weight_decay = 1e-5
     Unfreeze_batch_size = 24
     # -------------------------------#
     #   分类数量，及输入图像设计
@@ -106,8 +106,8 @@ if __name__ == '__main__':
     #   选择优化器
     # -------------------------------#
     Freeze_optimizer = torch.optim.RMSprop([{'params': model.parameters()}, {'params': metric_fc.parameters()}],
-                                           lr=Freeze_lr, weight_decay=Freeze_weight_decay)
-    Freeze_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(Freeze_optimizer, T_max=32, eta_min=1e-5, last_epoch=-1)
+                                           lr=Freeze_lr, weight_decay=Freeze_weight_decay, alpha=0.9, momentum=0.9)
+    Freeze_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(Freeze_optimizer, T_max=32, eta_min=0.05, last_epoch=-1)
     # -------------------------------#
     #   生成冻结dataloader
     # -------------------------------#
@@ -144,8 +144,8 @@ if __name__ == '__main__':
     #   选择优化器
     # -------------------------------#
     Unfreeze_optimizer = torch.optim.RMSprop([{'params': model.parameters()}, {'params': metric_fc.parameters()}],
-                                             lr=Freeze_lr, weight_decay=Freeze_weight_decay)
-    Unfreeze_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(Freeze_optimizer, T_max=64, eta_min=4e-6, last_epoch=-1)
+                                             lr=Freeze_lr, weight_decay=Freeze_weight_decay, alpha=0.9, momentum=0.9)
+    Unfreeze_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(Freeze_optimizer, T_max=64, eta_min=0.05, last_epoch=-1)
     # -------------------------------#
     #   生成解冻dataloader
     # -------------------------------#
