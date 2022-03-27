@@ -133,7 +133,8 @@ if __name__ == '__main__':
                        backbone=backbone,
                        epoch_start=1,
                        epoch_end=Freeze_Epoch,
-                       Str=metric)
+                       Str=metric,
+                       Freeze_Epoch=Freeze_Epoch)
 
     # -------------------------------#
     #   开始解冻训练
@@ -170,4 +171,5 @@ if __name__ == '__main__':
                backbone=backbone,
                epoch_start=Freeze_Epoch + 1,
                epoch_end=Freeze_Epoch + Unfreeze_Epoch,
-               Str=metric)
+               Str=metric,
+               Freeze_Epoch=Freeze_Epoch)
