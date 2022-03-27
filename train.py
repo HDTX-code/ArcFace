@@ -11,7 +11,7 @@ if __name__ == '__main__':
     # -------------------------------#
     #   数据路径
     # -------------------------------#
-    data_train_path = r'../input/happy-whale-and-dolphin/train_images'
+    data_train_path = r'../input/notebook6b97c908c9'
     data_csv_path = r'../input/happy-whale-and-dolphin/train.csv'
     save_path = r'./'
     dict_id_path = r'../input/raw-data/dict_id'
@@ -41,7 +41,7 @@ if __name__ == '__main__':
     Unfreeze_lr_step = 10
     Unfreeze_lr_decay = 0.95  # when val_loss increase lr = lr*lr_decay
     Unfreeze_weight_decay = 5e-4
-    Unfreeze_batch_size = 128
+    Unfreeze_batch_size = 32
     # -------------------------------#
     #   分类数量，及输入图像设计
     # -------------------------------#
