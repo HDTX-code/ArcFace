@@ -1,3 +1,5 @@
+import numpy as np
+
 from __init__ import *
 
 if __name__ == '__main__':
@@ -33,7 +35,7 @@ if __name__ == '__main__':
         # 获取各个总类中心点
         Feature_train_num = np.zeros([len(dict_id), 512])
         for item in range(len(dict_id)):
-            Feature_train_num[item, :] = get_feature_num(Feature_train[target_train[:, 0] == item, :], device)
+            Feature_train_num[item, :] = np.mean(Feature_train[target_train[:, 0] == item, :], axis=0)
 
         path_list = os.listdir(data_test_path)
         # 建立test_dataloader的csv文件
