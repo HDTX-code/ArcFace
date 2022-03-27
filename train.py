@@ -107,7 +107,7 @@ if __name__ == '__main__':
     # -------------------------------#
     Freeze_optimizer = torch.optim.RMSprop([{'params': model.parameters()}, {'params': metric_fc.parameters()}],
                                            lr=Freeze_lr, weight_decay=Freeze_weight_decay)
-    Freeze_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(Freeze_optimizer, T_max=int(Freeze_Epoch/2), eta_min=4e-4, last_epoch=-1)
+    Freeze_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(Freeze_optimizer, T_max=math.floor(Freeze_Epoch/2), eta_min=4e-4, last_epoch=-1)
     # -------------------------------#
     #   生成冻结dataloader
     # -------------------------------#
@@ -145,7 +145,7 @@ if __name__ == '__main__':
     # -------------------------------#
     Unfreeze_optimizer = torch.optim.RMSprop([{'params': model.parameters()}, {'params': metric_fc.parameters()}],
                                              lr=Freeze_lr, weight_decay=Freeze_weight_decay)
-    Unfreeze_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(Freeze_optimizer, T_max=int(Unfreeze_Epoch/2), eta_min=4e-4, last_epoch=-1)
+    Unfreeze_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(Freeze_optimizer, T_max=math.floor(Unfreeze_Epoch/2), eta_min=4e-4, last_epoch=-1)
     # -------------------------------#
     #   生成解冻dataloader
     # -------------------------------#
