@@ -32,7 +32,7 @@ if __name__ == '__main__':
     Freeze_lr_step = 10
     Freeze_lr_decay = 0.95  # when val_loss increase lr = lr*lr_decay
     Freeze_weight_decay = 5e-4
-    Freeze_batch_size = 64
+    Freeze_batch_size = 256
     # -------------------------------#
     #   解冻训练
     # -------------------------------#
@@ -41,12 +41,12 @@ if __name__ == '__main__':
     Unfreeze_lr_step = 10
     Unfreeze_lr_decay = 0.95  # when val_loss increase lr = lr*lr_decay
     Unfreeze_weight_decay = 5e-4
-    Unfreeze_batch_size = 36
+    Unfreeze_batch_size = 128
     # -------------------------------#
     #   分类数量，及输入图像设计
     # -------------------------------#
-    w = 512
-    h = 512
+    w = 224
+    h = 224
     low = 0
     high = 1000
     val_number = 0
