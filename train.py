@@ -1,3 +1,6 @@
+import pandas as pd
+import torch.optim
+
 from __init__ import *
 
 if __name__ == '__main__':
@@ -11,6 +14,8 @@ if __name__ == '__main__':
     data_train_path = r'../input/happy-whale-and-dolphin/train_images'
     data_csv_path = r'../input/happy-whale-and-dolphin/train.csv'
     save_path = r'./'
+    dict_id_path = r'../input/raw-data/dict_id'
+    train_csv_train_path = r'../input/raw-data/train_csv_train.csv'
     # -------------------------------#
     #   model及设置
     # -------------------------------#
@@ -22,8 +27,8 @@ if __name__ == '__main__':
     # -------------------------------#
     #   冻结训练
     # -------------------------------#
-    Freeze_Epoch = 20
-    Freeze_lr = 0.2
+    Freeze_Epoch = 12
+    Freeze_lr = 0.4
     Freeze_lr_step = 10
     Freeze_lr_decay = 0.95  # when val_loss increase lr = lr*lr_decay
     Freeze_weight_decay = 5e-4
@@ -31,8 +36,8 @@ if __name__ == '__main__':
     # -------------------------------#
     #   解冻训练
     # -------------------------------#
-    Unfreeze_Epoch = 40
-    Unfreeze_lr = 1e-1  # initial learning rate
+    Unfreeze_Epoch = 24
+    Unfreeze_lr = 0.3  # initial learning rate
     Unfreeze_lr_step = 10
     Unfreeze_lr_decay = 0.95  # when val_loss increase lr = lr*lr_decay
     Unfreeze_weight_decay = 5e-4
@@ -51,11 +56,17 @@ if __name__ == '__main__':
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     # 清洗数据，生成训练所需csv及dict
-    train_csv_train, train_csv_val, dict_id_all = make_csv(data_csv_path,
-                                                           low,
-                                                           high,
-                                                           val_number,
-                                                           save_path)
+    # train_csv_train, train_csv_val, dict_id_all = make_csv(data_csv_path,
+    #                                                        low,
+    #                                                        high,
+    #                                                        val_number,
+    #                                                        save_path)
+    f2 = open(dict_id_path, 'r')
+    dict_id_all = json.load(f2)
+    train_csv_train = pd.read_csv(train_csv_train_path)
+    train_csv_train = train_csv_train[:18000]
+    train_csv_val = None
+
     num_classes = len(dict_id_all)
 
     # 加载模型的loss函数类型
@@ -103,9 +114,9 @@ if __name__ == '__main__':
     # -------------------------------#
     #   选择优化器
     # -------------------------------#
-    Freeze_optimizer = torch.optim.SGD([{'params': model.parameters()}, {'params': metric_fc.parameters()}],
-                                       lr=Freeze_lr, weight_decay=Freeze_weight_decay)
-    Freeze_scheduler = StepLR(Freeze_optimizer, step_size=Freeze_lr_step, gamma=0.1)
+    Freeze_optimizer = torch.optim.RMSprop([{'params': model.parameters()}, {'params': metric_fc.parameters()}],
+                                           lr=Freeze_lr, weight_decay=Freeze_weight_decay)
+    Freeze_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(Freeze_optimizer, T_max=6, eta_min=0.1)
     # -------------------------------#
     #   生成冻结dataloader
     # -------------------------------#
@@ -140,9 +151,9 @@ if __name__ == '__main__':
     # -------------------------------#
     #   选择优化器
     # -------------------------------#
-    Unfreeze_optimizer = torch.optim.SGD([{'params': model.parameters()}, {'params': metric_fc.parameters()}],
+    Unfreeze_optimizer = torch.optim.RMSprop([{'params': model.parameters()}, {'params': metric_fc.parameters()}],
                                          lr=Unfreeze_lr, weight_decay=Unfreeze_weight_decay)
-    Unfreeze_scheduler = StepLR(Unfreeze_optimizer, step_size=Unfreeze_lr_step, gamma=0.1)
+    Unfreeze_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(Freeze_optimizer, T_max=12, eta_min=0.1)
     # -------------------------------#
     #   生成解冻dataloader
     # -------------------------------#
