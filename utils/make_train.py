@@ -12,7 +12,7 @@ from utils.save_model import save_model
 
 def make_train(model, metric_fc, criterion, optimizer, scheduler,
                train_loader, val_loader, device, Str, num_classes,
-               max_epoch, save_interval, save_path, backbone, epoch_start, epoch_end):
+               max_epoch, save_interval, save_path, backbone, epoch_start, epoch_end, Freeze_Epoch):
     for item in range(epoch_start, epoch_end+1):
         with tqdm(total=(len(train_loader)), desc=f'Epoch {item}/{max_epoch}', postfix=dict) as pbar:
             # 开始训练
@@ -49,7 +49,7 @@ def make_train(model, metric_fc, criterion, optimizer, scheduler,
 
             print("第{}轮 : Loss_{} = {}".format(item, Str, Loss))
 
-            if item % save_interval == 0 or item == max_epoch:
+            if (item % save_interval == 0 or item == max_epoch) and item > Freeze_Epoch:
                 # 开始验证，获取特征矩阵
                 Feature_train, target_train = get_feature(model, train_loader, device)
                 if val_loader is not None:

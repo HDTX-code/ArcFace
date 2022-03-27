@@ -27,7 +27,7 @@ if __name__ == '__main__':
     # -------------------------------#
     #   冻结训练
     # -------------------------------#
-    Freeze_Epoch = 12
+    Freeze_Epoch = 6
     Freeze_lr = 0.1
     Freeze_lr_step = 10
     Freeze_lr_decay = 0.95  # when val_loss increase lr = lr*lr_decay
@@ -142,7 +142,8 @@ if __name__ == '__main__':
                        backbone=backbone,
                        epoch_start=1,
                        epoch_end=Freeze_Epoch,
-                       Str=metric)
+                       Str=metric,
+                       Freeze_Epoch=Freeze_Epoch)
 
     # -------------------------------#
     #   开始解冻训练
@@ -179,4 +180,5 @@ if __name__ == '__main__':
                backbone=backbone,
                epoch_start=Freeze_Epoch + 1,
                epoch_end=Freeze_Epoch + Unfreeze_Epoch,
-               Str=metric)
+               Str=metric,
+               Freeze_Epoch=Freeze_Epoch)
