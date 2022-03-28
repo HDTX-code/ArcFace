@@ -19,7 +19,7 @@ if __name__ == '__main__':
     # -------------------------------#
     #   model及设置
     # -------------------------------#
-    model_path = r''
+    model_path = r'../input/arc-all-epoth-1/resnet50Arc-42loss_ 1.8224909502760809score_ 0.pth'
     metric = 'Arc'
     pretrained = True
     num_workers = 6
@@ -37,7 +37,7 @@ if __name__ == '__main__':
     #   解冻训练
     # -------------------------------#
     Unfreeze_Epoch = 36
-    Unfreeze_lr = 0.1  # initial learning rate
+    Unfreeze_lr = 0.05  # initial learning rate
     Unfreeze_lr_step = 10
     Unfreeze_lr_decay = 0.95  # when val_loss increase lr = lr*lr_decay
     Unfreeze_weight_decay = 5e-4
