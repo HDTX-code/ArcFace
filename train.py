@@ -11,7 +11,7 @@ if __name__ == '__main__':
     # -------------------------------#
     #   数据路径
     # -------------------------------#
-    data_train_path = r'../input/faster-rcnn-resize-800'
+    data_train_path = r'../input/happywhale-resize-224-raw/train_images'
     data_csv_path = r'../input/happy-whale-and-dolphin/train.csv'
     save_path = r'./'
     dict_id_path = r'../input/raw-data/dict_id'
@@ -19,7 +19,7 @@ if __name__ == '__main__':
     # -------------------------------#
     #   model及设置
     # -------------------------------#
-    model_path = r''
+    model_path = r'../input/arc-all-epoth-2/resnet50Arc-12loss_ 1.2807544526599703score_ 0.pth'
     metric = 'Arc'
     pretrained = True
     num_workers = 6
@@ -27,7 +27,7 @@ if __name__ == '__main__':
     # -------------------------------#
     #   冻结训练
     # -------------------------------#
-    Freeze_Epoch = 6
+    Freeze_Epoch = 20
     Freeze_lr = 1e-1
     Freeze_lr_step = 10
     Freeze_lr_decay = 0.95  # when val_loss increase lr = lr*lr_decay
@@ -36,8 +36,8 @@ if __name__ == '__main__':
     # -------------------------------#
     #   解冻训练
     # -------------------------------#
-    Unfreeze_Epoch = 36
-    Unfreeze_lr = 0.1  # initial learning rate
+    Unfreeze_Epoch = 40
+    Unfreeze_lr = 0.05  # initial learning rate
     Unfreeze_lr_step = 10
     Unfreeze_lr_decay = 0.95  # when val_loss increase lr = lr*lr_decay
     Unfreeze_weight_decay = 5e-4
