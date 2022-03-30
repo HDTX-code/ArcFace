@@ -11,7 +11,7 @@ if __name__ == '__main__':
     # -------------------------------#
     #   数据路径
     # -------------------------------#
-    data_train_path = r'../input/happywhale-resize-224-raw/train_images'
+    data_train_path = r'../input/happywhale-resize-224/train_images/train_images'
     data_csv_path = r'../input/happy-whale-and-dolphin/train.csv'
     save_path = r'./'
     dict_id_path = r'../input/raw-data/dict_id'
