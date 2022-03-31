@@ -11,9 +11,9 @@ from utils.save_model import save_model
 
 
 def make_train(model, metric_fc, criterion, optimizer, scheduler,
-               train_loader, val_loader, device, Str, num_classes,
-               max_epoch, save_interval, save_path, backbone, epoch_start, epoch_end, Freeze_Epoch):
-    for item in range(epoch_start, epoch_end+1):
+               train_loader, device, Str, num_classes,
+               max_epoch, save_interval, save_path, backbone, epoch_start, epoch_end, Freeze_Epoch, val_loader=None):
+    for item in range(epoch_start, epoch_end + 1):
         with tqdm(total=(len(train_loader)), desc=f'Epoch {item}/{max_epoch}', postfix=dict) as pbar:
             # 开始训练
             model = model.train()
