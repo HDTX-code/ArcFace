@@ -15,7 +15,7 @@ if __name__ == '__main__':
     backbone = 'resnet50'
     pretrained = True
     num_workers = 4
-    save_interval = 5
+    save_interval = 2
     # -------------------------------#
     #   冻结训练
     # -------------------------------#
