@@ -6,7 +6,7 @@ import torch
 from tqdm import tqdm
 
 
-def get_feature(model, dataloader, device):
+def get_feature(model, dataloader, device, feature_num):
     model.eval()
     model.to(device)
     val = 0
@@ -15,7 +15,7 @@ def get_feature(model, dataloader, device):
             for iteration, (image_tensor, target_t) in enumerate(dataloader):
                 image_tensor = image_tensor.type(torch.FloatTensor).to(device)
                 feature = model(image_tensor.to(device))
-                feature.reshape(-1, 512).to(device)
+                feature.reshape(-1, feature_num).to(device)
                 target_t.reshape(-1, 1).to(device)
                 if val == 0:
                     Feature = copy.copy(feature)

@@ -51,10 +51,10 @@ def make_train(model, metric_fc, criterion, optimizer, scheduler,
 
             if (item % save_interval == 0 or item == max_epoch) and item > Freeze_Epoch:
                 # 开始验证，获取特征矩阵
-                Feature_train, target_train = get_feature(model, train_loader, device)
+                Feature_train, target_train = get_feature(model, train_loader, device, 512)
                 if val_loader is not None:
                     # 计算验证得分
-                    Feature_val, target_val = get_feature(model, val_loader, device)
+                    Feature_val, target_val = get_feature(model, val_loader, device, 512)
                     Score = make_val(Feature_train, target_train, Feature_val, target_val, device, num_classes)
                 else:
                     Score = 0
