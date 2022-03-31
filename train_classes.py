@@ -29,7 +29,7 @@ if __name__ == '__main__':
     # -------------------------------#
     #   解冻训练
     # -------------------------------#
-    Unfreeze_Epoch = 80
+    Unfreeze_Epoch = 40
     Unfreeze_lr = 0.05  # initial learning rate
     Unfreeze_lr_step = 8
     Unfreeze_lr_decay = 0.95  # when val_loss increase lr = lr*lr_decay
