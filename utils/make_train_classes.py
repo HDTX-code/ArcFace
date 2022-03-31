@@ -22,7 +22,7 @@ def fit_one_epoch_classes(model, criterion, optimizer, item, max_epoch,
         for iteration, (image_tensor, target_t) in enumerate(train_loader):
             image_tensor = image_tensor.type(torch.FloatTensor).to(device)
             feature = model(image_tensor).to(device)
-            loss = criterion(feature).to(device).mean()
+            loss = criterion(feature, target_t).to(device).mean()
             Loss += loss
             optimizer.zero_grad()
             loss.backward()
