@@ -50,4 +50,4 @@ def fit_one_epoch_classes(model, criterion, optimizer, item, max_epoch,
             path_model = os.path.join(save_path, "model")
             if not os.path.exists(path_model):
                 os.mkdir(path_model)
-            torch.save(model.state_dict(), backbone + '第{}轮次'.format(item) + 'loss:{}'.format(Loss))
+            torch.save(model.state_dict(), backbone + '_epoch:{}'.format(item) + 'loss:{}'.format(Loss))
