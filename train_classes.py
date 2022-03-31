@@ -19,6 +19,7 @@ if __name__ == '__main__':
     # -------------------------------#
     #   冻结训练
     # -------------------------------#
+    Freeze = False
     Freeze_Epoch = 20
     Freeze_lr = 1e-1
     Freeze_lr_step = 10
@@ -70,41 +71,42 @@ if __name__ == '__main__':
     # 生成dataset
     train_dataset = ClassesDataset(train_csv, w, h)
 
-    # -------------------------------#
-    #   开始冻结训练
-    # -------------------------------#
-    print("--------冻结训练--------")
-    # -------------------------------#
-    #   选择优化器
-    # -------------------------------#
-    Freeze_optimizer = torch.optim.SGD(model.parameters(), lr=Freeze_lr, weight_decay=Freeze_weight_decay)
-    Freeze_scheduler = StepLR(Freeze_optimizer, step_size=Freeze_lr_step, gamma=0.1)
-    # -------------------------------#
-    #   生成冻结dataloader
-    # -------------------------------#
-    Freeze_train_dataloader = DataLoader(dataset=train_dataset, batch_size=Freeze_batch_size, shuffle=True,
-                                         num_workers=num_workers)
-    # -------------------------------#
-    #   冻结措施
-    # -------------------------------#
-    for param in model.parameters():
-        param.requires_grad = False
-    for item in range(1, Freeze_Epoch + 1):
-        fit_one_epoch_classes(model=model,
-                              criterion=criterion,
-                              optimizer=Freeze_optimizer,
-                              item=item,
-                              max_epoch=Unfreeze_Epoch + Freeze_Epoch,
-                              Freeze_Epoch=Freeze_Epoch,
-                              train_loader=Freeze_train_dataloader,
-                              device=device,
-                              save_interval=save_interval,
-                              save_path=save_path,
-                              backbone=backbone)
-        Freeze_scheduler.step()
-    # -------------------------------#
-    #   开始解冻训练
-    # -------------------------------#
+    if Freeze:
+        # -------------------------------#
+        #   开始冻结训练
+        # -------------------------------#
+        print("--------冻结训练--------")
+        # -------------------------------#
+        #   选择优化器
+        # -------------------------------#
+        Freeze_optimizer = torch.optim.SGD(model.parameters(), lr=Freeze_lr, weight_decay=Freeze_weight_decay)
+        Freeze_scheduler = StepLR(Freeze_optimizer, step_size=Freeze_lr_step, gamma=0.1)
+        # -------------------------------#
+        #   生成冻结dataloader
+        # -------------------------------#
+        Freeze_train_dataloader = DataLoader(dataset=train_dataset, batch_size=Freeze_batch_size, shuffle=True,
+                                             num_workers=num_workers)
+        # -------------------------------#
+        #   冻结措施
+        # -------------------------------#
+        for param in model.parameters():
+            param.requires_grad = False
+        for item in range(1, Freeze_Epoch + 1):
+            fit_one_epoch_classes(model=model,
+                                  criterion=criterion,
+                                  optimizer=Freeze_optimizer,
+                                  item=item,
+                                  max_epoch=Unfreeze_Epoch + Freeze_Epoch,
+                                  Freeze_Epoch=Freeze_Epoch,
+                                  train_loader=Freeze_train_dataloader,
+                                  device=device,
+                                  save_interval=save_interval,
+                                  save_path=save_path,
+                                  backbone=backbone)
+            Freeze_scheduler.step()
+        # -------------------------------#
+        #   开始解冻训练
+        # -------------------------------#
     print("--------解冻训练--------")
     # -------------------------------#
     #   选择优化器
