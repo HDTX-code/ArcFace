@@ -153,7 +153,7 @@ if __name__ == '__main__':
     # -------------------------------#
     Unfreeze_optimizer = torch.optim.SGD([{'params': model.parameters()}, {'params': metric_fc.parameters()}],
                                          lr=Unfreeze_lr, weight_decay=Unfreeze_weight_decay)
-    Unfreeze_scheduler = StepLR(Freeze_optimizer, step_size=Unfreeze_lr_step, gamma=0.1)
+    Unfreeze_scheduler = StepLR(Unfreeze_optimizer, step_size=Unfreeze_lr_step, gamma=0.1)
     # -------------------------------#
     #   生成解冻dataloader
     # -------------------------------#
