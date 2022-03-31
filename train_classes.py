@@ -4,9 +4,9 @@ if __name__ == '__main__':
     # -------------------
     # 路径设置
     # -------------------
-    path_0 = r"C:\Users\12529\Desktop\鱼鳍"
-    path_1 = r"C:\Users\12529\Desktop\鱼头"
-    path_2 = r"C:\Users\12529\Desktop\反例"
+    path_0 = r"../input/happywhale-classes/0"
+    path_1 = r"../input/happywhale-classes/1"
+    path_2 = r"../input/happywhale-classes/2"
     save_path = r''
     model_path = r''
     # -------------------
