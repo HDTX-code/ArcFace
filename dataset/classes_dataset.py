@@ -16,7 +16,7 @@ class ClassesDataset(Dataset):
 
     def __getitem__(self, index):
         path = self.csv.loc[index, 'path']
-        target = self.csv.loc[index, 'label']
+        target = self.csv.loc[index, 'individual_id']
         img1 = get_img_for_tensor(path, self.w, self.h)
         img_tensor = torch.from_numpy(img1)
         target_tensor = torch.ones([1])

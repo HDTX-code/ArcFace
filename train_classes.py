@@ -101,6 +101,7 @@ if __name__ == '__main__':
                               save_interval=save_interval,
                               save_path=save_path,
                               backbone=backbone)
+        Freeze_scheduler.step()
     # -------------------------------#
     #   开始解冻训练
     # -------------------------------#
@@ -132,3 +133,4 @@ if __name__ == '__main__':
                               save_interval=save_interval,
                               save_path=save_path,
                               backbone=backbone)
+        Unfreeze_scheduler.step()
