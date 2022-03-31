@@ -24,7 +24,6 @@ def fit_one_epoch_classes(model, criterion, optimizer, item, max_epoch,
             target_t = target_t.long().to(device)
             feature = model(image_tensor).to(device)
             loss = criterion(feature, target_t.reshape(-1)).to(device)
-            print(loss)
             Loss += loss
             optimizer.zero_grad()
             loss.backward()
