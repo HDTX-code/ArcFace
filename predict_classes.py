@@ -4,11 +4,11 @@ if __name__ == '__main__':
     # -------------------
     # 参数设置
     # -------------------
-    model_path = r"D:\edge\resnet50_epoch_52_loss_0.0341694478416048"
+    model_path = r"D:\edge\resnet50_epoch_50_loss_0.02979323887588954"
     data_test_path = r'D:\project\happyWhale\archive\archive'
     path_0 = r"C:\Users\12529\Desktop\0"
     path_1 = r"C:\Users\12529\Desktop\1"
-    path_2 = r"C:\Users\12529\Desktop\2"
+    # path_2 = r"C:\Users\12529\Desktop\2"
     backbone = 'resnet50'
     w = 224
     h = 224
@@ -27,7 +27,7 @@ if __name__ == '__main__':
         model = timm.create_model('efficientnetv2_rw_m', pretrained=False, num_classes=3)
     else:
         model = torchvision.models.resnet50(pretrained=False)
-        model.fc = torch.nn.Linear(model.fc.in_features, 3)
+        model.fc = torch.nn.Linear(model.fc.in_features, 2)
     if model_path != "":
         model.load_state_dict(torch.load(model_path, map_location=device), False)
 
@@ -47,7 +47,7 @@ if __name__ == '__main__':
     test_dataloader = DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=False,
                                  num_workers=num_workers)
 
-    Feature_test, target_test = get_feature(model, test_dataloader, device, 3)
+    Feature_test, target_test = get_feature(model, test_dataloader, device, 2)
     # target_test = target_test.cpu().detach().numpy()
     # Feature_test =  Feature_test.cpu().detach().numpy()
     with tqdm(total=target_test.shape[0], postfix=dict) as pbar:
@@ -60,8 +60,5 @@ if __name__ == '__main__':
             elif Feature.argmax() == 1:
                 shutil.copyfile(os.path.join(data_test_path, Str),
                                 os.path.join(path_1, Str))
-            elif Feature.argmax() == 2:
-                shutil.copyfile(os.path.join(data_test_path, Str),
-                                os.path.join(path_2, Str))
             pbar.update(1)
 
