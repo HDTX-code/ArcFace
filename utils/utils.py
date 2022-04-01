@@ -25,6 +25,7 @@ def get_img_for_tensor(path, w, h):
     img1[0, :, :] = img_0[:, :, 2]
     img1[1, :, :] = img_0[:, :, 1]
     img1[2, :, :] = img_0[:, :, 0]
+    cv2.imshow("img", img1)
     return img1
 
 
