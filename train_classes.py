@@ -8,7 +8,7 @@ if __name__ == '__main__':
     path_1 = r"../input/happywhale-classes-2/1"
     # path_2 = r"../input/happywhale-classes/2"
     save_path = r''
-    model_path = r'../input/classes-weigihts/resnet50_epoch_52_loss_0.0341694478416048'
+    model_path = r''
     # -------------------
     # 网络设置
     # -------------------
@@ -53,7 +53,7 @@ if __name__ == '__main__':
         model = timm.create_model('efficientnetv2_rw_m', pretrained=pretrained, num_classes=3)
     else:
         model = torchvision.models.resnet50(pretrained=pretrained)
-        model.fc = torch.nn.Linear(model.fc.in_features, 3)
+        model.fc = torch.nn.Linear(model.fc.in_features, 2)
     if model_path != "":
         model.load_state_dict(torch.load(model_path, map_location=device), False)
 
