@@ -12,7 +12,7 @@ if __name__ == '__main__':
     # -------------------
     # 网络设置
     # -------------------
-    backbone = 'resnet50'
+    backbone = 'resnet18'
     pretrained = True
     num_workers = 4
     save_interval = 2
@@ -34,7 +34,7 @@ if __name__ == '__main__':
     Unfreeze_lr_step = 4
     Unfreeze_lr_decay = 0.95  # when val_loss increase lr = lr*lr_decay
     Unfreeze_weight_decay = 5e-4
-    Unfreeze_batch_size = 8
+    Unfreeze_batch_size = 32
     # -------------------------------#
     #   分类数量，及输入图像设计
     # -------------------------------#
