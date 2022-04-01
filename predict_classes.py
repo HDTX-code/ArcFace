@@ -4,7 +4,7 @@ if __name__ == '__main__':
     # -------------------
     # 参数设置
     # -------------------
-    model_path = r"D:\edge\resnet50_epoch_50_loss_0.02979323887588954"
+    model_path = r"D:\edge\resnet50_epoch_50_loss_0.02858788626534598"
     data_test_path = r'D:\project\happyWhale\archive\archive'
     path_0 = r"C:\Users\12529\Desktop\0"
     path_1 = r"C:\Users\12529\Desktop\1"
@@ -26,7 +26,7 @@ if __name__ == '__main__':
     if backbone == 'EfficientNet-V2':
         model = timm.create_model('efficientnetv2_rw_m', pretrained=False, num_classes=3)
     else:
-        model = torchvision.models.resnet50(pretrained=False)
+        model = torchvision.models.resnet18(pretrained=False)
         model.fc = torch.nn.Linear(model.fc.in_features, 2)
     if model_path != "":
         model.load_state_dict(torch.load(model_path, map_location=device), False)
@@ -50,6 +50,12 @@ if __name__ == '__main__':
     Feature_test, target_test = get_feature(model, test_dataloader, device, 2)
     # target_test = target_test.cpu().detach().numpy()
     # Feature_test =  Feature_test.cpu().detach().numpy()
+
+    if not os.path.exists(path_0):
+        os.mkdir(path_0)
+    if not os.path.exists(path_1):
+        os.mkdir(path_1)
+
     with tqdm(total=target_test.shape[0], postfix=dict) as pbar:
         for item in range(target_test.shape[0]):
             Feature = Feature_test[item, :]
