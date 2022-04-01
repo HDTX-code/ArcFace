@@ -4,11 +4,11 @@ if __name__ == '__main__':
     # -------------------
     # 路径设置
     # -------------------
-    path_0 = r"../input/happywhale-classes/0"
-    path_1 = r"../input/happywhale-classes/1"
+    path_0 = r"../input/happywhale-classes-2/0"
+    path_1 = r"../input/happywhale-classes-2/1"
     # path_2 = r"../input/happywhale-classes/2"
     save_path = r''
-    model_path = r''
+    model_path = r'../input/classes-weigihts/resnet50_epoch_52_loss_0.0341694478416048'
     # -------------------
     # 网络设置
     # -------------------
