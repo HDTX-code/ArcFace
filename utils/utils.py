@@ -20,12 +20,11 @@ def get_img_for_tensor(path, w, h):
         img = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
     img_0 = cv2.resize(img, (w, h))
     # 改变img1的时候不改变img
-    img1 = np.zeros([3, h, w])
+    img1 = np.zeros([3, w, h])
     # cv2读取的是bgr,转换成rgb就要做一下变通
     img1[0, :, :] = img_0[:, :, 2]
     img1[1, :, :] = img_0[:, :, 1]
     img1[2, :, :] = img_0[:, :, 0]
-    cv2.imshow("img", img1)
     return img1
 
 
