@@ -17,7 +17,7 @@ def get_csv(path, label):
 
 def get_img_for_tensor(path, w, h):
     img = cv2.imread(path)
-    img = ImageNew(ImageNew(img))
+    img = ImageNew(img)
     # 改变格式成规定的框和高
     if img.shape[2] != 3:
         img = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
