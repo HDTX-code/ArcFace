@@ -31,7 +31,7 @@ if __name__ == '__main__':
     # -------------------------------#
     Unfreeze_Epoch = 32
     Unfreeze_lr = 1e-2  # initial learning rate
-    Unfreeze_lr_step = 6
+    Unfreeze_lr_step = 4
     Unfreeze_lr_decay = 0.95  # when val_loss increase lr = lr*lr_decay
     Unfreeze_weight_decay = 5e-4
     Unfreeze_batch_size = 8
@@ -112,7 +112,7 @@ if __name__ == '__main__':
     #   选择优化器
     # -------------------------------#
     Unfreeze_optimizer = torch.optim.SGD(model.parameters(), lr=Unfreeze_lr, weight_decay=Unfreeze_weight_decay)
-    Unfreeze_scheduler = StepLR(Unfreeze_optimizer, step_size=Unfreeze_lr_step, gamma=0.1)
+    Unfreeze_scheduler = StepLR(Unfreeze_optimizer, step_size=Unfreeze_lr_step, gamma=0.2)
     # -------------------------------#
     #   生成解冻dataloader
     # -------------------------------#
