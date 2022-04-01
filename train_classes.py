@@ -34,12 +34,12 @@ if __name__ == '__main__':
     Unfreeze_lr_step = 8
     Unfreeze_lr_decay = 0.95  # when val_loss increase lr = lr*lr_decay
     Unfreeze_weight_decay = 5e-4
-    Unfreeze_batch_size = 1
+    Unfreeze_batch_size = 8
     # -------------------------------#
     #   分类数量，及输入图像设计
     # -------------------------------#
-    w = 224
-    h = 224
+    w = 1024
+    h = 512
     # -------------------------------#
     #   训练设备、网络、loss函数、dataset
     # -------------------------------#
