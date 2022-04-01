@@ -14,7 +14,7 @@ if __name__ == '__main__':
     # -------------------
     backbone = 'resnet18'
     pretrained = True
-    num_workers = 4
+    num_workers = 2
     save_interval = 2
     # -------------------------------#
     #   冻结训练
