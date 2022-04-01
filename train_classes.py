@@ -6,7 +6,7 @@ if __name__ == '__main__':
     # -------------------
     path_0 = r"../input/happywhale-classes/0"
     path_1 = r"../input/happywhale-classes/1"
-    path_2 = r"../input/happywhale-classes/2"
+    # path_2 = r"../input/happywhale-classes/2"
     save_path = r''
     model_path = r''
     # -------------------
@@ -65,8 +65,8 @@ if __name__ == '__main__':
     # 获取csv
     csv_0 = get_csv(path_0, 0)
     csv_1 = get_csv(path_1, 1)
-    csv_2 = get_csv(path_2, 2)
-    train_csv = pd.concat([csv_0, csv_1, csv_2], ignore_index=True)
+    # csv_2 = get_csv(path_2, 2)
+    train_csv = pd.concat([csv_0, csv_1], ignore_index=True)
 
     # 生成dataset
     train_dataset = ClassesDataset(train_csv, w, h)

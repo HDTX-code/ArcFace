@@ -49,7 +49,7 @@ if __name__ == '__main__':
         test_dataloader = DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=False,
                                      num_workers=num_workers)
 
-        Feature_test, target_test = get_feature(model, test_dataloader, device)
+        Feature_test, target_test = get_feature(model, test_dataloader, device, 512)
 
         target_test = target_test.cpu().detach().numpy()
         with tqdm(total=target_test.shape[0], postfix=dict) as pbar:

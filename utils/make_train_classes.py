@@ -39,7 +39,7 @@ def fit_one_epoch_classes(model, criterion, optimizer, item, max_epoch,
 
         if (item % save_interval == 0 or item == max_epoch) and item > Freeze_Epoch:
             # 开始验证，获取特征矩阵
-            Feature_train, target_train = get_feature(model, train_loader, device, 3)
+            Feature_train, target_train = get_feature(model, train_loader, device, 2)
             path_featureMap = os.path.join(save_path, "FeatureMap")
             if not os.path.exists(path_featureMap):
                 os.mkdir(path_featureMap)
