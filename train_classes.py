@@ -29,12 +29,12 @@ if __name__ == '__main__':
     # -------------------------------#
     #   解冻训练
     # -------------------------------#
-    Unfreeze_Epoch = 128
+    Unfreeze_Epoch = 16
     Unfreeze_lr = 1e-2  # initial learning rate
     Unfreeze_lr_step = 4
     Unfreeze_lr_decay = 0.95  # when val_loss increase lr = lr*lr_decay
     Unfreeze_weight_decay = 5e-4
-    Unfreeze_batch_size = 32
+    Unfreeze_batch_size = 128
     # -------------------------------#
     #   分类数量，及输入图像设计
     # -------------------------------#
