@@ -4,45 +4,28 @@ import os
 import pandas as pd
 
 
-def make_csv(data_csv_path, low, high, val_number, save_path):
+if __name__ == '__main__':
+    # -------------------------------#
+    #   参数设置
+    # -------------------------------#
+    data_csv_path = r"D:\project\happyWhale\efficentnet\train_csv_train.csv"
+    pic_file = r"D:\project\happyWhale\classes\粗分类\result\head"
+    save_path = r"C:\Users\12529\Desktop\新建文件夹"
+    val_number = 0
+    # -------------------------------#
+    #   参数设置
+    # -------------------------------#
     train_csv = pd.read_csv(data_csv_path)
-    train_csv_id = train_csv['individual_id'].unique()
-    dict_id = dict(zip(train_csv_id, range(len(train_csv_id))))
-    # 选取数据量大于等于 low 小于等于 high 的数据
-    train_csv_describe = pd.DataFrame(columns=['individual_id', 'num'])
-    train_csv_train = pd.DataFrame(columns=['image', 'individual_id'])
-    train_csv_val = pd.DataFrame(columns=['image', 'individual_id'])
-    # 生成类别数量统计表
-    for k, v in dict_id.items():
-        train_csv_describe.loc[v] = [k, sum(train_csv['individual_id'] == k)]
-    train_csv_describe = train_csv_describe.sort_values(by="num", ascending=False)
-    train_csv_all_id = train_csv_describe.loc[train_csv_describe['num'].isin(range(low, high + 1)), 'individual_id']
-    train_csv_all_id.index = range(len(train_csv_all_id))
 
-    train_csv_all = train_csv.loc[train_csv['individual_id'].isin(train_csv_all_id), :]
+    name_list = os.listdir(pic_file)
+    train_csv_all = train_csv.loc[train_csv['image'].isin(name_list), ['image', 'individual_id']]
     train_csv_all.index = range(len(train_csv_all))
+    train_csv_all_id = train_csv_all['individual_id'].unique()
 
     dict_id_all = dict(zip(train_csv_all_id, range(len(train_csv_all_id))))
     info_json = json.dumps(dict_id_all, sort_keys=False, indent=4, separators=(',', ': '))
     f = open(os.path.join(save_path, "dict_id"), 'w')
     f.write(info_json)
 
-    if val_number != 0:
-        for item in train_csv_all_id:
-            train_csv_train = pd.concat([train_csv_train, train_csv_all.loc[
-                                                          train_csv_all[train_csv_all["Id"] == item].index.tolist()[
-                                                          val_number:], :]], ignore_index=True)
-            train_csv_val = pd.concat([train_csv_val, train_csv_all.loc[
-                                                      train_csv_all[train_csv_all["Id"] == item].index.tolist()[
-                                                      :val_number], :]], ignore_index=True)
+    train_csv_all.to_csv(os.path.join(save_path, "train_csv_train.csv"), index=False)
 
-        train_csv_train.index = range(len(train_csv_train))
-        train_csv_val.index = range(len(train_csv_val))
-        train_csv_train.to_csv(os.path.join(save_path, "train_csv_train.csv"), index=False)
-        train_csv_val.to_csv(os.path.join(save_path, "train_csv_val.csv"), index=False)
-    else:
-        train_csv_train = train_csv_all
-        train_csv_train.index = range(len(train_csv_train))
-        train_csv_train.to_csv(os.path.join(save_path, "train_csv_train.csv"), index=False)
-
-    return train_csv_train, train_csv_val, dict_id_all

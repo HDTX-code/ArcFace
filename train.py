@@ -11,15 +11,15 @@ if __name__ == '__main__':
     # -------------------------------#
     #   数据路径
     # -------------------------------#
-    data_train_path = r'../input/happywhale-resize-224/train_images/train_images'
+    data_train_path = r'../input/happywhale-headdata/head/head'
     data_csv_path = r'../input/happy-whale-and-dolphin/train.csv'
     save_path = r'./'
-    dict_id_path = r'../input/raw-data/dict_id'
-    train_csv_train_path = r'../input/raw-data/train_csv_train.csv'
+    dict_id_path = r'../input/happywhale-headdata/dict_id'
+    train_csv_train_path = r'../input/happywhale-headdata/train_csv_train.csv'
     # -------------------------------#
     #   model及设置
     # -------------------------------#
-    model_path = r'../input/arc-all-epoth-2/resnet50Arc-12loss_ 1.2807544526599703score_ 0.pth'
+    model_path = r''
     metric = 'Arc'
     pretrained = True
     num_workers = 6
@@ -41,7 +41,7 @@ if __name__ == '__main__':
     Unfreeze_lr_step = 10
     Unfreeze_lr_decay = 0.95  # when val_loss increase lr = lr*lr_decay
     Unfreeze_weight_decay = 5e-4
-    Unfreeze_batch_size = 128
+    Unfreeze_batch_size = 64
     # -------------------------------#
     #   分类数量，及输入图像设计
     # -------------------------------#
@@ -75,7 +75,7 @@ if __name__ == '__main__':
     if backbone == 'EfficientNet-V2':
         model = timm.create_model('efficientnetv2_rw_m', pretrained=pretrained, num_classes=512)
     else:
-        model = torchvision.models.resnet50(pretrained=pretrained)
+        model = torchvision.models.resnet101(pretrained=pretrained)
         model.fc = torch.nn.Linear(model.fc.in_features, 512)
     if model_path != "":
         model.load_state_dict(torch.load(model_path, map_location=device), False)
@@ -106,43 +106,44 @@ if __name__ == '__main__':
 
     criterion.to(device)
 
-    # -------------------------------#
-    #   开始冻结训练
-    # -------------------------------#
-    print("--------冻结训练--------")
-    # -------------------------------#
-    #   选择优化器
-    # -------------------------------#
-    Freeze_optimizer = torch.optim.SGD([{'params': model.parameters()}, {'params': metric_fc.parameters()}],
-                                       lr=Freeze_lr, weight_decay=Freeze_weight_decay)
-    Freeze_scheduler = StepLR(Freeze_optimizer, step_size=Freeze_lr_step, gamma=0.1)
-    # -------------------------------#
-    #   生成冻结dataloader
-    # -------------------------------#
-    Freeze_train_dataloader = DataLoader(dataset=train_dataset, batch_size=Freeze_batch_size, shuffle=True,
-                                         num_workers=num_workers)
-    # -------------------------------#
-    #   冻结措施
-    # -------------------------------#
-    for param in model.parameters():
-        param.requires_grad = False
-    model = make_train(model=model,
-                       metric_fc=metric_fc,
-                       criterion=criterion,
-                       optimizer=Freeze_optimizer,
-                       scheduler=Freeze_scheduler,
-                       train_loader=Freeze_train_dataloader,
-                       val_loader=val_dataloader,
-                       device=device,
-                       num_classes=num_classes,
-                       max_epoch=Freeze_Epoch + Unfreeze_Epoch,
-                       save_interval=save_interval,
-                       save_path=save_path,
-                       backbone=backbone,
-                       epoch_start=1,
-                       epoch_end=Freeze_Epoch,
-                       Str=metric,
-                       Freeze_Epoch=Freeze_Epoch)
+    if Freeze_Epoch != 0:
+        # -------------------------------#
+        #   开始冻结训练
+        # -------------------------------#
+        print("--------冻结训练--------")
+        # -------------------------------#
+        #   选择优化器
+        # -------------------------------#
+        Freeze_optimizer = torch.optim.SGD([{'params': model.parameters()}, {'params': metric_fc.parameters()}],
+                                           lr=Freeze_lr, weight_decay=Freeze_weight_decay)
+        Freeze_scheduler = StepLR(Freeze_optimizer, step_size=Freeze_lr_step, gamma=0.1)
+        # -------------------------------#
+        #   生成冻结dataloader
+        # -------------------------------#
+        Freeze_train_dataloader = DataLoader(dataset=train_dataset, batch_size=Freeze_batch_size, shuffle=True,
+                                             num_workers=num_workers)
+        # -------------------------------#
+        #   冻结措施
+        # -------------------------------#
+        for param in model.parameters():
+            param.requires_grad = False
+        model = make_train(model=model,
+                           metric_fc=metric_fc,
+                           criterion=criterion,
+                           optimizer=Freeze_optimizer,
+                           scheduler=Freeze_scheduler,
+                           train_loader=Freeze_train_dataloader,
+                           val_loader=val_dataloader,
+                           device=device,
+                           num_classes=num_classes,
+                           max_epoch=Freeze_Epoch + Unfreeze_Epoch,
+                           save_interval=save_interval,
+                           save_path=save_path,
+                           backbone=backbone,
+                           epoch_start=1,
+                           epoch_end=Freeze_Epoch,
+                           Str=metric,
+                           Freeze_Epoch=Freeze_Epoch)
 
     # -------------------------------#
     #   开始解冻训练

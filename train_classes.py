@@ -19,8 +19,7 @@ if __name__ == '__main__':
     # -------------------------------#
     #   冻结训练
     # -------------------------------#
-    Freeze = False
-    Freeze_Epoch = 20
+    Freeze_Epoch = 0
     Freeze_lr = 1e-1
     Freeze_lr_step = 10
     Freeze_lr_decay = 0.95  # when val_loss increase lr = lr*lr_decay
@@ -76,7 +75,7 @@ if __name__ == '__main__':
     # 生成dataset
     train_dataset = ClassesDataset(train_csv, w, h)
 
-    if Freeze:
+    if Freeze_Epoch != 0:
         # -------------------------------#
         #   开始冻结训练
         # -------------------------------#

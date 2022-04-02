@@ -4,7 +4,7 @@ if __name__ == '__main__':
     # -------------------
     # 参数设置
     # -------------------
-    model_path = r"D:\edge\resnet18_epoch_36_loss_0.05083953045509957"
+    model_path = r"D:\edge\resnet18_epoch_30_loss_0.033053112030029294"
     data_test_path = r'D:\project\happyWhale\archive\archive'
     path_0 = r"C:\Users\12529\Desktop\0"
     path_1 = r"C:\Users\12529\Desktop\1"
