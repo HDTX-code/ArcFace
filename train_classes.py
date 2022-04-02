@@ -4,8 +4,8 @@ if __name__ == '__main__':
     # -------------------
     # 路径设置
     # -------------------
-    path_0 = r"../input/happywhale-classes-3/0"
-    path_1 = r"../input/happywhale-classes-3/1"
+    path_0 = r"../input/happywhale-classes-4/0"
+    path_1 = r"../input/happywhale-classes-4/1"
     # path_2 = r"../input/happywhale-classes/2"
     save_path = r''
     model_path = r''
