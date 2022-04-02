@@ -12,7 +12,7 @@ if __name__ == '__main__':
     # -------------------
     # 网络设置
     # -------------------
-    backbone = 'AlexNet'
+    backbone = 'resnet18'
     pretrained = True
     num_workers = 2
     save_interval = 2
