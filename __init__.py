@@ -14,7 +14,7 @@ from torch.utils.data import DataLoader
 from dataset.dataset import ArcDataset
 from models.focal_loss import FocalLoss
 from models.metrics import SphereProduct
-from utils.make_csv import make_csv
+# from utils.make_csv import make_csv
 from utils.make_train import make_train
 from utils.Canny import get_img
 from torch.utils.data import Dataset
