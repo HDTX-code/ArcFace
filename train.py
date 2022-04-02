@@ -49,7 +49,7 @@ def go_train(backbone, data_train_path, save_path,
     # dataset
     train_dataset = ArcDataset(train_csv_train, dict_id_all, data_train_path, w,
                                h)
-    if train_csv_val is None:
+    if train_csv_val is not None:
         val_dataset = ArcDataset(train_csv_val, dict_id_all, data_train_path, w,
                                  h)
         val_dataloader = DataLoader(dataset=val_dataset, batch_size=Freeze_batch_size, shuffle=True,
