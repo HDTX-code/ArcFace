@@ -8,7 +8,7 @@ if __name__ == '__main__':
     path_1 = r"../input/happywhale-classes-4/1"
     # path_2 = r"../input/happywhale-classes/2"
     save_path = r''
-    model_path = r''
+    model_path = r'../input/classes-weights-3/resnet18_epoch_36_loss_0.05083953045509957'
     # -------------------
     # 网络设置
     # -------------------
