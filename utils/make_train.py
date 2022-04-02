@@ -8,6 +8,7 @@ from tqdm import tqdm
 from utils.get_feature import get_feature
 from utils.make_val import make_val
 from utils.save_model import save_model
+from utils.utils import get_lr
 
 
 def make_train(model, metric_fc, criterion, optimizer, scheduler,
@@ -32,7 +33,7 @@ def make_train(model, metric_fc, criterion, optimizer, scheduler,
                 optimizer.zero_grad()
                 loss.backward()
                 optimizer.step()
-                pbar.set_postfix(**{'loss_{}'.format(Str): loss.item()})
+                pbar.set_postfix(**{'loss_{}'.format(Str): loss.item(), 'lr': get_lr(optimizer)})
                 pbar.update(1)
                 # if iteration >= 1:
                 #     break

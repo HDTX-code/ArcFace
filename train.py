@@ -7,7 +7,7 @@ if __name__ == '__main__':
     # -------------------------------#
     #   参数设置
     # -------------------------------#
-    backbone = 'resnet101'
+    backbone = 'resnet50'
     # -------------------------------#
     #   数据路径
     # -------------------------------#
@@ -22,12 +22,12 @@ if __name__ == '__main__':
     model_path = r''
     metric = 'Arc'
     pretrained = True
-    num_workers = 6
-    save_interval = 3
+    num_workers = 2
+    save_interval = 2
     # -------------------------------#
     #   冻结训练
     # -------------------------------#
-    Freeze_Epoch = 12
+    Freeze_Epoch = 20
     Freeze_lr = 1e-1
     Freeze_lr_step = 10
     Freeze_lr_decay = 0.95  # when val_loss increase lr = lr*lr_decay
@@ -37,16 +37,16 @@ if __name__ == '__main__':
     #   解冻训练
     # -------------------------------#
     Unfreeze_Epoch = 40
-    Unfreeze_lr = 0.05  # initial learning rate
+    Unfreeze_lr = 0.1  # initial learning rate
     Unfreeze_lr_step = 10
     Unfreeze_lr_decay = 0.95  # when val_loss increase lr = lr*lr_decay
     Unfreeze_weight_decay = 5e-4
-    Unfreeze_batch_size = 64
+    Unfreeze_batch_size = 72
     # -------------------------------#
     #   分类数量，及输入图像设计
     # -------------------------------#
-    w = 224
-    h = 224
+    w = 512
+    h = 512
     low = 0
     high = 1000
     val_number = 0
@@ -75,7 +75,7 @@ if __name__ == '__main__':
     if backbone == 'EfficientNet-V2':
         model = timm.create_model('efficientnetv2_rw_m', pretrained=pretrained, num_classes=512)
     else:
-        model = torchvision.models.resnet101(pretrained=pretrained)
+        model = torchvision.models.resnet50(pretrained=pretrained)
         model.fc = torch.nn.Linear(model.fc.in_features, 512)
     if model_path != "":
         model.load_state_dict(torch.load(model_path, map_location=device), False)
@@ -116,7 +116,7 @@ if __name__ == '__main__':
         # -------------------------------#
         Freeze_optimizer = torch.optim.SGD([{'params': model.parameters()}, {'params': metric_fc.parameters()}],
                                            lr=Freeze_lr, weight_decay=Freeze_weight_decay)
-        Freeze_scheduler = StepLR(Freeze_optimizer, step_size=Freeze_lr_step, gamma=0.1)
+        Freeze_scheduler = StepLR(Freeze_optimizer, step_size=Freeze_lr_step, gamma=0.2)
         # -------------------------------#
         #   生成冻结dataloader
         # -------------------------------#
@@ -154,7 +154,7 @@ if __name__ == '__main__':
     # -------------------------------#
     Unfreeze_optimizer = torch.optim.SGD([{'params': model.parameters()}, {'params': metric_fc.parameters()}],
                                          lr=Unfreeze_lr, weight_decay=Unfreeze_weight_decay)
-    Unfreeze_scheduler = StepLR(Unfreeze_optimizer, step_size=Unfreeze_lr_step, gamma=0.1)
+    Unfreeze_scheduler = StepLR(Unfreeze_optimizer, step_size=Unfreeze_lr_step, gamma=0.2)
     # -------------------------------#
     #   生成解冻dataloader
     # -------------------------------#
