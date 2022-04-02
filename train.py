@@ -153,7 +153,7 @@ def go_train(backbone, data_train_path, save_path,
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='训练训练参数设置')
+    parser = argparse.ArgumentParser(description='训练参数设置')
     parser.add_argument('--backbone', type=str, default='resnet50', help='特征网络选择，默认resnet50')
     parser.add_argument('--data_train_path', type=str, help='训练集路径', required=True)
     parser.add_argument('--data_csv_path', type=str, help='全体训练集csv路径', default=r'../input/happy-whale-and-dolphin/train.csv')
