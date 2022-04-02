@@ -29,7 +29,7 @@ if __name__ == '__main__':
     # -------------------------------#
     #   解冻训练
     # -------------------------------#
-    Unfreeze_Epoch = 32
+    Unfreeze_Epoch = 128
     Unfreeze_lr = 1e-2  # initial learning rate
     Unfreeze_lr_step = 4
     Unfreeze_lr_decay = 0.95  # when val_loss increase lr = lr*lr_decay
@@ -57,7 +57,8 @@ if __name__ == '__main__':
         model.fc = torch.nn.Linear(model.fc.in_features, num_classes)
     else:
         model = torchvision.models.alexnet(pretrained=pretrained)
-        model.fc = torch.nn.Linear(model.fc.in_features, num_classes)
+        num_ftrs = model.classifier[0].in_features
+        model.classifier[0] = nn.Linear(num_ftrs, num_classes)
     if model_path != "":
         model.load_state_dict(torch.load(model_path, map_location=device), False)
 
