@@ -12,7 +12,7 @@ if __name__ == '__main__':
     # -------------------
     # 网络设置
     # -------------------
-    backbone = 'resnet18'
+    backbone = 'AlexNet'
     pretrained = True
     num_workers = 2
     save_interval = 2
@@ -40,6 +40,7 @@ if __name__ == '__main__':
     # -------------------------------#
     w = 1024
     h = 1024
+    num_classes = 2
     # -------------------------------#
     #   训练设备、网络、loss函数、dataset
     # -------------------------------#
@@ -50,10 +51,13 @@ if __name__ == '__main__':
     print("backbone = " + backbone)
 
     if backbone == 'EfficientNet-V2':
-        model = timm.create_model('efficientnetv2_rw_m', pretrained=pretrained, num_classes=3)
-    else:
+        model = timm.create_model('efficientnetv2_rw_m', pretrained=pretrained, num_classes=num_classes)
+    elif backbone == 'resnet18':
         model = torchvision.models.resnet18(pretrained=pretrained)
-        model.fc = torch.nn.Linear(model.fc.in_features, 2)
+        model.fc = torch.nn.Linear(model.fc.in_features, num_classes)
+    else:
+        model = torchvision.models.alexnet(pretrained=pretrained)
+        model.fc = torch.nn.Linear(model.fc.in_features, num_classes)
     if model_path != "":
         model.load_state_dict(torch.load(model_path, map_location=device), False)
 
@@ -102,7 +106,8 @@ if __name__ == '__main__':
                                   device=device,
                                   save_interval=save_interval,
                                   save_path=save_path,
-                                  backbone=backbone)
+                                  backbone=backbone,
+                                  num_classes=num_classes)
             Freeze_scheduler.step()
         # -------------------------------#
         #   开始解冻训练
@@ -134,5 +139,6 @@ if __name__ == '__main__':
                               device=device,
                               save_interval=save_interval,
                               save_path=save_path,
-                              backbone=backbone)
+                              backbone=backbone,
+                              num_classes=num_classes)
         Unfreeze_scheduler.step()

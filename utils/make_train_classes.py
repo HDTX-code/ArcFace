@@ -10,7 +10,7 @@ from utils.utils import get_lr
 
 def fit_one_epoch_classes(model, criterion, optimizer, item, max_epoch,
                           Freeze_Epoch, train_loader, device,
-                          save_interval, save_path, backbone):
+                          save_interval, save_path, backbone, num_classes):
     with tqdm(total=(len(train_loader)), desc=f'Epoch {item}/{max_epoch}', postfix=dict) as pbar:
         # 开始训练
         model = model.train()
@@ -39,7 +39,7 @@ def fit_one_epoch_classes(model, criterion, optimizer, item, max_epoch,
 
         if (item % save_interval == 0 or item == max_epoch) and item > Freeze_Epoch:
             # 开始验证，获取特征矩阵
-            # Feature_train, target_train = get_feature(model, train_loader, device, 2)
+            # Feature_train, target_train = get_feature(model, train_loader, device, num_classes)
             # path_featureMap = os.path.join(save_path, "FeatureMap")
             # if not os.path.exists(path_featureMap):
             #     os.mkdir(path_featureMap)

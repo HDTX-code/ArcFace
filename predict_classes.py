@@ -4,15 +4,15 @@ if __name__ == '__main__':
     # -------------------
     # 参数设置
     # -------------------
-    model_path = r"D:\edge\resnet50_epoch_50_loss_0.02858788626534598"
+    model_path = r"D:\edge\resnet18_epoch_36_loss_0.05083953045509957"
     data_test_path = r'D:\project\happyWhale\archive\archive'
     path_0 = r"C:\Users\12529\Desktop\0"
     path_1 = r"C:\Users\12529\Desktop\1"
     # path_2 = r"C:\Users\12529\Desktop\2"
-    backbone = 'resnet50'
+    backbone = 'resnet18'
     w = 224
     h = 224
-    batch_size = 256
+    batch_size = 512
     num_workers = 4
     # -------------------------------#
     #   训练设备、网络、loss函数、dataset
