@@ -13,6 +13,10 @@ def go_train(backbone, data_train_path, save_path,
     print(torch.cuda.is_available())
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
+    print("backbone = " + backbone)
+
+    print("metric = " + metric)
+
     # 清洗数据，生成训练所需csv及dict
     # train_csv_train, train_csv_val, dict_id_all = make_csv(data_csv_path,
     #                                                        low,
