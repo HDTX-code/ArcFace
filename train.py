@@ -7,15 +7,15 @@ if __name__ == '__main__':
     # -------------------------------#
     #   参数设置
     # -------------------------------#
-    backbone = 'resnet50'
+    backbone = 'resnet'
     # -------------------------------#
     #   数据路径
     # -------------------------------#
-    data_train_path = r'../input/happywhale-headdata/head/head'
+    data_train_path = r'../input/happywhale-nohead-data/no_head/no_head'
     data_csv_path = r'../input/happy-whale-and-dolphin/train.csv'
     save_path = r'./'
-    dict_id_path = r'../input/happywhale-headdata/dict_id'
-    train_csv_train_path = r'../input/happywhale-headdata/train_csv_train.csv'
+    dict_id_path = r'../input/happywhale-nohead-data/dict_id'
+    train_csv_train_path = r'../input/happywhale-nohead-data/train_csv_train.csv'
     # -------------------------------#
     #   model及设置
     # -------------------------------#
@@ -36,12 +36,12 @@ if __name__ == '__main__':
     # -------------------------------#
     #   解冻训练
     # -------------------------------#
-    Unfreeze_Epoch = 40
+    Unfreeze_Epoch = 100
     Unfreeze_lr = 0.1  # initial learning rate
     Unfreeze_lr_step = 10
     Unfreeze_lr_decay = 0.95  # when val_loss increase lr = lr*lr_decay
     Unfreeze_weight_decay = 5e-4
-    Unfreeze_batch_size = 128
+    Unfreeze_batch_size = 96
     # -------------------------------#
     #   分类数量，及输入图像设计
     # -------------------------------#
@@ -75,7 +75,7 @@ if __name__ == '__main__':
     if backbone == 'EfficientNet-V2':
         model = timm.create_model('efficientnetv2_rw_m', pretrained=pretrained, num_classes=512)
     else:
-        model = torchvision.models.resnet50(pretrained=pretrained)
+        model = torchvision.models.resnet101(pretrained=pretrained)
         model.fc = torch.nn.Linear(model.fc.in_features, 512)
     if model_path != "":
         model.load_state_dict(torch.load(model_path, map_location=device), False)

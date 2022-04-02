@@ -9,7 +9,7 @@ if __name__ == '__main__':
     #   参数设置
     # -------------------------------#
     data_csv_path = r"D:\project\happyWhale\efficentnet\train_csv_train.csv"
-    pic_file = r"D:\project\happyWhale\classes\粗分类\result\head"
+    pic_file = r"D:\project\happyWhale\classes\粗分类\result\no_head"
     save_path = r"C:\Users\12529\Desktop\新建文件夹"
     val_number = 0
     # -------------------------------#
