@@ -75,7 +75,7 @@ if __name__ == '__main__':
     if backbone == 'EfficientNet-V2':
         model = timm.create_model('efficientnetv2_rw_m', pretrained=pretrained, num_classes=512)
     else:
-        model = torchvision.models.resnet101(pretrained=pretrained)
+        model = torchvision.models.resnet50(pretrained=pretrained)
         model.fc = torch.nn.Linear(model.fc.in_features, 512)
     if model_path != "":
         model.load_state_dict(torch.load(model_path, map_location=device), False)
