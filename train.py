@@ -11,11 +11,11 @@ if __name__ == '__main__':
     # -------------------------------#
     #   数据路径
     # -------------------------------#
-    data_train_path = r'../input/happywhale-headdata/head/head'
+    data_train_path = r'../input/happywhale-nohead-data/no_head/no_head'
     data_csv_path = r'../input/happy-whale-and-dolphin/train.csv'
     save_path = r'./'
-    dict_id_path = r'../input/happywhale-headdata/dict_id'
-    train_csv_train_path = r'../input/happywhale-headdata/train_csv_train.csv'
+    dict_id_path = r'../input/happywhale-nohead-data/dict_id'
+    train_csv_train_path = r'../input/happywhale-nohead-data/train_csv_train.csv'
     # -------------------------------#
     #   model及设置
     # -------------------------------#
