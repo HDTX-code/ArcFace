@@ -8,7 +8,7 @@ def go_train(backbone, data_train_path, save_path,
              Freeze_lr_step, Freeze_batch_size,
              Unfreeze_Epoch, Unfreeze_lr, Unfreeze_lr_step,
              Unfreeze_batch_size, w, h, pretrained, Freeze_weight_decay,
-             Unfreeze_weight_decay, Freeze_gamma, Unfreeze_gamma):
+             Unfreeze_weight_decay, Freeze_gamma, Unfreeze_gamma, m):
     # 训练设备
     print(torch.cuda.is_available())
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -53,7 +53,7 @@ def go_train(backbone, data_train_path, save_path,
 
     # 加载模型的margin类型
     if metric == 'Arc':
-        metric_fc = ArcMarginProduct(512, num_classes)
+        metric_fc = ArcMarginProduct(512, num_classes, m=m)
     elif metric == 'Add':
         metric_fc = AddMarginProduct(512, num_classes)
     else:
@@ -182,6 +182,7 @@ if __name__ == '__main__':
     parser.add_argument('--Unfreeze_batch_size', type=int, help='解冻训练batch size', default=64)
     parser.add_argument('--w', type=int, help='训练图片宽度', default=224)
     parser.add_argument('--h', type=int, help='训练图片高度', default=224)
+    parser.add_argument('--m', type=float, help='Arc参数', default=0.4)
     args = parser.parse_args()
 
     go_train(backbone=args.backbone,
@@ -207,4 +208,5 @@ if __name__ == '__main__':
              w=args.w,
              h=args.h,
              Freeze_gamma=args.Freeze_gamma,
-             Unfreeze_gamma=args.Unfreeze_gamma)
+             Unfreeze_gamma=args.Unfreeze_gamma,
+             m=args.m)
