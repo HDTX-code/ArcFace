@@ -42,6 +42,9 @@ def go_train(backbone, data_train_path, save_path,
     elif backbone == 'resnet152':
         model = torchvision.models.resnet152(pretrained=pretrained)
         model.fc = torch.nn.Linear(model.fc.in_features, 512)
+    elif backbone == 'resnet18':
+        model = torchvision.models.resnet18(pretrained=pretrained)
+        model.fc = torch.nn.Linear(model.fc.in_features, 512)
     else:
         model = torchvision.models.resnet50(pretrained=pretrained)
         model.fc = torch.nn.Linear(model.fc.in_features, 512)
