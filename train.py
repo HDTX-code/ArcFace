@@ -8,7 +8,7 @@ def go_train(backbone, data_train_path, save_path,
              Freeze_lr_step, Freeze_batch_size,
              Unfreeze_Epoch, Unfreeze_lr, Unfreeze_lr_step,
              Unfreeze_batch_size, w, h, pretrained, Freeze_weight_decay,
-             Unfreeze_weight_decay):
+             Unfreeze_weight_decay, Freeze_gamma, Unfreeze_gamma):
     # 训练设备
     print(torch.cuda.is_available())
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -87,7 +87,7 @@ def go_train(backbone, data_train_path, save_path,
         # -------------------------------#
         Freeze_optimizer = torch.optim.SGD([{'params': model.parameters()}, {'params': metric_fc.parameters()}],
                                            lr=Freeze_lr, weight_decay=Freeze_weight_decay)
-        Freeze_scheduler = StepLR(Freeze_optimizer, step_size=Freeze_lr_step, gamma=0.2)
+        Freeze_scheduler = StepLR(Freeze_optimizer, step_size=Freeze_lr_step, gamma=Freeze_gamma)
         # -------------------------------#
         #   生成冻结dataloader
         # -------------------------------#
@@ -125,7 +125,7 @@ def go_train(backbone, data_train_path, save_path,
     # -------------------------------#
     Unfreeze_optimizer = torch.optim.SGD([{'params': model.parameters()}, {'params': metric_fc.parameters()}],
                                          lr=Unfreeze_lr, weight_decay=Unfreeze_weight_decay)
-    Unfreeze_scheduler = StepLR(Unfreeze_optimizer, step_size=Unfreeze_lr_step, gamma=0.2)
+    Unfreeze_scheduler = StepLR(Unfreeze_optimizer, step_size=Unfreeze_lr_step, gamma=Unfreeze_gamma)
     # -------------------------------#
     #   生成解冻dataloader
     # -------------------------------#
@@ -170,11 +170,13 @@ if __name__ == '__main__':
     parser.add_argument('--save_interval', type=int, help='保存间隔', default=3)
     parser.add_argument('--Freeze_Epoch', type=int, help='冻结训练轮次', default=12)
     parser.add_argument('--Freeze_lr', type=float, help='冻结训练lr', default=0.1)
+    parser.add_argument('--Freeze_gamma', type=float, help='冻结训练gamma', default=0.1)
     parser.add_argument('--Freeze_lr_step', type=int, help='冻结训练lr衰减周期', default=10)
     parser.add_argument('--Freeze_weight_decay', type=float, help='冻结训练权重衰减率', default=5e-4)
     parser.add_argument('--Freeze_batch_size', type=int, help='冻结训练batch size', default=256)
     parser.add_argument('--Unfreeze_Epoch', type=int, help='解冻训练轮次', default=36)
     parser.add_argument('--Unfreeze_lr', type=float, help='解冻训练lr', default=0.05)
+    parser.add_argument('--Unfreeze_gamma', type=float, help='解冻训练gamma', default=0.2)
     parser.add_argument('--Unfreeze_lr_step', type=int, help='解冻训练lr衰减周期', default=10)
     parser.add_argument('--Unfreeze_weight_decay', type=float, help='解冻训练权重衰减率', default=5e-4)
     parser.add_argument('--Unfreeze_batch_size', type=int, help='解冻训练batch size', default=64)
@@ -203,4 +205,6 @@ if __name__ == '__main__':
              Unfreeze_weight_decay=args.Unfreeze_weight_decay,
              Unfreeze_batch_size=args.Unfreeze_batch_size,
              w=args.w,
-             h=args.h)
+             h=args.h,
+             Freeze_gamma=args.Freeze_gamma,
+             Unfreeze_gamma=args.Unfreeze_gamma)
