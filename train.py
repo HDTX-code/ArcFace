@@ -55,7 +55,7 @@ def go_train(backbone, data_train_path, save_path,
     if metric == 'Arc':
         metric_fc = ArcMarginProduct(512, num_classes, m=m)
     elif metric == 'Add':
-        metric_fc = AddMarginProduct(512, num_classes)
+        metric_fc = AddMarginProduct(512, num_classes, m=m)
     else:
         metric_fc = SphereProduct(512, num_classes)
 
