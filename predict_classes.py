@@ -5,7 +5,7 @@ if __name__ == '__main__':
     # 参数设置
     # -------------------
     model_path = r"D:\project\happyWhale\classes\粗分类\weights\resnet18_epoch_30_loss_0.033053112030029294"
-    data_test_path = r'D:\project\happyWhale\archive\archive'
+    data_test_path = r"D:\edge\archive"
     data_path_list = [r"C:\Users\12529\Desktop\0", r"C:\Users\12529\Desktop\1"]
     # path_0 = r"C:\Users\12529\Desktop\0"
     # path_1 = r"C:\Users\12529\Desktop\1"
@@ -13,7 +13,7 @@ if __name__ == '__main__':
     backbone = 'resnet18'
     w = 224
     h = 224
-    batch_size = 512
+    batch_size = 256
     num_workers = 4
     num_classes = len(data_path_list)
     # -------------------------------#
