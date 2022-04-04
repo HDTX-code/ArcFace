@@ -64,7 +64,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='训练训练参数设置')
     parser.add_argument('--backbone', type=str, default='resnet50', help='特征网络选择，默认resnet50')
     parser.add_argument('--data_test_path', type=str, help='测试集路径', required=True)
-    parser.add_argument('--data_csv_path', type=str, help='训练csv路径', default=r'../input/humpback-whale-identification/train.csv')
+    parser.add_argument('--data_csv_path', type=str, help='训练csv路径',
+                        default=r'../input/happy-whale-and-dolphin/train.csv')
     parser.add_argument('--save_path', type=str, help='存储路径', default=r'./')
     parser.add_argument('--path', type=str, help='模型及特征矩阵、字典存储路径', required=True)
     parser.add_argument('--num_workers', type=int, default=2)
