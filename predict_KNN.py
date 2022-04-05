@@ -43,10 +43,11 @@ def go_predict_KNN(data_test_path, data_csv_path, save_path, path,
         test_dataloader = DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=False,
                                      num_workers=num_workers)
 
-        Feature_test = torch.from_numpy(np.load(r"C:\Users\12529\Desktop\1\Feature_test.npy"))
-        target_test = np.load(r"C:\Users\12529\Desktop\1\target_test.npy")
+        Feature_test, target_test = get_feature(model, test_dataloader, device, 512)
+        # Feature_test = torch.from_numpy(np.load(r"C:\Users\12529\Desktop\1\Feature_test.npy"))
+        # target_test = np.load(r"C:\Users\12529\Desktop\1\target_test.npy")
         # Feature_test = Feature_test.cpu().detach().numpy()
-        # target_test = target_test.cpu().detach().numpy()
+        target_test = target_test.cpu().detach().numpy()
         # np.save(os.path.join(r"C:\Users\12529\Desktop\1", "Feature_test.npy"), Feature_test)
         # np.save(os.path.join(r"C:\Users\12529\Desktop\1", "target_test.npy"), target_test)
         if path_1 is not None:
