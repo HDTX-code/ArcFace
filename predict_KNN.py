@@ -2,7 +2,7 @@ from __init__ import *
 
 
 def go_predict_KNN(data_test_path, data_csv_path, save_path, path,
-                   w, h, num_workers, batch_size, backbone, data_train_path,
+                   w, h, num_workers, batch_size, backbone, data_train_path, k,
                    backbone_1=None, backbone_2=None,
                    path_1=None, path_2=None):
     with torch.no_grad():
@@ -59,7 +59,7 @@ def go_predict_KNN(data_test_path, data_csv_path, save_path, path,
 
         KNN_by_iter(Feature_train, target_train,
                     Feature_test, target_test,
-                    100, device, submission,
+                    k, device, submission,
                     new_d_test, new_d_all, save_path)
 
 
@@ -80,6 +80,7 @@ if __name__ == '__main__':
     parser.add_argument('--batch_size', type=int, default=128)
     parser.add_argument('--w', type=int, help='训练图片宽度', default=224)
     parser.add_argument('--h', type=int, help='训练图片高度', default=224)
+    parser.add_argument('--k', type=int, help='KNN系数', default=200)
     args = parser.parse_args()
 
     go_predict_KNN(backbone=args.backbone,
@@ -95,4 +96,5 @@ if __name__ == '__main__':
                    backbone_1=args.backbone_1,
                    backbone_2=args.backbone_2,
                    w=args.w,
-                   h=args.h)
+                   h=args.h,
+                   k=args.k)
