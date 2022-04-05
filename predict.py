@@ -1,8 +1,12 @@
+import copy
+
 from __init__ import *
 
 
 def go_predict(data_test_path, data_csv_path, save_path, path,
-               w, h, num_workers, batch_size, backbone, data_train_path):
+               w, h, num_workers, batch_size, backbone, data_train_path,
+               backbone_1=None, backbone_2=None,
+               path_1=None, path_2=None):
     with torch.no_grad():
         print(torch.cuda.is_available())
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -17,10 +21,32 @@ def go_predict(data_test_path, data_csv_path, save_path, path,
                                                                    data_train_path, batch_size,
                                                                    num_workers, backbone)
         model.eval()
+        if path_1 is not None:
+            model_1, dict_id_1, Feature_train_1, target_train_1 = get_pre_need(path_1, device, w, h,
+                                                                               data_train_path, batch_size,
+                                                                               num_workers, backbone_1)
+            model_1.eval()
+        if path_2 is not None:
+            model_2, dict_id_2, Feature_train_2, target_train_2 = get_pre_need(path_2, device, w, h,
+                                                                               data_train_path, batch_size,
+                                                                               num_workers, backbone_2)
+            model_2.eval()
         # 获取各个总类中心点
         Feature_train_num = np.zeros([len(dict_id), 512])
         for item in range(len(dict_id)):
             Feature_train_num[item] = np.mean(Feature_train[target_train[:, 0] == item, :], axis=0)
+        if path_1 is not None:
+            Feature_train_num_1 = np.zeros([len(dict_id_1), 512])
+            for item in range(len(dict_id_1)):
+                Feature_train_num_1[item] = np.mean(Feature_train_1[target_train_1[:, 0] == item, :], axis=0)
+        else:
+            Feature_train_num_1 = None
+        if path_2 is not None:
+            Feature_train_num_2 = np.zeros([len(dict_id_2), 512])
+            for item in range(len(dict_id_2)):
+                Feature_train_num_2[item] = np.mean(Feature_train_2[target_train_2[:, 0] == item, :], axis=0)
+        else:
+            Feature_train_num_2 = None
 
         path_list = os.listdir(data_test_path)
         # 建立test_dataloader的csv文件
@@ -36,6 +62,14 @@ def go_predict(data_test_path, data_csv_path, save_path, path,
                                      num_workers=num_workers)
 
         Feature_test, target_test = get_feature(model, test_dataloader, device, 512)
+        if path_1 is not None:
+            Feature_test_1, target_test_1 = get_feature(model_1, test_dataloader, device, 512)
+        else:
+            Feature_test_1 = None
+        if path_2 is not None:
+            Feature_test_2, target_test_2 = get_feature(model_2, test_dataloader, device, 512)
+        else:
+            Feature_test_2 = None
 
         target_test = target_test.cpu().detach().numpy()
         Top_all = np.zeros([len(path_list), 5])
@@ -45,9 +79,10 @@ def go_predict(data_test_path, data_csv_path, save_path, path,
                 # Top, Top_index = get_pre(Feature_test[item, :], Feature_train, target_train, dict_id,
                 #                          dict_id_all,
                 #                          4, device)
-                Top, Top_index = get_pre_num(Feature_test[item, :], Feature_train_num, dict_id, dict_id_all, 5, device)
-                Top_all[item, :] = Top
-                Top_index_all[item, :] = Top_index
+                Top, Top_index = get_pre_num(Feature_test[item, :], Feature_train_num, dict_id, dict_id_all, 5, device,
+                                             Feature_test_1, Feature_train_num_1, Feature_test_2,  Feature_train_num_2)
+                Top_all[item, :] = copy.copy(Top)
+                Top_index_all[item, :] = copy.copy(Top_index)
                 pbar.update(1)
         with tqdm(total=target_test.shape[0], postfix=dict) as pbar2:
             New_data = Top_all[np.argsort(Top_all[:, 0])[math.floor(0.12 * len(path_list))], 0]
@@ -57,11 +92,12 @@ def go_predict(data_test_path, data_csv_path, save_path, path,
                     submission.loc[
                         submission[
                             submission.image == new_d_test[target_test[item, 0]]].index.tolist(), "predictions"] = \
-                        'new_individual' + ' ' + new_d_all[Top_index[1]] + ' ' + new_d_all[
-                            Top_index[2]] + ' ' + new_d_all[Top_index[3]] + ' ' + new_d_all[Top_index[4]]
+                        'new_individual' + ' ' + new_d_all[Top_index[0]] + ' ' + new_d_all[
+                            Top_index[1]] + ' ' + new_d_all[Top_index[2]] + ' ' + new_d_all[Top_index[3]]
                 else:
                     submission.loc[
-                        submission[submission.image == new_d_test[target_test[item, 0]]].index.tolist(), "predictions"] = \
+                        submission[
+                            submission.image == new_d_test[target_test[item, 0]]].index.tolist(), "predictions"] = \
                         new_d_all[Top_index[0]] + ' ' + new_d_all[Top_index[1]] + ' ' + new_d_all[
                             Top_index[2]] + ' ' + new_d_all[Top_index[3]] + ' ' + new_d_all[Top_index[4]]
                 # Top[4] = 0.575
@@ -86,6 +122,8 @@ if __name__ == '__main__':
                         default=r'../input/happy-whale-and-dolphin/train.csv')
     parser.add_argument('--save_path', type=str, help='存储路径', default=r'./')
     parser.add_argument('--path', type=str, help='模型及特征矩阵、字典存储路径', required=True)
+    parser.add_argument('--path_1', type=str, help='模型及特征矩阵、字典存储路径', default=None)
+    parser.add_argument('--path_2', type=str, help='模型及特征矩阵、字典存储路径', default=None)
     parser.add_argument('--num_workers', type=int, default=2)
     parser.add_argument('--batch_size', type=int, default=128)
     parser.add_argument('--w', type=int, help='训练图片宽度', default=224)
@@ -100,6 +138,8 @@ if __name__ == '__main__':
                num_workers=args.num_workers,
                batch_size=args.batch_size,
                data_train_path=args.data_train_path,
+               path_1=args.path_1,
+               path_2=args.path_2,
                w=args.w,
                h=args.h)
     # # -------------------------------#
