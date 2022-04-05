@@ -80,7 +80,8 @@ def go_predict(data_test_path, data_csv_path, save_path, path,
                 #                          dict_id_all,
                 #                          4, device)
                 Top, Top_index = get_pre_num(Feature_test[item, :], Feature_train_num, dict_id, dict_id_all, 5, device,
-                                             Feature_test_1, Feature_train_num_1, Feature_test_2,  Feature_train_num_2)
+                                             Feature_test_1[item, :], Feature_train_num_1,
+                                             Feature_test_2[item, :],  Feature_train_num_2)
                 Top_all[item, :] = copy.copy(Top)
                 Top_index_all[item, :] = copy.copy(Top_index)
                 pbar.update(1)
