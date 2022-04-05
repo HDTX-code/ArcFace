@@ -116,6 +116,8 @@ def go_predict(data_test_path, data_csv_path, save_path, path,
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='训练训练参数设置')
     parser.add_argument('--backbone', type=str, default='resnet50', help='特征网络选择，默认resnet50')
+    parser.add_argument('--backbone_1', type=str, default='resnet101', help='特征网络选择，默认resnet101')
+    parser.add_argument('--backbone_2', type=str, default='resnet152', help='特征网络选择，默认resnet152')
     parser.add_argument('--data_test_path', type=str, help='测试集路径', required=True)
     parser.add_argument('--data_train_path', type=str, help='训练集路径', default="../input/data-do-cut/All/All")
     parser.add_argument('--data_csv_path', type=str, help='训练csv路径',
@@ -140,6 +142,8 @@ if __name__ == '__main__':
                data_train_path=args.data_train_path,
                path_1=args.path_1,
                path_2=args.path_2,
+               backbone_1=args.backbone_1,
+               backbone_2=args.backbone_2,
                w=args.w,
                h=args.h)
     # # -------------------------------#
