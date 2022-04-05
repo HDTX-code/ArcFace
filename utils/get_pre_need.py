@@ -2,12 +2,17 @@ import json
 import os
 
 import numpy as np
+import pandas as pd
 import timm
 import torch
 import torchvision
+from torch.utils.data import DataLoader
+
+from dataset.dataset import ArcDataset
+from utils.get_feature import get_feature
 
 
-def get_pre_need(root_path, device, backbone='resnet50'):
+def get_pre_need(root_path, device, w, h, data_train_path, batch_size, num_workers, backbone='resnet50'):
     with torch.no_grad():
         # 拼接地址
         model_path_Sph = os.path.join(root_path, backbone + "Sph.pth")
@@ -15,6 +20,7 @@ def get_pre_need(root_path, device, backbone='resnet50'):
         model_path_Add = os.path.join(root_path, backbone + "Add.pth")
         Feature_train_path = os.path.join(root_path, "Feature_train.npy")
         target_train_path = os.path.join(root_path, "target_train.npy")
+        train_csv_train_path = os.path.join(root_path, "train_csv_train.csv")
         dict_id_path = os.path.join(root_path, "dict_id")
         if not os.path.exists(dict_id_path):
             dict_id_path = os.path.join(root_path, "dict_id.txt")
@@ -45,7 +51,16 @@ def get_pre_need(root_path, device, backbone='resnet50'):
         dict_id = json.load(f2)
 
         # 加载Feature_train
-        Feature_train = np.load(Feature_train_path)
-        target_train = np.load(target_train_path)
+        if not os.path.exists(Feature_train_path):
+            train_csv_train = pd.read_csv(train_csv_train_path)
+            train_dataset = ArcDataset(train_csv_train, dict_id, data_train_path, w, h)
+            dataloader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True,
+                                    num_workers=num_workers)
+            Feature_train, target_train = get_feature(model, dataloader, device, 512)
+            Feature_train = Feature_train.cpu().detach().numpy()
+            target_train = target_train.cpu().detach().numpy()
+        else:
+            Feature_train = np.load(Feature_train_path)
+            target_train = np.load(target_train_path)
 
     return model, dict_id, Feature_train, target_train

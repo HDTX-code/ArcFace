@@ -2,7 +2,7 @@ from __init__ import *
 
 
 def go_predict(data_test_path, data_csv_path, save_path, path,
-               w, h, num_workers, batch_size, backbone):
+               w, h, num_workers, batch_size, backbone, data_train_path):
     with torch.no_grad():
         print(torch.cuda.is_available())
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -13,7 +13,9 @@ def go_predict(data_test_path, data_csv_path, save_path, path,
         dict_id_all = dict(zip(train_csv_id, range(len(train_csv_id))))
         new_d_all = {v: k for k, v in dict_id_all.items()}
 
-        model, dict_id, Feature_train, target_train = get_pre_need(path, device, backbone)
+        model, dict_id, Feature_train, target_train = get_pre_need(path, device, w, h,
+                                                                   data_train_path, batch_size,
+                                                                   num_workers, backbone)
         model.eval()
         # 获取各个总类中心点
         Feature_train_num = np.zeros([len(dict_id), 512])
@@ -64,6 +66,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='训练训练参数设置')
     parser.add_argument('--backbone', type=str, default='resnet50', help='特征网络选择，默认resnet50')
     parser.add_argument('--data_test_path', type=str, help='测试集路径', required=True)
+    parser.add_argument('--data_train_path', type=str, help='训练集路径', default="../input/data-do-cut/All/All")
     parser.add_argument('--data_csv_path', type=str, help='训练csv路径',
                         default=r'../input/happy-whale-and-dolphin/train.csv')
     parser.add_argument('--save_path', type=str, help='存储路径', default=r'./')
@@ -81,6 +84,7 @@ if __name__ == '__main__':
                path=args.path,
                num_workers=args.num_workers,
                batch_size=args.batch_size,
+               data_train_path=args.data_train_path,
                w=args.w,
                h=args.h)
     # # -------------------------------#
