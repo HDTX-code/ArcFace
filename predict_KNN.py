@@ -43,10 +43,10 @@ def go_predict_KNN(data_test_path, data_csv_path, save_path, path,
         test_dataloader = DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=False,
                                      num_workers=num_workers)
 
-        Feature_test, target_test = get_feature(model, test_dataloader, device, 512)
-        target_test = target_test.cpu().detach().numpy()
-        # Feature_test = torch.from_numpy(np.load(r"C:\Users\12529\Desktop\1\Feature_test.npy"))
-        # target_test = np.load(r"C:\Users\12529\Desktop\1\target_test.npy")
+        # Feature_test, target_test = get_feature(model, test_dataloader, device, 512)
+        # target_test = target_test.cpu().detach().numpy()
+        Feature_test = torch.from_numpy(np.load(r"C:\Users\12529\Desktop\1\Feature_test.npy"))
+        target_test = np.load(r"C:\Users\12529\Desktop\1\target_test.npy")
 
         if path_1 is not None:
             Feature_test_1, target_test_1 = get_feature(model_1, test_dataloader, device, 512)
@@ -64,37 +64,41 @@ def go_predict_KNN(data_test_path, data_csv_path, save_path, path,
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='训练训练参数设置')
-    parser.add_argument('--backbone', type=str, default='resnet50', help='特征网络选择，默认resnet50')
-    parser.add_argument('--backbone_1', type=str, default='resnet101', help='特征网络选择，默认resnet101')
-    parser.add_argument('--backbone_2', type=str, default='resnet152', help='特征网络选择，默认resnet152')
-    parser.add_argument('--data_test_path', type=str, help='测试集路径', required=True)
-    parser.add_argument('--data_train_path', type=str, help='训练集路径', default="../input/data-do-cut/All/All")
-    parser.add_argument('--data_csv_path', type=str, help='训练csv路径',
-                        default=r'../input/happy-whale-and-dolphin/train.csv')
-    parser.add_argument('--save_path', type=str, help='存储路径', default=r'./')
-    parser.add_argument('--path', type=str, help='模型及特征矩阵、字典存储路径', required=True)
-    parser.add_argument('--path_1', type=str, help='模型及特征矩阵、字典存储路径', default=None)
-    parser.add_argument('--path_2', type=str, help='模型及特征矩阵、字典存储路径', default=None)
-    parser.add_argument('--num_workers', type=int, default=2)
-    parser.add_argument('--batch_size', type=int, default=128)
-    parser.add_argument('--w', type=int, help='训练图片宽度', default=224)
-    parser.add_argument('--h', type=int, help='训练图片高度', default=224)
-    parser.add_argument('--k', type=int, help='KNN系数', default=200)
-    args = parser.parse_args()
+    # parser = argparse.ArgumentParser(description='训练训练参数设置')
+    # parser.add_argument('--backbone', type=str, default='resnet50', help='特征网络选择，默认resnet50')
+    # parser.add_argument('--backbone_1', type=str, default='resnet101', help='特征网络选择，默认resnet101')
+    # parser.add_argument('--backbone_2', type=str, default='resnet152', help='特征网络选择，默认resnet152')
+    # parser.add_argument('--data_test_path', type=str, help='测试集路径', required=True)
+    # parser.add_argument('--data_train_path', type=str, help='训练集路径', default="../input/data-do-cut/All/All")
+    # parser.add_argument('--data_csv_path', type=str, help='训练csv路径',
+    #                     default=r'../input/happy-whale-and-dolphin/train.csv')
+    # parser.add_argument('--save_path', type=str, help='存储路径', default=r'./')
+    # parser.add_argument('--path', type=str, help='模型及特征矩阵、字典存储路径', required=True)
+    # parser.add_argument('--path_1', type=str, help='模型及特征矩阵、字典存储路径', default=None)
+    # parser.add_argument('--path_2', type=str, help='模型及特征矩阵、字典存储路径', default=None)
+    # parser.add_argument('--num_workers', type=int, default=2)
+    # parser.add_argument('--batch_size', type=int, default=128)
+    # parser.add_argument('--w', type=int, help='训练图片宽度', default=224)
+    # parser.add_argument('--h', type=int, help='训练图片高度', default=224)
+    # parser.add_argument('--k', type=int, help='KNN系数', default=200)
+    # args = parser.parse_args()
+    #
+    # go_predict_KNN(backbone=args.backbone,
+    #                save_path=args.save_path,
+    #                data_test_path=args.data_test_path,
+    #                data_csv_path=args.data_csv_path,
+    #                path=args.path,
+    #                num_workers=args.num_workers,
+    #                batch_size=args.batch_size,
+    #                data_train_path=args.data_train_path,
+    #                path_1=args.path_1,
+    #                path_2=args.path_2,
+    #                backbone_1=args.backbone_1,
+    #                backbone_2=args.backbone_2,
+    #                w=args.w,
+    #                h=args.h,
+    #                k=args.k)
 
-    go_predict_KNN(backbone=args.backbone,
-                   save_path=args.save_path,
-                   data_test_path=args.data_test_path,
-                   data_csv_path=args.data_csv_path,
-                   path=args.path,
-                   num_workers=args.num_workers,
-                   batch_size=args.batch_size,
-                   data_train_path=args.data_train_path,
-                   path_1=args.path_1,
-                   path_2=args.path_2,
-                   backbone_1=args.backbone_1,
-                   backbone_2=args.backbone_2,
-                   w=args.w,
-                   h=args.h,
-                   k=args.k)
+    go_predict_KNN(r"D:\project\happyWhale\classes\CFL\test\test_all", r"D:\project\happyWhale\efficentnet\train_csv_train.csv",
+                   r"C:\Users\12529\Desktop\1",  r"D:\project\happyWhale\resnet\152-Arc-epoth_1.1754",
+                   224, 224, 2, 512, 'resnet152', r"D:\project\happyWhale\classes\CFL\result\All", 100)
