@@ -79,9 +79,21 @@ def go_predict(data_test_path, data_csv_path, save_path, path,
                 # Top, Top_index = get_pre(Feature_test[item, :], Feature_train, target_train, dict_id,
                 #                          dict_id_all,
                 #                          4, device)
-                Top, Top_index = get_pre_num(Feature_test[item, :], Feature_train_num, dict_id, dict_id_all, 5, device,
-                                             Feature_test_1[item, :], Feature_train_num_1,
-                                             Feature_test_2[item, :],  Feature_train_num_2)
+                if path_1 is not None and path_2 is not None:
+                    Top, Top_index = get_pre_num(Feature_test[item, :], Feature_train_num, dict_id, dict_id_all, 5, device,
+                                                 Feature_test_1[item, :], Feature_train_num_1,
+                                                 Feature_test_2[item, :],  Feature_train_num_2)
+                elif path_1 is not None:
+                    Top, Top_index = get_pre_num(Feature_test[item, :], Feature_train_num, dict_id, dict_id_all, 5,
+                                                 device, Feature_test_1[item, :], Feature_train_num_1)
+                elif path_2 is not None:
+                    Top, Top_index = get_pre_num(Feature_test[item, :], Feature_train_num, dict_id, dict_id_all, 5,
+                                                 device,
+                                                 feature_test_2=Feature_test_2[item, :],
+                                                 Feature_train_num_2=Feature_train_num_2)
+                else:
+                    Top, Top_index = get_pre_num(Feature_test[item, :], Feature_train_num, dict_id, dict_id_all, 5,
+                                                 device)
                 Top_all[item, :] = copy.copy(Top)
                 Top_index_all[item, :] = copy.copy(Top_index)
                 pbar.update(1)
