@@ -3,6 +3,9 @@ import os
 import cv2
 import numpy as np
 import pandas as pd
+import torch
+import torch.nn.functional as F
+from tqdm import tqdm
 
 from utils.DataStrength import ImageNew
 
@@ -38,3 +41,37 @@ def get_img_for_tensor(path, w, h, isNew=False):
 def get_lr(optimizer):
     for param_group in optimizer.param_groups:
         return param_group['lr']
+
+
+# ---------------------------------------------------#
+#   KNN
+# ---------------------------------------------------#
+def cal_distance(Feature_train, feature_test, device):
+    Feature_train = torch.from_numpy(Feature_train).to(device)
+    feature_test = feature_test.to(device)
+    with torch.no_grad():
+        output = F.cosine_similarity(
+            torch.mul(torch.ones(Feature_train.shape).to(device), feature_test.T),
+            Feature_train, dim=1).to(device)
+    return torch.ones(output.shape).to(device) - output
+
+
+def KNN_by_iter(Feature_train, target_train, Feature_test, target_test, k, device,
+                submission, new_d_test, new_d_all, save_path):
+    # 计算距离
+    # res = []
+    with tqdm(total=Feature_test.shape[0]) as pbar:
+        for item in range(Feature_test.shape[0]):
+            dists = cal_distance(Feature_train, Feature_test[item, :], device)
+            # torch.cat()用来拼接tensor
+            idxs = dists.argsort()[:k].to(device)
+            idxs = idxs.cpu().detach().numpy()
+            target_train_index = target_train[idxs, 0].astype('int64')
+            # res.append(np.bincount(target_train_index).argmax())
+            submission.loc[
+                submission[
+                    submission.image == new_d_test[target_test[item, 0]]].index.tolist(), "predictions"] = \
+                new_d_all[np.bincount(target_train_index).argmax().item()]
+            pbar.update(1)
+    submission.to_csv(os.path.join(save_path, "submission.csv"), index=False)
+

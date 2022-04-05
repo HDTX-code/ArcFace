@@ -46,6 +46,7 @@ import shutil
 import pandas as pd
 import torch.optim
 import argparse
+from utils.utils import KNN_by_iter
 
 curPath = os.path.abspath(os.path.dirname(__file__))
 rootPath = os.path.split(curPath)[0]
