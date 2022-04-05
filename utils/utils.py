@@ -1,3 +1,4 @@
+import copy
 import os
 
 import cv2
@@ -68,10 +69,12 @@ def KNN_by_iter(Feature_train, target_train, Feature_test, target_test, k, devic
             idxs = idxs.cpu().detach().numpy()
             target_train_index = target_train[idxs, 0].astype('int64')
             # res.append(np.bincount(target_train_index).argmax())
+            res = copy.copy(np.bincount(target_train_index).argsort()[-5:])
             submission.loc[
                 submission[
                     submission.image == new_d_test[target_test[item, 0]]].index.tolist(), "predictions"] = \
-                new_d_all[np.bincount(target_train_index).argmax().item()]
+                new_d_all[res[-1]] + ' ' + new_d_all[res[-2]] + ' ' + new_d_all[res[-3]] + ' ' \
+                + new_d_all[res[-4]] + ' ' + new_d_all[res[-5]]
             pbar.update(1)
     submission.to_csv(os.path.join(save_path, "submission.csv"), index=False)
 
