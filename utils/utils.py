@@ -1,5 +1,6 @@
 import copy
 import os
+from collections import Counter
 
 import cv2
 import numpy as np
@@ -47,40 +48,52 @@ def get_lr(optimizer):
 # ---------------------------------------------------#
 #   KNN
 # ---------------------------------------------------#
-def cal_distance(Feature_train, feature_test, device):
+def cal_distance(Feature_train, Feature_test, device):
     Feature_train = torch.from_numpy(Feature_train).to(device)
-    feature_test = feature_test.to(device)
+    Feature_test = Feature_test.to(device)
     with torch.no_grad():
-        output = F.cosine_similarity(
-            torch.mul(torch.ones(Feature_train.shape).to(device), feature_test.T),
-            Feature_train, dim=1).to(device)
-    return output
+        with tqdm(total=Feature_test.shape[0]) as pbar:
+            val = 0
+            for item in range(Feature_train.shape[0]):
+                output = F.cosine_similarity(
+                    torch.mul(torch.ones(Feature_train.shape).to(device), Feature_test[item, :].T),
+                    Feature_train, dim=1).to(device)
+                if val == 0:
+                    Output = output
+                else:
+                    Output = torch.cat((Output, output), 0)
+                pbar.update(1)
+    return Output
 
 
 def KNN_by_iter(Feature_train, target_train, Feature_test, target_test, k, device,
                 submission, new_d_test, new_id, save_path):
     # 计算距离
     # res = []
+    Dis = cal_distance(Feature_train, Feature_test, device)
+    Dis = Dis.cpu().detach().numpy()
     with tqdm(total=Feature_test.shape[0]) as pbar:
         for item in range(Feature_test.shape[0]):
-            dists = cal_distance(Feature_train, Feature_test[item, :], device)
-            dists = dists.cpu().detach().numpy()
+            dists = Dis[item, :]
             # torch.cat()用来拼接tensor
             K = copy.copy(k)
             while True:
                 idxs = dists.argsort()[-K:]
-                idxs = idxs
-                target_train_index = target_train[idxs, 0].astype('int64')
-                # res.append(np.bincount(target_train_index).argmax())
-                res = copy.copy((np.bincount(target_train_index, weights=dists[idxs])/np.bincount(target_train_index)).argsort()[-5:])
-                if len(res) >= 5:
+                target_train_index = target_train[idxs, 0].astype('int32')
+                if len(np.unique(target_train_index)) >= 5:
                     break
                 K += 5
+            score = dists[idxs]
+            Index = np.unique(target_train_index)
+            res = np.zeros(len(Index))
+            for item2 in range(len(Index)):
+                res[item2] = score[target_train_index == Index[item2]].mean()
+            res_sort = res.argsort()[-5:]
             submission.loc[
                 submission[
                     submission.image == new_d_test[target_test[item, 0]]].index.tolist(), "predictions"] = \
-                new_id[res[-1]] + ' ' + new_id[res[-2]] + ' ' + new_id[res[-3]] + ' ' \
-                + new_id[res[-4]] + ' ' + new_id[res[-5]]
+                new_id[Index[res_sort[-1]]] + ' ' + new_id[Index[res_sort[-2]]] + ' ' + new_id[
+                    Index[res_sort[-3]]] + ' ' \
+                + new_id[Index[res_sort[-4]]] + ' ' + new_id[Index[res_sort[-5]]]
             pbar.update(1)
     submission.to_csv(os.path.join(save_path, "submission.csv"), index=False)
-

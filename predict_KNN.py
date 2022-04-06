@@ -46,6 +46,7 @@ def go_predict_KNN(data_test_path, data_csv_path, save_path, path,
 
         Feature_test, target_test = get_feature(model, test_dataloader, device, 512)
         target_test = target_test.cpu().detach().numpy()
+        # Feature_test = Feature_test.cpu().detach().numpy()
         # np.save(os.path.join(r"C:\Users\12529\Desktop\1", "Feature_test.npy"), Feature_test)
         # np.save(os.path.join(r"C:\Users\12529\Desktop\1", "target_test.npy"), target_test)
         # Feature_test = torch.from_numpy(np.load(r"C:\Users\12529\Desktop\1\Feature_test.npy"))
@@ -104,4 +105,4 @@ if __name__ == '__main__':
 
     # go_predict_KNN(r"D:\project\happyWhale\classes\CFL\test\test_all", r"D:\project\happyWhale\efficentnet\train_csv_train.csv",
     #                r"C:\Users\12529\Desktop\1",  r"D:\project\happyWhale\resnet\152-Add-epoch_0.059",
-    #                224, 224, 2, 512, 'resnet152', r"D:\project\happyWhale\classes\CFL\result\All", 10)
+    #                224, 224, 2, 512, 'resnet152', r"D:\project\happyWhale\classes\CFL\result\All", 50)
