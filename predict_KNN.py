@@ -18,6 +18,7 @@ def go_predict_KNN(data_test_path, data_csv_path, save_path, path,
         model, dict_id, Feature_train, target_train = get_pre_need(path, device, w, h,
                                                                    data_train_path, batch_size,
                                                                    num_workers, backbone)
+        new_id = {v: k for k, v in dict_id.items()}
         model.eval()
         if path_1 is not None:
             model_1, dict_id_1, Feature_train_1, target_train_1 = get_pre_need(path_1, device, w, h,
@@ -43,10 +44,12 @@ def go_predict_KNN(data_test_path, data_csv_path, save_path, path,
         test_dataloader = DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=False,
                                      num_workers=num_workers)
 
-        # Feature_test, target_test = get_feature(model, test_dataloader, device, 512)
-        # target_test = target_test.cpu().detach().numpy()
-        Feature_test = torch.from_numpy(np.load(r"C:\Users\12529\Desktop\1\Feature_test.npy"))
-        target_test = np.load(r"C:\Users\12529\Desktop\1\target_test.npy")
+        Feature_test, target_test = get_feature(model, test_dataloader, device, 512)
+        target_test = target_test.cpu().detach().numpy()
+        # np.save(os.path.join(r"C:\Users\12529\Desktop\1", "Feature_test.npy"), Feature_test)
+        # np.save(os.path.join(r"C:\Users\12529\Desktop\1", "target_test.npy"), target_test)
+        # Feature_test = torch.from_numpy(np.load(r"C:\Users\12529\Desktop\1\Feature_test.npy"))
+        # target_test = np.load(r"C:\Users\12529\Desktop\1\target_test.npy")
 
         if path_1 is not None:
             Feature_test_1, target_test_1 = get_feature(model_1, test_dataloader, device, 512)
@@ -60,7 +63,7 @@ def go_predict_KNN(data_test_path, data_csv_path, save_path, path,
         KNN_by_iter(Feature_train, target_train,
                     Feature_test, target_test,
                     k, device, submission,
-                    new_d_test, new_d_all, save_path)
+                    new_d_test, new_id, save_path)
 
 
 if __name__ == '__main__':
@@ -100,5 +103,5 @@ if __name__ == '__main__':
     #                k=args.k)
 
     go_predict_KNN(r"D:\project\happyWhale\classes\CFL\test\test_all", r"D:\project\happyWhale\efficentnet\train_csv_train.csv",
-                   r"C:\Users\12529\Desktop\1",  r"D:\project\happyWhale\resnet\152-Arc-epoth_1.1754",
-                   224, 224, 2, 512, 'resnet152', r"D:\project\happyWhale\classes\CFL\result\All", 100)
+                   r"C:\Users\12529\Desktop\1",  r"D:\project\happyWhale\resnet\152-Add-epoch_0.059",
+                   224, 224, 2, 512, 'resnet152', r"D:\project\happyWhale\classes\CFL\result\All", 10)
