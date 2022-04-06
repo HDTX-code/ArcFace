@@ -64,6 +64,7 @@ def KNN_by_iter(Feature_train, target_train, Feature_test, target_test, k, devic
     with tqdm(total=Feature_test.shape[0]) as pbar:
         for item in range(Feature_test.shape[0]):
             dists = cal_distance(Feature_train, Feature_test[item, :], device)
+            dists = dists.cpu().detach().numpy()
             # torch.cat()用来拼接tensor
             K = copy.copy(k)
             while True:
