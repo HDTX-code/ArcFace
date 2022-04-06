@@ -71,10 +71,10 @@ def KNN_by_iter(Feature_train, target_train, Feature_test, target_test, k, devic
                 idxs = idxs.cpu().detach().numpy()
                 target_train_index = target_train[idxs, 0].astype('int64')
                 # res.append(np.bincount(target_train_index).argmax())
-                res = copy.copy(np.bincount(target_train_index).argsort()[-5:])
+                res = copy.copy((np.bincount(target_train_index, weights=dists[idxs])/np.bincount(target_train_index)).argsort()[-5:])
                 if len(res) >= 5:
                     break
-                K += 10
+                K += 5
             submission.loc[
                 submission[
                     submission.image == new_d_test[target_test[item, 0]]].index.tolist(), "predictions"] = \
