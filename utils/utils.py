@@ -68,7 +68,7 @@ def KNN_by_iter(Feature_train, target_train, Feature_test, target_test, k, devic
             # torch.cat()用来拼接tensor
             K = copy.copy(k)
             while True:
-                idxs = dists.argsort()[-K:].to(device)
+                idxs = dists.argsort()[-K:]
                 idxs = idxs.cpu().detach().numpy()
                 target_train_index = target_train[idxs, 0].astype('int64')
                 # res.append(np.bincount(target_train_index).argmax())
