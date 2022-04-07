@@ -81,7 +81,7 @@ if __name__ == '__main__':
     parser.add_argument('--path', type=str, help='模型及特征矩阵、字典存储路径', required=True)
     parser.add_argument('--path_1', type=str, help='模型及特征矩阵、字典存储路径', default=None)
     parser.add_argument('--path_2', type=str, help='模型及特征矩阵、字典存储路径', default=None)
-    parser.add_argument('cosine_similarity_path', type=str, help='cosine_similarity_path', default=None)
+    parser.add_argument('--cosine_similarity_path', type=str, help='cosine_similarity_path', default=None)
     parser.add_argument('--num_workers', type=int, default=2)
     parser.add_argument('--batch_size', type=int, default=128)
     parser.add_argument('--w', type=int, help='训练图片宽度', default=224)
