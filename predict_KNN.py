@@ -3,6 +3,7 @@ from __init__ import *
 
 def go_predict_KNN(data_test_path, data_csv_path, save_path, path,
                    w, h, num_workers, batch_size, backbone, data_train_path, k,
+                   cosine_similarity_path,
                    backbone_1=None, backbone_2=None,
                    path_1=None, path_2=None):
     with torch.no_grad():
@@ -64,7 +65,7 @@ def go_predict_KNN(data_test_path, data_csv_path, save_path, path,
         KNN_by_iter(Feature_train, target_train,
                     Feature_test, target_test,
                     k, device, submission,
-                    new_d_test, new_id, save_path)
+                    new_d_test, new_id, save_path, cosine_similarity_path)
 
 
 if __name__ == '__main__':
@@ -80,6 +81,7 @@ if __name__ == '__main__':
     parser.add_argument('--path', type=str, help='模型及特征矩阵、字典存储路径', required=True)
     parser.add_argument('--path_1', type=str, help='模型及特征矩阵、字典存储路径', default=None)
     parser.add_argument('--path_2', type=str, help='模型及特征矩阵、字典存储路径', default=None)
+    parser.add_argument('cosine_similarity_path', type=str, help='cosine_similarity_path', default=None)
     parser.add_argument('--num_workers', type=int, default=2)
     parser.add_argument('--batch_size', type=int, default=128)
     parser.add_argument('--w', type=int, help='训练图片宽度', default=224)
@@ -99,6 +101,7 @@ if __name__ == '__main__':
                    path_2=args.path_2,
                    backbone_1=args.backbone_1,
                    backbone_2=args.backbone_2,
+                   cosine_similarity_path=args.cosine_similarity_path,
                    w=args.w,
                    h=args.h,
                    k=args.k)

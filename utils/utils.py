@@ -68,12 +68,15 @@ def cal_distance(Feature_train, Feature_test, device):
 
 
 def KNN_by_iter(Feature_train, target_train, Feature_test, target_test, k, device,
-                submission, new_d_test, new_id, save_path):
+                submission, new_d_test, new_id, save_path, cosine_similarity_path=None):
     # 计算距离
     # res = []
-    Dis = cal_distance(Feature_train, Feature_test, device)
-    Dis = Dis.cpu().detach().numpy()
-    np.save(os.path.join(save_path, "cosine_similarity.npy"), Dis)
+    if cosine_similarity_path is None:
+        Dis = cal_distance(Feature_train, Feature_test, device)
+        Dis = Dis.cpu().detach().numpy()
+        np.save(os.path.join(save_path, "cosine_similarity.npy"), Dis)
+    else:
+        Dis = np.load(cosine_similarity_path)
     with tqdm(total=Feature_test.shape[0]) as pbar:
         for item in range(Feature_test.shape[0]):
             dists = Dis[item, :]
