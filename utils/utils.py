@@ -54,7 +54,7 @@ def cal_distance(Feature_train, Feature_test, device):
     with torch.no_grad():
         with tqdm(total=Feature_test.shape[0]) as pbar:
             val = 0
-            for item in range(Feature_train.shape[0]):
+            for item in range(Feature_test.shape[0]):
                 output = F.cosine_similarity(
                     torch.mul(torch.ones(Feature_train.shape).to(device), Feature_test[item, :].T),
                     Feature_train, dim=1).to(device)
