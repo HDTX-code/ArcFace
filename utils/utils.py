@@ -58,8 +58,9 @@ def cal_distance(Feature_train, Feature_test, device):
                 output = F.cosine_similarity(
                     torch.mul(torch.ones(Feature_train.shape).to(device), Feature_test[item, :].T),
                     Feature_train, dim=1).to(device)
+                output = output.reshape(1, -1)
                 if val == 0:
-                    Output = output
+                    Output = copy.copy(output)
                     val = 1
                 else:
                     Output = torch.cat((Output, output), 0)
