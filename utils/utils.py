@@ -60,6 +60,7 @@ def cal_distance(Feature_train, Feature_test, device):
                     Feature_train, dim=1).to(device)
                 if val == 0:
                     Output = output
+                    val = 1
                 else:
                     Output = torch.cat((Output, output), 0)
                 pbar.update(1)
