@@ -111,14 +111,14 @@ def go_predict(data_test_path, data_csv_path, save_path, path,
                     submission.loc[
                         submission[
                             submission.image == new_d_test[target_test[item, 0]]].index.tolist(), "predictions"] = \
-                        'new_individual' + ' ' + new_d_all[Top_index_all[item, 3]] + ' ' + new_d_all[
-                            Top_index_all[item, 2]] + ' ' + new_d_all[Top_index_all[item, 1]] + ' ' + new_d_all[Top_index_all[item, 0]]
+                        'new_individual' + ' ' + new_d_all[Top_index_all[item, 0]] + ' ' + new_d_all[
+                            Top_index_all[item, 1]] + ' ' + new_d_all[Top_index_all[item, 2]] + ' ' + new_d_all[Top_index_all[item, 3]]
                 else:
                     submission.loc[
                         submission[
                             submission.image == new_d_test[target_test[item, 0]]].index.tolist(), "predictions"] = \
-                        new_d_all[Top_index_all[item, 4]] + ' ' + new_d_all[Top_index_all[item, 3]] + ' ' + new_d_all[
-                            Top_index_all[item, 2]] + ' ' + new_d_all[Top_index_all[item, 1]] + ' ' + new_d_all[Top_index_all[item, 0]]
+                        new_d_all[Top_index_all[item, 0]] + ' ' + new_d_all[Top_index_all[item, 1]] + ' ' + new_d_all[
+                            Top_index_all[item, 2]] + ' ' + new_d_all[Top_index_all[item, 1]] + ' ' + new_d_all[Top_index_all[item, 3]]
                 # Top[4] = 0.575
                 # Top_index[4] = dict_id_all['new_whale']
                 # Top_index = Top_index[np.argsort(-Top)]
