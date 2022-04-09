@@ -53,6 +53,8 @@ def go_train(backbone, data_train_path, save_path,
         model = timm.create_model('convnext_base', pretrained=pretrained, num_classes=512)
     elif backbone == 'convnext_large':
         model = timm.create_model('convnext_large', pretrained=pretrained, num_classes=512)
+    elif backbone == 'swin_base_patch4_window7_224':
+        model = timm.create_model('swin_base_patch4_window7_224', pretrained=pretrained, num_classes=512)
     else:
         model = torchvision.models.resnet50(pretrained=pretrained)
         model.fc = torch.nn.Linear(model.fc.in_features, 512)
