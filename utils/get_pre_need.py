@@ -14,6 +14,7 @@ from utils.get_feature import get_feature
 
 def get_pre_need(root_path, device, w, h, data_train_path, batch_size, num_workers, backbone='resnet50'):
     with torch.no_grad():
+        pretrained = False
         # 拼接地址
         model_path_Sph = os.path.join(root_path, backbone + "Sph.pth")
         model_path_Arc = os.path.join(root_path, backbone + "Arc.pth")
@@ -27,15 +28,28 @@ def get_pre_need(root_path, device, w, h, data_train_path, batch_size, num_worke
 
         # 加载模型
         if backbone == 'EfficientNet-V2':
-            model = timm.create_model('efficientnetv2_rw_m', pretrained=False, num_classes=512)
+            model = timm.create_model('efficientnetv2_rw_m', pretrained=pretrained, num_classes=512)
         elif backbone == 'resnet101':
-            model = torchvision.models.resnet101(pretrained=False)
+            model = torchvision.models.resnet101(pretrained=pretrained)
             model.fc = torch.nn.Linear(model.fc.in_features, 512)
         elif backbone == 'resnet152':
-            model = torchvision.models.resnet152(pretrained=False)
+            model = torchvision.models.resnet152(pretrained=pretrained)
             model.fc = torch.nn.Linear(model.fc.in_features, 512)
+        elif backbone == 'resnet18':
+            model = torchvision.models.resnet18(pretrained=pretrained)
+            model.fc = torch.nn.Linear(model.fc.in_features, 512)
+        elif backbone == 'convnext_tiny':
+            model = timm.create_model('convnext_tiny', pretrained=pretrained, num_classes=512)
+        elif backbone == 'convnext_small':
+            model = timm.create_model('convnext_small', pretrained=pretrained, num_classes=512)
+        elif backbone == 'convnext_base':
+            model = timm.create_model('convnext_base', pretrained=pretrained, num_classes=512)
+        elif backbone == 'convnext_large':
+            model = timm.create_model('convnext_large', pretrained=pretrained, num_classes=512)
+        elif backbone == 'swin_base_patch4_window7_224':
+            model = timm.create_model('swin_base_patch4_window7_224', pretrained=pretrained, num_classes=512)
         else:
-            model = torchvision.models.resnet50(pretrained=False)
+            model = torchvision.models.resnet50(pretrained=pretrained)
             model.fc = torch.nn.Linear(model.fc.in_features, 512)
 
         if os.path.exists(model_path_Sph):
