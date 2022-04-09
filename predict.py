@@ -3,7 +3,7 @@ import copy
 from __init__ import *
 
 
-def go_predict(data_test_path, data_csv_path, save_path, path,
+def go_predict(data_test_path, data_csv_path, save_path, model_path, dict_id_path, train_csv_train_path,
                w, h, num_workers, batch_size, backbone, data_train_path,
                backbone_1=None, backbone_2=None,
                path_1=None, path_2=None):
@@ -17,7 +17,7 @@ def go_predict(data_test_path, data_csv_path, save_path, path,
         dict_id_all = dict(zip(train_csv_id, range(len(train_csv_id))))
         new_d_all = {v: k for k, v in dict_id_all.items()}
 
-        model, dict_id, Feature_train, target_train = get_pre_need(path, device, w, h,
+        model, dict_id, Feature_train, target_train = get_pre_need(model_path, dict_id_path, train_csv_train_path, device, w, h,
                                                                    data_train_path, batch_size,
                                                                    num_workers, backbone)
         model.eval()
@@ -105,7 +105,7 @@ def go_predict(data_test_path, data_csv_path, save_path, path,
             for item in range(len(path_list)):
                 submission.loc[
                     submission[
-                        submission.image == new_d_test[target_test[item, 0]]].index.tolist(), "Id"] = \
+                        submission.image == new_d_test[target_test[item, 0]]].index.tolist(), "predictions"] = \
                     new_d_all[Top_index_all[item, 0]] + ' ' + new_d_all[Top_index_all[item, 1]] + ' ' + new_d_all[
                         Top_index_all[item, 2]] + ' ' + new_d_all[Top_index_all[item, 3]] + ' ' + new_d_all[
                         Top_index_all[item, 4]]
@@ -136,8 +136,11 @@ if __name__ == '__main__':
     parser.add_argument('--data_train_path', type=str, help='训练集路径', default="../input/data-do-cut/All/All")
     parser.add_argument('--data_csv_path', type=str, help='训练csv路径',
                         default=r'../input/happy-whale-and-dolphin/train.csv')
+    parser.add_argument('--data_csv_train_path', type=str, help='本次训练csv路径',
+                        default=r'../input/happy-whale-and-dolphin/train.csv')
     parser.add_argument('--save_path', type=str, help='存储路径', default=r'./')
-    parser.add_argument('--path', type=str, help='模型及特征矩阵、字典存储路径', required=True)
+    parser.add_argument('--model_path', type=str, help='模型路径', required=True)
+    parser.add_argument('--dict_id_path', type=str, help='字典路径', required=True)
     parser.add_argument('--path_1', type=str, help='模型及特征矩阵、字典存储路径', default=None)
     parser.add_argument('--path_2', type=str, help='模型及特征矩阵、字典存储路径', default=None)
     parser.add_argument('--num_workers', type=int, default=2)
@@ -150,7 +153,7 @@ if __name__ == '__main__':
                save_path=args.save_path,
                data_test_path=args.data_test_path,
                data_csv_path=args.data_csv_path,
-               path=args.path,
+               model_path=args.model_path,
                num_workers=args.num_workers,
                batch_size=args.batch_size,
                data_train_path=args.data_train_path,
@@ -158,6 +161,8 @@ if __name__ == '__main__':
                path_2=args.path_2,
                backbone_1=args.backbone_1,
                backbone_2=args.backbone_2,
+               dict_id_path=args.dict_id_path,
+               train_csv_train_path=args.train_csv_train_path,
                w=args.w,
                h=args.h)
     # # -------------------------------#

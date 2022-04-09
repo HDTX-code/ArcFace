@@ -12,19 +12,20 @@ from dataset.dataset import ArcDataset
 from utils.get_feature import get_feature
 
 
-def get_pre_need(root_path, device, w, h, data_train_path, batch_size, num_workers, backbone='resnet50'):
+def get_pre_need(model_path, dict_id_path, train_csv_path,  device, w, h, data_train_path,
+                 batch_size, num_workers, backbone='resnet50', Feature_train_path=None, target_train_path=None):
     with torch.no_grad():
         pretrained = False
         # 拼接地址
-        model_path_Sph = os.path.join(root_path, backbone + "Sph.pth")
-        model_path_Arc = os.path.join(root_path, backbone + "Arc.pth")
-        model_path_Add = os.path.join(root_path, backbone + "Add.pth")
-        Feature_train_path = os.path.join(root_path, "Feature_train.npy")
-        target_train_path = os.path.join(root_path, "target_train.npy")
-        train_csv_train_path = os.path.join(root_path, "train_csv_train.csv")
-        dict_id_path = os.path.join(root_path, "dict_id")
-        if not os.path.exists(dict_id_path):
-            dict_id_path = os.path.join(root_path, "dict_id.txt")
+        # model_path_Sph = os.path.join(root_path, backbone + "Sph.pth")
+        # model_path_Arc = os.path.join(root_path, backbone + "Arc.pth")
+        # model_path_Add = os.path.join(root_path, backbone + "Add.pth")
+        # Feature_train_path = os.path.join(root_path, "Feature_train.npy")
+        # target_train_path = os.path.join(root_path, "target_train.npy")
+        # train_csv_train_path = os.path.join(root_path, "train_csv_train.csv")
+        # dict_id_path = os.path.join(root_path, "dict_id")
+        # if not os.path.exists(dict_id_path):
+        #     dict_id_path = os.path.join(root_path, "dict_id.txt")
 
         # 加载模型
         if backbone == 'EfficientNet-V2':
@@ -52,12 +53,7 @@ def get_pre_need(root_path, device, w, h, data_train_path, batch_size, num_worke
             model = torchvision.models.resnet50(pretrained=pretrained)
             model.fc = torch.nn.Linear(model.fc.in_features, 512)
 
-        if os.path.exists(model_path_Sph):
-            model.load_state_dict(torch.load(model_path_Sph, map_location=device), False)
-        elif os.path.exists(model_path_Arc):
-            model.load_state_dict(torch.load(model_path_Arc, map_location=device), False)
-        elif os.path.exists(model_path_Add):
-            model.load_state_dict(torch.load(model_path_Add, map_location=device), False)
+        model.load_state_dict(torch.load(model_path, map_location=device), False)
         model.eval()
 
         # 加载字典
@@ -66,7 +62,7 @@ def get_pre_need(root_path, device, w, h, data_train_path, batch_size, num_worke
 
         # 加载Feature_train
         if not os.path.exists(Feature_train_path):
-            train_csv_train = pd.read_csv(train_csv_train_path)
+            train_csv_train = pd.read_csv(train_csv_path)
             train_dataset = ArcDataset(train_csv_train, dict_id, data_train_path, w, h)
             dataloader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True,
                                     num_workers=num_workers)
