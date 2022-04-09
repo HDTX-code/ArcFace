@@ -136,7 +136,7 @@ if __name__ == '__main__':
     parser.add_argument('--data_train_path', type=str, help='训练集路径', default="../input/data-do-cut/All/All")
     parser.add_argument('--data_csv_path', type=str, help='训练csv路径',
                         default=r'../input/happy-whale-and-dolphin/train.csv')
-    parser.add_argument('--data_csv_train_path', type=str, help='本次训练csv路径',
+    parser.add_argument('--train_csv_train_path', type=str, help='本次训练csv路径',
                         default=r'../input/happy-whale-and-dolphin/train.csv')
     parser.add_argument('--save_path', type=str, help='存储路径', default=r'./')
     parser.add_argument('--model_path', type=str, help='模型路径', required=True)
