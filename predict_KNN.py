@@ -21,20 +21,20 @@ def go_predict_KNN(data_test_path, data_csv_path, save_path, model_path, dict_id
         model, dict_id, Feature_train, target_train = get_pre_need(model_path, dict_id_path, train_csv_train_path,
                                                                    device, w, h,
                                                                    data_train_path, batch_size,
-                                                                   num_workers, backbone)
+                                                                   num_workers, save_path, backbone)
         new_id = {v: k for k, v in dict_id.items()}
         model.eval()
         if model_path_1 is not None:
             model_1, dict_id_1, Feature_train_1, target_train_1 = get_pre_need(model_path_1, dict_id_path_1,
                                                                                train_csv_train_path_1, device, w, h,
                                                                                data_train_path, batch_size,
-                                                                               num_workers, backbone_1)
+                                                                               num_workers, save_path, backbone_1)
             model_1.eval()
         if model_path_2 is not None:
             model_2, dict_id_2, Feature_train_2, target_train_2 = get_pre_need(model_path_2, dict_id_path_2,
                                                                                train_csv_train_path_2, device, w, h,
                                                                                data_train_path, batch_size,
-                                                                               num_workers, backbone_2)
+                                                                               num_workers, save_path, backbone_2)
             model_2.eval()
 
         path_list = os.listdir(data_test_path)
