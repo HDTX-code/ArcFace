@@ -1,11 +1,12 @@
 from __init__ import *
 
 
-def go_predict_KNN(data_test_path, data_csv_path, save_path, path,
-                   w, h, num_workers, batch_size, backbone, data_train_path, k,
-                   cosine_similarity_path=None,
+def go_predict_KNN(data_test_path, data_csv_path, save_path, model_path, dict_id_path, train_csv_train_path,
+                   w, h, num_workers, batch_size, backbone, data_train_path, k, Score_path, Index_path,
                    backbone_1=None, backbone_2=None,
-                   path_1=None, path_2=None):
+                   model_path_1=None, model_path_2=None,
+                   dict_id_path_1=None, dict_id_path_2=None,
+                   train_csv_train_path_1=None, train_csv_train_path_2=None):
     with torch.no_grad():
         print(torch.cuda.is_available())
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -16,18 +17,21 @@ def go_predict_KNN(data_test_path, data_csv_path, save_path, path,
         dict_id_all = dict(zip(train_csv_id, range(len(train_csv_id))))
         new_d_all = {v: k for k, v in dict_id_all.items()}
 
-        model, dict_id, Feature_train, target_train = get_pre_need(path, device, w, h,
+        model, dict_id, Feature_train, target_train = get_pre_need(model_path, dict_id_path, train_csv_train_path,
+                                                                   device, w, h,
                                                                    data_train_path, batch_size,
                                                                    num_workers, backbone)
         new_id = {v: k for k, v in dict_id.items()}
         model.eval()
-        if path_1 is not None:
-            model_1, dict_id_1, Feature_train_1, target_train_1 = get_pre_need(path_1, device, w, h,
+        if model_path_1 is not None:
+            model_1, dict_id_1, Feature_train_1, target_train_1 = get_pre_need(model_path_1, dict_id_path_1,
+                                                                               train_csv_train_path_1, device, w, h,
                                                                                data_train_path, batch_size,
                                                                                num_workers, backbone_1)
             model_1.eval()
-        if path_2 is not None:
-            model_2, dict_id_2, Feature_train_2, target_train_2 = get_pre_need(path_2, device, w, h,
+        if model_path_2 is not None:
+            model_2, dict_id_2, Feature_train_2, target_train_2 = get_pre_need(model_path_2, dict_id_path_2,
+                                                                               train_csv_train_path_2, device, w, h,
                                                                                data_train_path, batch_size,
                                                                                num_workers, backbone_2)
             model_2.eval()
@@ -53,11 +57,11 @@ def go_predict_KNN(data_test_path, data_csv_path, save_path, path,
         # Feature_test = torch.from_numpy(np.load(r"C:\Users\12529\Desktop\1\Feature_test.npy"))
         # target_test = np.load(r"C:\Users\12529\Desktop\1\target_test.npy")
 
-        if path_1 is not None:
+        if model_path_1 is not None:
             Feature_test_1, target_test_1 = get_feature(model_1, test_dataloader, device, 512)
         else:
             Feature_test_1 = None
-        if path_2 is not None:
+        if model_path_1 is not None:
             Feature_test_2, target_test_2 = get_feature(model_2, test_dataloader, device, 512)
         else:
             Feature_test_2 = None
@@ -65,23 +69,30 @@ def go_predict_KNN(data_test_path, data_csv_path, save_path, path,
         KNN_by_iter(Feature_train, target_train,
                     Feature_test, target_test,
                     k, device, submission,
-                    new_d_test, new_id, save_path, cosine_similarity_path)
+                    new_d_test, new_id, save_path, Score_path, Index_path)
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='训练训练参数设置')
-    parser.add_argument('--backbone', type=str, default='resnet50', help='特征网络选择，默认resnet50')
-    parser.add_argument('--backbone_1', type=str, default='resnet101', help='特征网络选择，默认resnet101')
-    parser.add_argument('--backbone_2', type=str, default='resnet152', help='特征网络选择，默认resnet152')
+    parser.add_argument('--backbone', type=str, default='resnet50', help='特征网络选择，默认resnet50', required=True)
+    parser.add_argument('--backbone_1', type=str, default=None, help='特征网络选择，默认resnet101')
+    parser.add_argument('--backbone_2', type=str, default=None, help='特征网络选择，默认resnet152')
+    parser.add_argument('--dict_id_path', type=str, help='字典路径', required=True)
+    parser.add_argument('--dict_id_path_1', type=str, help='字典路径', default=None)
+    parser.add_argument('--dict_id_path_2', type=str, help='字典路径', default=None)
+    parser.add_argument('--model_path', type=str, help='模型路径', required=True)
+    parser.add_argument('--model_path_1', type=str, help='模型路径', default=None)
+    parser.add_argument('--model_path_2', type=str, help='模型路径', default=None)
+    parser.add_argument('--train_csv_train_path', type=str, help='本次训练csv路径', required=True)
+    parser.add_argument('--train_csv_train_path_1', type=str, help='本次训练csv路径', default=None)
+    parser.add_argument('--train_csv_train_path_2', type=str, help='本次训练csv路径', default=None)
     parser.add_argument('--data_test_path', type=str, help='测试集路径', required=True)
     parser.add_argument('--data_train_path', type=str, help='训练集路径', default="../input/data-do-cut/All/All")
     parser.add_argument('--data_csv_path', type=str, help='训练csv路径',
                         default=r'../input/happy-whale-and-dolphin/train.csv')
     parser.add_argument('--save_path', type=str, help='存储路径', default=r'./')
-    parser.add_argument('--path', type=str, help='模型及特征矩阵、字典存储路径', required=True)
-    parser.add_argument('--path_1', type=str, help='模型及特征矩阵、字典存储路径', default=None)
-    parser.add_argument('--path_2', type=str, help='模型及特征矩阵、字典存储路径', default=None)
-    parser.add_argument('--cosine_similarity_path', type=str, help='cosine_similarity_path', default=None)
+    parser.add_argument('--Score_path', type=str, help='cosine_similarity_path', default=None)
+    parser.add_argument('--Index_path', type=str, help='cosine_similarity_path', default=None)
     parser.add_argument('--num_workers', type=int, default=2)
     parser.add_argument('--batch_size', type=int, default=128)
     parser.add_argument('--w', type=int, help='训练图片宽度', default=224)
@@ -90,21 +101,26 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     go_predict_KNN(backbone=args.backbone,
+                   backbone_1=args.backbone_1,
+                   backbone_2=args.backbone_2,
+                   dict_id_path=args.dict_id_path,
+                   dict_id_path_1=args.dict_id_path_1,
+                   dict_id_path_2=args.dict_id_path_2,
+                   train_csv_train_path=args.train_csv_train_path,
+                   train_csv_train_path_1=args.train_csv_train_path_1,
+                   train_csv_train_path_2=args.train_csv_train_path_2,
                    save_path=args.save_path,
                    data_test_path=args.data_test_path,
                    data_csv_path=args.data_csv_path,
-                   path=args.path,
+                   model_path=args.model_path,
                    num_workers=args.num_workers,
                    batch_size=args.batch_size,
                    data_train_path=args.data_train_path,
-                   path_1=args.path_1,
-                   path_2=args.path_2,
-                   backbone_1=args.backbone_1,
-                   backbone_2=args.backbone_2,
-                   cosine_similarity_path=args.cosine_similarity_path,
+                   Index_path=args.Index_path,
+                   Score_path=args.Score_path,
+                   k=args.k,
                    w=args.w,
-                   h=args.h,
-                   k=args.k)
+                   h=args.h)
 
     # go_predict_KNN(r"D:\project\happyWhale\classes\CFL\test\test_all", r"D:\project\happyWhale\efficentnet\train_csv_train.csv",
     #                r"C:\Users\12529\Desktop\1",  r"D:\project\happyWhale\resnet\101-Add-more-epoch_0.122",
