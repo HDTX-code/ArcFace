@@ -48,7 +48,7 @@ def get_lr(optimizer):
 # ---------------------------------------------------#
 #   KNN
 # ---------------------------------------------------#
-def cal_distance(Feature_train, Feature_test, device):
+def cal_distance(Feature_train, Feature_test, device, K):
     Feature_train = torch.from_numpy(Feature_train).to(device)
     Feature_test = Feature_test.to(device)
     with torch.no_grad():
@@ -58,38 +58,41 @@ def cal_distance(Feature_train, Feature_test, device):
                 output = F.cosine_similarity(
                     torch.mul(torch.ones(Feature_train.shape).to(device), Feature_test[item, :].T),
                     Feature_train, dim=1).to(device)
-                output = output.reshape(1, -1)
+                sorted, indices = torch.sort(output, descending=True)
+                # output = output.reshape(1, -1)
                 if val == 0:
-                    Output = copy.copy(output)
+                    Output_score = copy.copy(sorted[:K])
+                    Output_index = copy.copy(indices[:K])
                     val = 1
                 else:
-                    Output = torch.cat((Output, output), 0)
+                    Output_score = torch.cat((Output_score, sorted[:K]), 0)
+                    Output_index = torch.cat((Output_index, indices[:K]), 0)
                 pbar.update(1)
-    return Output
+    return Output_score, Output_index
 
 
 def KNN_by_iter(Feature_train, target_train, Feature_test, target_test, k, device,
-                submission, new_d_test, new_id, save_path, cosine_similarity_path=None):
+                submission, new_d_test, new_id, save_path, Score_path=None, Index_path=None):
     # 计算距离
     # res = []
-    if cosine_similarity_path is None:
-        Dis = cal_distance(Feature_train, Feature_test, device)
-        Dis = Dis.cpu().detach().numpy()
-        np.save(os.path.join(save_path, "cosine_similarity.npy"), Dis)
+    if Score_path is None:
+        Score, Index = cal_distance(Feature_train, Feature_test, device, K=1000)
+        Score = Score.cpu().detach().numpy()
+        Index = Index.cpu().detach().numpy()
+        np.save(os.path.join(save_path, "Score.npy"), Score)
+        np.save(os.path.join(save_path, "Index.npy"), Index)
     else:
-        Dis = np.load(cosine_similarity_path)
+        Score = np.load(Score_path)
+        Index = np.load(Index_path)
     with tqdm(total=Feature_test.shape[0]) as pbar:
         for item in range(Feature_test.shape[0]):
-            dists = Dis[item, :]
-            # torch.cat()用来拼接tensor
             K = copy.copy(k)
             while True:
-                idxs = dists.argsort()[-K:]
-                target_train_index = target_train[idxs, 0].astype('int32')
+                target_train_index = Index[item, :K].astype('int32')
                 if len(np.unique(target_train_index)) >= 5:
                     break
                 K += 5
-            score = dists[idxs]
+            score = Score[item, :K]
             Index = np.unique(target_train_index)
             res = np.zeros(len(Index))
             for item2 in range(len(Index)):
