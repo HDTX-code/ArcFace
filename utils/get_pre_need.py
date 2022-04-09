@@ -13,7 +13,7 @@ from utils.get_feature import get_feature
 
 
 def get_pre_need(model_path, dict_id_path, train_csv_path,  device, w, h, data_train_path,
-                 batch_size, num_workers, backbone='resnet50', Feature_train_path=None, target_train_path=None):
+                 batch_size, num_workers, save_path, backbone='resnet50', Feature_train_path=None, target_train_path=None):
     with torch.no_grad():
         pretrained = False
         # 拼接地址
@@ -69,6 +69,8 @@ def get_pre_need(model_path, dict_id_path, train_csv_path,  device, w, h, data_t
             Feature_train, target_train = get_feature(model, dataloader, device, 512)
             Feature_train = Feature_train.cpu().detach().numpy()
             target_train = target_train.cpu().detach().numpy()
+            np.save(os.path.join(save_path, "Feature_train.npy"), Feature_train)
+            np.save(os.path.join(save_path, "target_train.npy"), target_train)
         else:
             Feature_train = np.load(Feature_train_path)
             target_train = np.load(target_train_path)
