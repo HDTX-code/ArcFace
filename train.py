@@ -45,8 +45,12 @@ def go_train(backbone, data_train_path, save_path,
     elif backbone == 'resnet18':
         model = torchvision.models.resnet18(pretrained=pretrained)
         model.fc = torch.nn.Linear(model.fc.in_features, 512)
-    elif backbone == 'convnext_tiny_hnf':
-        model = timm.create_model('convnext_tiny_hnf', pretrained=pretrained, num_classes=512)
+    elif backbone == 'convnext_tiny':
+        model = timm.create_model('convnext_tiny', pretrained=pretrained, num_classes=512)
+    elif backbone == 'convnext_small':
+        model = timm.create_model('convnext_small', pretrained=pretrained, num_classes=512)
+    elif backbone == 'convnext_base':
+        model = timm.create_model('convnext_base', pretrained=pretrained, num_classes=512)
     else:
         model = torchvision.models.resnet50(pretrained=pretrained)
         model.fc = torch.nn.Linear(model.fc.in_features, 512)
