@@ -10,8 +10,9 @@ def go_train(backbone, data_train_path, save_path,
              Unfreeze_batch_size, w, h, pretrained, Freeze_weight_decay,
              Unfreeze_weight_decay, Freeze_gamma, Unfreeze_gamma, m):
     # 训练设备
-    print(torch.cuda.is_available())
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    # print(torch.cuda.is_available())
+    # device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    device = xm.xla_device()
 
     print("backbone = " + backbone)
 

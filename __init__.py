@@ -47,6 +47,8 @@ import pandas as pd
 import torch.optim
 import argparse
 from utils.utils import KNN_by_iter
+import torch_xla
+import torch_xla.core.xla_model as xm
 
 curPath = os.path.abspath(os.path.dirname(__file__))
 rootPath = os.path.split(curPath)[0]
