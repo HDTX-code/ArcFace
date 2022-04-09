@@ -61,7 +61,7 @@ def get_pre_need(model_path, dict_id_path, train_csv_path,  device, w, h, data_t
         dict_id = json.load(f2)
 
         # 加载Feature_train
-        if not os.path.exists(Feature_train_path):
+        if Feature_train_path is None:
             train_csv_train = pd.read_csv(train_csv_path)
             train_dataset = ArcDataset(train_csv_train, dict_id, data_train_path, w, h)
             dataloader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True,
