@@ -97,6 +97,8 @@ def go_predict(data_test_path, data_csv_path, save_path, path,
                 Top_all[item, :] = copy.copy(Top)
                 Top_index_all[item, :] = copy.copy(Top_index)
                 pbar.update(1)
+        np.save(os.path.join(save_path, "Top.npy"), Top_all)
+        np.save(os.path.join(save_path, "Top_index.npy"), Top_index_all)
         with tqdm(total=target_test.shape[0], postfix=dict) as pbar2:
             New_data = Top_all[np.argsort(Top_all[:, 0])[math.floor(0.12 * len(path_list))], 0]
             # Is_new = 'new_whale' if Top[0] < 0.75 else new_d_all[Top_index[4]]
@@ -119,13 +121,6 @@ def go_predict(data_test_path, data_csv_path, save_path, path,
                 #             submission.image == new_d_test[target_test[item, 0]]].index.tolist(), "predictions"] = \
                 #         new_d_all[Top_index_all[item, 0]] + ' ' + new_d_all[Top_index_all[item, 1]] + ' ' + new_d_all[
                 #             Top_index_all[item, 2]] + ' ' + new_d_all[Top_index_all[item, 1]] + ' ' + new_d_all[Top_index_all[item, 3]]
-                # Top[4] = 0.575
-                # Top_index[4] = dict_id_all['new_whale']
-                # Top_index = Top_index[np.argsort(-Top)]
-                # # Is_new = 'new_whale' if Top[0] < 0.75 else new_d_all[Top_index[4]]
-                # submission.loc[submission[submission.Image == new_d_test[target_test[item, 0]]].index.tolist(), "Id"] = \
-                #     new_d_all[Top_index[0]] + ' ' + new_d_all[Top_index[1]] + ' ' + new_d_all[Top_index[
-                #         2]] + ' ' + new_d_all[Top_index[3]] + ' ' + new_d_all[Top_index[4]]
                 pbar2.update(1)
                 pbar2.set_postfix(
                     **{'Top': Top_all[item, 0], 'new': New_data})
