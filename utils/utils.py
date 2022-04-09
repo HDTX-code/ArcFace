@@ -88,15 +88,15 @@ def KNN_by_iter(Feature_train, target_train, Feature_test, target_test, k, devic
         for item in range(Feature_test.shape[0]):
             K = copy.copy(k)
             while True:
-                target_train_index = target_train[Index[item, :K]].astype('int32')
+                target_train_index = target_train[item, Index[item, :K]].astype('int32')
                 if len(np.unique(target_train_index)) >= 5:
                     break
                 K += 5
             score = Score[item, :K]
-            Index = np.unique(target_train_index)
-            res = np.zeros(len(Index))
-            for item2 in range(len(Index)):
-                res[item2] = score[target_train_index == Index[item2]].mean()
+            index = np.unique(target_train_index)
+            res = np.zeros(len(index))
+            for item2 in range(len(index)):
+                res[item2] = score[target_train_index == index[item2]].mean()
             res_sort = res.argsort()[-5:]
             submission.loc[
                 submission[

@@ -6,7 +6,8 @@ def go_predict_KNN(data_test_path, data_csv_path, save_path, model_path, dict_id
                    backbone_1=None, backbone_2=None,
                    model_path_1=None, model_path_2=None,
                    dict_id_path_1=None, dict_id_path_2=None,
-                   train_csv_train_path_1=None, train_csv_train_path_2=None):
+                   train_csv_train_path_1=None, train_csv_train_path_2=None,
+                   Feature_test_path=None, target_test_path=None):
     with torch.no_grad():
         print(torch.cuda.is_available())
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -49,13 +50,15 @@ def go_predict_KNN(data_test_path, data_csv_path, save_path, model_path, dict_id
         test_dataloader = DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=False,
                                      num_workers=num_workers)
 
-        Feature_test, target_test = get_feature(model, test_dataloader, device, 512)
-        target_test = target_test.cpu().detach().numpy()
-        # Feature_test = Feature_test.cpu().detach().numpy()
-        np.save(os.path.join(save_path, "Feature_test.npy"), Feature_test.cpu().detach().numpy())
-        np.save(os.path.join(save_path, "target_test.npy"), target_test)
-        # Feature_test = torch.from_numpy(np.load(r"C:\Users\12529\Desktop\1\Feature_test.npy"))
-        # target_test = np.load(r"C:\Users\12529\Desktop\1\target_test.npy")
+        if Feature_test_path is None:
+            Feature_test, target_test = get_feature(model, test_dataloader, device, 512)
+            target_test = target_test.cpu().detach().numpy()
+            # Feature_test = Feature_test.cpu().detach().numpy()
+            np.save(os.path.join(save_path, "Feature_test.npy"), Feature_test.cpu().detach().numpy())
+            np.save(os.path.join(save_path, "target_test.npy"), target_test)
+        else:
+            Feature_test = torch.from_numpy(np.load(Feature_test_path))
+            target_test = np.load(target_test_path)
 
         if model_path_1 is not None:
             Feature_test_1, target_test_1 = get_feature(model_1, test_dataloader, device, 512)
@@ -86,6 +89,8 @@ if __name__ == '__main__':
     parser.add_argument('--train_csv_train_path', type=str, help='本次训练csv路径', required=True)
     parser.add_argument('--train_csv_train_path_1', type=str, help='本次训练csv路径', default=None)
     parser.add_argument('--train_csv_train_path_2', type=str, help='本次训练csv路径', default=None)
+    parser.add_argument('--Feature_test_path', type=str, help='测试集特征矩阵路径', default=None)
+    parser.add_argument('--target_test_path', type=str, help='测试集标签矩阵路径', default=None)
     parser.add_argument('--data_test_path', type=str, help='测试集路径', required=True)
     parser.add_argument('--data_train_path', type=str, help='训练集路径', default="../input/data-do-cut/All/All")
     parser.add_argument('--data_csv_path', type=str, help='训练csv路径',
@@ -118,6 +123,8 @@ if __name__ == '__main__':
                    data_train_path=args.data_train_path,
                    Index_path=args.Index_path,
                    Score_path=args.Score_path,
+                   Feature_test_path=args.Feature_test_path,
+                   target_test_path=args.target_test_path,
                    k=args.k,
                    w=args.w,
                    h=args.h)
