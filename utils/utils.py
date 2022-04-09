@@ -76,7 +76,7 @@ def KNN_by_iter(Feature_train, target_train, Feature_test, target_test, k, devic
     # 计算距离
     # res = []
     if Score_path is None:
-        Score, Index = cal_distance(Feature_train, Feature_test, device, K=1000)
+        Score, Index = cal_distance(Feature_train, Feature_test, device, K=10000)
         Score = Score.cpu().detach().numpy()
         Index = Index.cpu().detach().numpy()
         np.save(os.path.join(save_path, "Score.npy"), Score)
