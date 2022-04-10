@@ -59,6 +59,8 @@ def cal_distance(Feature_train, Feature_test, device, K):
                     torch.mul(torch.ones(Feature_train.shape).to(device), Feature_test[item, :].T),
                     Feature_train, dim=1).to(device)
                 sorted, indices = torch.sort(output, descending=True)
+                sorted = sorted.reshape(1, -1)
+                indices = indices.reshape(1, -1)
                 # output = output.reshape(1, -1)
                 if val == 0:
                     Output_score = copy.copy(sorted[:K])

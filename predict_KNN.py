@@ -7,7 +7,8 @@ def go_predict_KNN(data_test_path, data_csv_path, save_path, model_path, dict_id
                    model_path_1=None, model_path_2=None,
                    dict_id_path_1=None, dict_id_path_2=None,
                    train_csv_train_path_1=None, train_csv_train_path_2=None,
-                   Feature_test_path=None, target_test_path=None):
+                   Feature_test_path=None, target_test_path=None,
+                   Feature_train_path=None, target_train_path=None):
     with torch.no_grad():
         print(torch.cuda.is_available())
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -21,7 +22,7 @@ def go_predict_KNN(data_test_path, data_csv_path, save_path, model_path, dict_id
         model, dict_id, Feature_train, target_train = get_pre_need(model_path, dict_id_path, train_csv_train_path,
                                                                    device, w, h,
                                                                    data_train_path, batch_size,
-                                                                   num_workers, save_path, backbone)
+                                                                   num_workers, save_path, backbone, Feature_train_path, target_train_path)
         new_id = {v: k for k, v in dict_id.items()}
         model.eval()
         if model_path_1 is not None:
@@ -91,6 +92,8 @@ if __name__ == '__main__':
     parser.add_argument('--train_csv_train_path_2', type=str, help='本次训练csv路径', default=None)
     parser.add_argument('--Feature_test_path', type=str, help='测试集特征矩阵路径', default=None)
     parser.add_argument('--target_test_path', type=str, help='测试集标签矩阵路径', default=None)
+    parser.add_argument('--Feature_train_path', type=str, help='训练集特征矩阵路径', default=None)
+    parser.add_argument('--target_train_path', type=str, help='训练集标签矩阵路径', default=None)
     parser.add_argument('--data_test_path', type=str, help='测试集路径', required=True)
     parser.add_argument('--data_train_path', type=str, help='训练集路径', default="../input/data-do-cut/All/All")
     parser.add_argument('--data_csv_path', type=str, help='训练csv路径',
@@ -125,6 +128,8 @@ if __name__ == '__main__':
                    Score_path=args.Score_path,
                    Feature_test_path=args.Feature_test_path,
                    target_test_path=args.target_test_path,
+                   Feature_train_path=args.Feature_train_path,
+                   target_train_path=args.target_train_path,
                    k=args.k,
                    w=args.w,
                    h=args.h)
