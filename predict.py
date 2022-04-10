@@ -8,7 +8,8 @@ def go_predict(data_test_path, data_csv_path, save_path, model_path, dict_id_pat
                backbone_1=None, backbone_2=None,
                model_path_1=None, model_path_2=None,
                dict_id_path_1=None, dict_id_path_2=None,
-               train_csv_train_path_1=None, train_csv_train_path_2=None):
+               train_csv_train_path_1=None, train_csv_train_path_2=None,
+               Feature_train_path=None, target_train_path=None):
     with torch.no_grad():
         print(torch.cuda.is_available())
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -22,7 +23,7 @@ def go_predict(data_test_path, data_csv_path, save_path, model_path, dict_id_pat
         model, dict_id, Feature_train, target_train = get_pre_need(model_path, dict_id_path, train_csv_train_path,
                                                                    device, w, h,
                                                                    data_train_path, batch_size,
-                                                                   num_workers, save_path, backbone)
+                                                                   num_workers, save_path, backbone, Feature_train_path, target_train_path)
         model.eval()
         if model_path_1 is not None:
             model_1, dict_id_1, Feature_train_1, target_train_1 = get_pre_need(model_path_1, dict_id_path_1,
@@ -147,6 +148,8 @@ if __name__ == '__main__':
     parser.add_argument('--train_csv_train_path', type=str, help='本次训练csv路径', required=True)
     parser.add_argument('--train_csv_train_path_1', type=str, help='本次训练csv路径', default=None)
     parser.add_argument('--train_csv_train_path_2', type=str, help='本次训练csv路径', default=None)
+    parser.add_argument('--Feature_train_path', type=str, help='训练集特征矩阵路径', default=None)
+    parser.add_argument('--target_train_path', type=str, help='训练集标签矩阵路径', default=None)
     parser.add_argument('--data_test_path', type=str, help='测试集路径', required=True)
     parser.add_argument('--data_train_path', type=str, help='训练集路径', default="../input/data-do-cut/All/All")
     parser.add_argument('--data_csv_path', type=str, help='训练集csv路径',
@@ -174,6 +177,8 @@ if __name__ == '__main__':
                num_workers=args.num_workers,
                batch_size=args.batch_size,
                data_train_path=args.data_train_path,
+               Feature_train_path=args.Feature_train_path,
+               target_train_path=args.target_train_path,
                w=args.w,
                h=args.h)
     # # -------------------------------#
