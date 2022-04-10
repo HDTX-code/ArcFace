@@ -78,22 +78,18 @@ def KNN_by_iter(Feature_train, target_train, Feature_test, target_test, k, devic
     # 计算距离
     # res = []
     if Score_path is None:
-        print("计算数据")
         Score, Index = cal_distance(Feature_train, Feature_test, device, K=10000)
         Score = Score.cpu().detach().numpy()
         Index = Index.cpu().detach().numpy()
         np.save(os.path.join(save_path, "Score.npy"), Score)
         np.save(os.path.join(save_path, "Index.npy"), Index)
     else:
-        print("加载数据")
         Score = np.load(Score_path)
         Index = np.load(Index_path)
     with tqdm(total=Feature_test.shape[0]) as pbar:
         for item in range(Feature_test.shape[0]):
             K = copy.copy(k)
             while True:
-                print(Index[item, :K])
-                print(Index[item, :K].dtype)
                 target_train_index = target_train[Index[item, :K], 0]
                 if len(np.unique(target_train_index)) >= 5:
                     break
