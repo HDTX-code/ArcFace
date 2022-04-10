@@ -71,13 +71,13 @@ def go_predict(data_test_path, data_csv_path, save_path, model_path, dict_id_pat
         # Feature_test, target_test = get_feature(model, test_dataloader, device, 512)
         if Feature_test_path is None:
             Feature_test, target_test = get_feature(model, test_dataloader, device, 512)
-            target_test = target_test.cpu().detach().numpy()
+            # target_test = target_test.cpu().detach().numpy()
             # Feature_test = Feature_test.cpu().detach().numpy()
             np.save(os.path.join(save_path, "Feature_test.npy"), Feature_test.cpu().detach().numpy())
-            np.save(os.path.join(save_path, "target_test.npy"), target_test)
+            np.save(os.path.join(save_path, "target_test.npy"), target_test.cpu().detach().numpy())
         else:
             Feature_test = torch.from_numpy(np.load(Feature_test_path))
-            target_test = np.load(target_test_path)
+            target_test = torch.from_numpy(np.load(target_test_path))
         if model_path_1 is not None:
             Feature_test_1, target_test_1 = get_feature(model_1, test_dataloader, device, 512)
         else:
