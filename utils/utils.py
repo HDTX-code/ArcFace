@@ -103,8 +103,8 @@ def KNN_by_iter(Feature_train, target_train, Feature_test, target_test, k, devic
             submission.loc[
                 submission[
                     submission.image == new_d_test[target_test[item, 0]]].index.tolist(), "predictions"] = \
-                new_id[Index[res_sort[-1]]] + ' ' + new_id[Index[res_sort[-2]]] + ' ' + new_id[
-                    Index[res_sort[-3]]] + ' ' \
-                + new_id[Index[res_sort[-4]]] + ' ' + new_id[Index[res_sort[-5]]]
+                new_id[index[res_sort[-1]]] + ' ' + new_id[index[res_sort[-2]]] + ' ' + new_id[
+                    index[res_sort[-3]]] + ' ' \
+                + new_id[index[res_sort[-4]]] + ' ' + new_id[index[res_sort[-5]]]
             pbar.update(1)
     submission.to_csv(os.path.join(save_path, "submission.csv"), index=False)
