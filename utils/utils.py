@@ -90,7 +90,7 @@ def KNN_by_iter(Feature_train, target_train, Feature_test, target_test, k, devic
         for item in range(Feature_test.shape[0]):
             K = copy.copy(k)
             while True:
-                target_train_index = target_train[Index[item, :K], 0].astype('int32')
+                target_train_index = target_train[Index[item, :K].astype('int32'), 0]
                 if len(np.unique(target_train_index)) >= 5:
                     break
                 K += 5
