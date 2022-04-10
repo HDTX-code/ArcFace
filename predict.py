@@ -22,7 +22,7 @@ def go_predict(data_test_path, data_csv_path, save_path, model_path, dict_id_pat
         model, dict_id, Feature_train, target_train = get_pre_need(model_path, dict_id_path, train_csv_train_path,
                                                                    device, w, h,
                                                                    data_train_path, batch_size,
-                                                                   num_workers, backbone)
+                                                                   num_workers, save_path, backbone)
         model.eval()
         if model_path_1 is not None:
             model_1, dict_id_1, Feature_train_1, target_train_1 = get_pre_need(model_path_1, dict_id_path_1,
