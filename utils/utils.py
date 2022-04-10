@@ -98,8 +98,8 @@ def KNN_by_iter(Feature_train, target_train, Feature_test, target_test, k, devic
             index = np.unique(target_train_index)
             res = np.zeros(len(index))
             for item2 in range(len(index)):
-                # res[item2] = score[target_train_index == index[item2]].mean()
-                res[item2] = sum(target_train_index == index[item2])
+                res[item2] = score[target_train_index == index[item2]].mean()
+                # res[item2] = sum(target_train_index == index[item2])
             res_sort = res.argsort()[-5:]
             submission.loc[
                 submission[
