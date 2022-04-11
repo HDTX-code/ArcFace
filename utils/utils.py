@@ -184,4 +184,4 @@ def get_model(backbone, pretrained, ):
     else:
         model = torchvision.models.resnet50(pretrained=pretrained)
         model.fc = torch.nn.Linear(model.fc.in_features, 512)
-
+    return  model
