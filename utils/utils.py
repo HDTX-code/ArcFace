@@ -1,6 +1,7 @@
 import copy
 import os
 from collections import Counter
+import random
 
 import cv2
 import numpy as np
@@ -10,6 +11,50 @@ import torch.nn.functional as F
 from tqdm import tqdm
 
 from utils.DataStrength import ImageNew
+
+
+def ImageRotate(image):
+    image = cv2.resize(image, (224, 224))
+    height, width = image.shape[:2]  # 输入(H,W,C)，取 H，W 的zhi
+    center = (width / 2, height / 2)  # 绕图片中心进行旋转
+    angle = random.randint(-180, 180)  # 旋转方向取（-180，180）中的随机整数值，负为逆时针，正为顺势针
+    scale = 1  # 将图像缩放为80%
+
+    # 获得旋转矩阵
+    M = cv2.getRotationMatrix2D(center, angle, scale)
+    # 进行仿射变换，边界填充为255，即白色，默认为黑色
+    image_rotation = cv2.warpAffine(src=image, M=M, dsize=(height, width), borderValue=(255, 255, 255))
+
+    return image_rotation
+
+
+def ImageNew(src):
+    blur_img = cv2.GaussianBlur(src, (0, 0), 5)
+    usm = cv2.addWeighted(src, 1.5, blur_img, -0.5, 0)
+    result = usm
+    return result
+
+
+def Image_GaussianBlur(img):
+    kernel_size = (5, 5)
+    sigma = 1.5
+    img = cv2.GaussianBlur(img, kernel_size, sigma)
+    return img
+
+
+def Image_flip_horizontal(img):
+    # 水平翻转
+    return cv2.flip(img, 1)
+
+
+def Image_flip_vertical(img):
+    # 垂直翻转
+    return cv2.flip(img, 0)
+
+
+def Image_flip_hv(img):
+    # 水平加垂直翻转
+    return cv2.flip(img, -1)
 
 
 def get_csv(path, label):
@@ -24,12 +69,13 @@ def get_img_for_tensor(path, w, h, isNew=False):
     img = cv2.imread(path)
     if isNew:
         img = ImageNew(img)
+    img = ImageRotate(img)
     # 改变格式成规定的框和高
     if img.shape[2] != 3:
         img = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
     img_0 = cv2.resize(img, (w, h))
     # 改变img1的时候不改变img
-    img1 = np.zeros([3, w, h])
+    img1 = np.zeros([3, h, w])
     # cv2读取的是bgr,转换成rgb就要做一下变通
     img1[0, :, :] = img_0[:, :, 2]
     img1[1, :, :] = img_0[:, :, 1]
