@@ -17,30 +17,65 @@ def go_predict(data_test_path, data_csv_path, save_path, model_path, dict_id_pat
     with torch.no_grad():
         print(torch.cuda.is_available())
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-        if Top_all_path is None:
-            # 建立全局字典
-            train_csv = pd.read_csv(data_csv_path)
-            train_csv_id = train_csv['individual_id'].unique()
-            dict_id_all = dict(zip(train_csv_id, range(len(train_csv_id))))
-            new_d_all = {v: k for k, v in dict_id_all.items()}
 
-            model, dict_id, Feature_train, target_train = get_pre_need(model_path, dict_id_path, train_csv_train_path,
-                                                                       device, w, h,
-                                                                       data_train_path, batch_size,
-                                                                       num_workers, save_path, backbone, Feature_train_path, target_train_path)
-            model.eval()
-            if model_path_1 is not None:
-                model_1, dict_id_1, Feature_train_1, target_train_1 = get_pre_need(model_path_1, dict_id_path_1,
-                                                                                   train_csv_train_path_1, device, w, h,
-                                                                                   data_train_path, batch_size,
-                                                                                   num_workers, backbone_1)
-                model_1.eval()
-            if model_path_2 is not None:
-                model_2, dict_id_2, Feature_train_2, target_train_2 = get_pre_need(model_path_2, dict_id_path_2,
-                                                                                   train_csv_train_path_2, device, w, h,
-                                                                                   data_train_path, batch_size,
-                                                                                   num_workers, backbone_2)
-                model_2.eval()
+        path_list = os.listdir(data_test_path)
+        # 建立test_dataloader的csv文件
+        submission = pd.DataFrame(columns=['image', 'predictions'])
+        for item in range(len(path_list)):
+            submission.loc[item, "image"] = path_list[item]
+        # 建立测试集地址字典
+        dict_id_test = dict(zip(path_list, range(len(path_list))))
+        new_d_test = {v: k for k, v in dict_id_test.items()}
+        # 建立全局字典
+        train_csv = pd.read_csv(data_csv_path)
+        train_csv_id = train_csv['individual_id'].unique()
+        dict_id_all = dict(zip(train_csv_id, range(len(train_csv_id))))
+        new_d_all = {v: k for k, v in dict_id_all.items()}
+
+        model, dict_id, Feature_train, target_train = get_pre_need(model_path, dict_id_path, train_csv_train_path,
+                                                                   device, w, h,
+                                                                   data_train_path, batch_size,
+                                                                   num_workers, save_path, backbone,
+                                                                   Feature_train_path, target_train_path)
+        model.eval()
+        if model_path_1 is not None:
+            model_1, dict_id_1, Feature_train_1, target_train_1 = get_pre_need(model_path_1, dict_id_path_1,
+                                                                               train_csv_train_path_1, device, w, h,
+                                                                               data_train_path, batch_size,
+                                                                               num_workers, backbone_1)
+            model_1.eval()
+        if model_path_2 is not None:
+            model_2, dict_id_2, Feature_train_2, target_train_2 = get_pre_need(model_path_2, dict_id_path_2,
+                                                                               train_csv_train_path_2, device, w, h,
+                                                                               data_train_path, batch_size,
+                                                                               num_workers, backbone_2)
+            model_2.eval()
+
+        test_dataset = TestDataset(submission, dict_id_test, data_test_path, w, h)
+        test_dataloader = DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=False,
+                                     num_workers=num_workers)
+        # Feature_test, target_test = get_feature(model, test_dataloader, device, 512)
+        if Feature_test_path is None:
+            Feature_test, target_test = get_feature(model, test_dataloader, device, 512)
+            # target_test = target_test.cpu().detach().numpy()
+            # Feature_test = Feature_test.cpu().detach().numpy()
+            np.save(os.path.join(save_path, "Feature_test.npy"), Feature_test.cpu().detach().numpy())
+            np.save(os.path.join(save_path, "target_test.npy"), target_test.cpu().detach().numpy())
+        else:
+            Feature_test = torch.from_numpy(np.load(Feature_test_path))
+            target_test = torch.from_numpy(np.load(target_test_path))
+        if model_path_1 is not None:
+            Feature_test_1, target_test_1 = get_feature(model_1, test_dataloader, device, 512)
+        else:
+            Feature_test_1 = None
+        if model_path_2 is not None:
+            Feature_test_2, target_test_2 = get_feature(model_2, test_dataloader, device, 512)
+        else:
+            Feature_test_2 = None
+
+        target_test = target_test.cpu().detach().numpy()
+
+        if Top_all_path is None:
             # 获取各个总类中心点
             Feature_train_num = np.zeros([len(dict_id), 512])
             for item in range(len(dict_id)):
@@ -57,40 +92,6 @@ def go_predict(data_test_path, data_csv_path, save_path, model_path, dict_id_pat
                     Feature_train_num_2[item] = np.mean(Feature_train_2[target_train_2[:, 0] == item, :], axis=0)
             else:
                 Feature_train_num_2 = None
-
-            path_list = os.listdir(data_test_path)
-            # 建立test_dataloader的csv文件
-            submission = pd.DataFrame(columns=['image', 'predictions'])
-            for item in range(len(path_list)):
-                submission.loc[item, "image"] = path_list[item]
-            # 建立测试集地址字典
-            dict_id_test = dict(zip(path_list, range(len(path_list))))
-            new_d_test = {v: k for k, v in dict_id_test.items()}
-
-            test_dataset = TestDataset(submission, dict_id_test, data_test_path, w, h)
-            test_dataloader = DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=False,
-                                         num_workers=num_workers)
-
-            # Feature_test, target_test = get_feature(model, test_dataloader, device, 512)
-            if Feature_test_path is None:
-                Feature_test, target_test = get_feature(model, test_dataloader, device, 512)
-                # target_test = target_test.cpu().detach().numpy()
-                # Feature_test = Feature_test.cpu().detach().numpy()
-                np.save(os.path.join(save_path, "Feature_test.npy"), Feature_test.cpu().detach().numpy())
-                np.save(os.path.join(save_path, "target_test.npy"), target_test.cpu().detach().numpy())
-            else:
-                Feature_test = torch.from_numpy(np.load(Feature_test_path))
-                target_test = torch.from_numpy(np.load(target_test_path))
-            if model_path_1 is not None:
-                Feature_test_1, target_test_1 = get_feature(model_1, test_dataloader, device, 512)
-            else:
-                Feature_test_1 = None
-            if model_path_2 is not None:
-                Feature_test_2, target_test_2 = get_feature(model_2, test_dataloader, device, 512)
-            else:
-                Feature_test_2 = None
-
-            target_test = target_test.cpu().detach().numpy()
 
             Top_all = np.zeros([len(path_list), 5])
             Top_index_all = np.zeros([len(path_list), 5])
@@ -123,31 +124,31 @@ def go_predict(data_test_path, data_csv_path, save_path, model_path, dict_id_pat
         else:
             Top_all = np.load(Top_all_path)
             Top_index_all = np.load(Top_index_all_path)
-        with tqdm(total=Top_all.shape[0], postfix=dict) as pbar2:
-            New_data = Top_all[np.argsort(Top_all[:, 0])[math.floor(0.12 * len(path_list))], 0]
-            # Is_new = 'new_whale' if Top[0] < 0.75 else new_d_all[Top_index[4]]
-            for item in range(len(path_list)):
-                submission.loc[
-                    submission[
-                        submission.image == new_d_test[target_test[item, 0]]].index.tolist(), "predictions"] = \
-                    new_d_all[Top_index_all[item, 0]] + ' ' + new_d_all[Top_index_all[item, 1]] + ' ' + new_d_all[
-                        Top_index_all[item, 2]] + ' ' + new_d_all[Top_index_all[item, 3]] + ' ' + new_d_all[
-                        Top_index_all[item, 4]]
-                # if Top_all[item, 0] <= New_data:
-                #     submission.loc[
-                #         submission[
-                #             submission.image == new_d_test[target_test[item, 0]]].index.tolist(), "predictions"] = \
-                #         'new_individual' + ' ' + new_d_all[Top_index_all[item, 0]] + ' ' + new_d_all[
-                #             Top_index_all[item, 1]] + ' ' + new_d_all[Top_index_all[item, 2]] + ' ' + new_d_all[Top_index_all[item, 3]]
-                # else:
-                #     submission.loc[
-                #         submission[
-                #             submission.image == new_d_test[target_test[item, 0]]].index.tolist(), "predictions"] = \
-                #         new_d_all[Top_index_all[item, 0]] + ' ' + new_d_all[Top_index_all[item, 1]] + ' ' + new_d_all[
-                #             Top_index_all[item, 2]] + ' ' + new_d_all[Top_index_all[item, 3]] + ' ' + new_d_all[Top_index_all[item, 4]]
-                pbar2.update(1)
-                pbar2.set_postfix(
-                    **{'Top': Top_all[item, 0], 'new': New_data})
+            with tqdm(total=Top_all.shape[0], postfix=dict) as pbar2:
+                New_data = Top_all[np.argsort(Top_all[:, 0])[math.floor(0.12 * len(path_list))], 0]
+                # Is_new = 'new_whale' if Top[0] < 0.75 else new_d_all[Top_index[4]]
+                for item in range(len(path_list)):
+                    submission.loc[
+                        submission[
+                            submission.image == new_d_test[target_test[item, 0]]].index.tolist(), "predictions"] = \
+                        new_d_all[Top_index_all[item, 0]] + ' ' + new_d_all[Top_index_all[item, 1]] + ' ' + new_d_all[
+                            Top_index_all[item, 2]] + ' ' + new_d_all[Top_index_all[item, 3]] + ' ' + new_d_all[
+                            Top_index_all[item, 4]]
+                    # if Top_all[item, 0] <= New_data:
+                    #     submission.loc[
+                    #         submission[
+                    #             submission.image == new_d_test[target_test[item, 0]]].index.tolist(), "predictions"] = \
+                    #         'new_individual' + ' ' + new_d_all[Top_index_all[item, 0]] + ' ' + new_d_all[
+                    #             Top_index_all[item, 1]] + ' ' + new_d_all[Top_index_all[item, 2]] + ' ' + new_d_all[Top_index_all[item, 3]]
+                    # else:
+                    #     submission.loc[
+                    #         submission[
+                    #             submission.image == new_d_test[target_test[item, 0]]].index.tolist(), "predictions"] = \
+                    #         new_d_all[Top_index_all[item, 0]] + ' ' + new_d_all[Top_index_all[item, 1]] + ' ' + new_d_all[
+                    #             Top_index_all[item, 2]] + ' ' + new_d_all[Top_index_all[item, 3]] + ' ' + new_d_all[Top_index_all[item, 4]]
+                    pbar2.update(1)
+                    pbar2.set_postfix(
+                        **{'Top': Top_all[item, 0], 'new': New_data})
         submission.to_csv(os.path.join(save_path, "submission.csv"), index=False)
 
 
