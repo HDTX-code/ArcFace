@@ -37,8 +37,10 @@ def make_train(model, metric_fc, criterion, optimizer, scheduler,
                 output_target = metric_fc(feature_target, target_t).to(device)
                 loss_target = criterion(output_target.reshape(-1, num_classes).to(device),
                                         target_t.reshape(-1).long().to(device)).to(device)
-
-                loss_species = criterion_species(feature_species.to(device), species_t.reshape(-1).long().to(device)).to(device)
+                if item > Freeze_Epoch:
+                    loss_species = criterion_species(feature_species.to(device), species_t.reshape(-1).long().to(device)).to(device)
+                else:
+                    loss_species = loss_target
 
                 loss = loss_target * 0.3 + loss_species * 0.7
                 optimizer.zero_grad()
