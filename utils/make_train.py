@@ -89,7 +89,7 @@ def make_train(model, metric_fc, criterion, optimizer, scheduler,
                 path_model = os.path.join(save_path, "model")
                 if not os.path.exists(path_model):
                     os.mkdir(path_model)
-                save_model(model, path_model, str(backbone) + Str, item, Loss, Score)
+                save_model(model, path_model, str(backbone) + Str, item, Loss_target, Loss_species)
                 # Feature_val = Feature_val.cpu().detach().numpy()
                 # target_val = target_val.cpu().detach().numpy()
                 # np.save(os.path.join(path_featureMap, "Feature_val_{}.npy".format(epoch_now)), Feature_val)
