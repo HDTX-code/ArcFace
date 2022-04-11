@@ -27,9 +27,10 @@ def make_train(model, metric_fc, criterion, optimizer, scheduler,
                 image_tensor = image_tensor.type(torch.FloatTensor).to(device)
 
                 feature = model(image_tensor).to(device)
-                feature_target = feature[:, :num_classes].to(device)
+                print(feature.shape)
+                feature_target = feature[:, :512].to(device)
                 print(feature_target.shape)
-                feature_species = feature[:, num_classes:].to(device)
+                feature_species = feature[:, 512:].to(device)
                 print(feature_species.shape)
 
                 output_target = metric_fc(feature_target, target_t).to(device)
@@ -65,7 +66,7 @@ def make_train(model, metric_fc, criterion, optimizer, scheduler,
             if (item % save_interval == 0 or item == max_epoch) and item > Freeze_Epoch:
                 # 开始验证，获取特征矩阵
                 if item == max_epoch:
-                    Feature_train, target_train = get_feature(model, train_loader, device, 512)
+                    Feature_train, target_train = get_feature(model, train_loader, device, 512 + 30)
                     path_featureMap = os.path.join(save_path, "FeatureMap")
                     if not os.path.exists(path_featureMap):
                         os.mkdir(path_featureMap)
@@ -75,7 +76,7 @@ def make_train(model, metric_fc, criterion, optimizer, scheduler,
                     np.save(os.path.join(path_featureMap, "target_train_{}.npy".format(item)), target_train)
                 if val_loader is not None:
                     # 计算验证得分
-                    Feature_val, target_val = get_feature(model, val_loader, device, 512)
+                    Feature_val, target_val = get_feature(model, val_loader, device, 512 + 30)
                     Score = make_val(Feature_train, target_train, Feature_val, target_val, device, num_classes)
                 else:
                     Score = 0
