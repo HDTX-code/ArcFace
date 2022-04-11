@@ -123,7 +123,7 @@ def go_predict(data_test_path, data_csv_path, save_path, model_path, dict_id_pat
         else:
             Top_all = np.load(Top_all_path)
             Top_index_all = np.load(Top_index_all_path)
-        with tqdm(total=target_test.shape[0], postfix=dict) as pbar2:
+        with tqdm(total=Top_all.shape[0], postfix=dict) as pbar2:
             New_data = Top_all[np.argsort(Top_all[:, 0])[math.floor(0.12 * len(path_list))], 0]
             # Is_new = 'new_whale' if Top[0] < 0.75 else new_d_all[Top_index[4]]
             for item in range(len(path_list)):
