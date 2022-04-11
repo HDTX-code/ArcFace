@@ -27,8 +27,10 @@ def make_train(model, metric_fc, criterion, optimizer, scheduler,
                 image_tensor = image_tensor.type(torch.FloatTensor).to(device)
 
                 feature = model(image_tensor).to(device)
-                feature_target = feature[:, :num_classes]
-                feature_species = feature[:, num_classes:]
+                feature_target = feature[:, :num_classes].to(device)
+                print(feature_target.shape)
+                feature_species = feature[:, num_classes:].to(device)
+                print(feature_species.shape)
 
                 output_target = metric_fc(feature_target, target_t).to(device)
                 loss_target = criterion(output_target.reshape(-1, num_classes).to(device),
