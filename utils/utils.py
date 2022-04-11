@@ -185,3 +185,22 @@ def get_model(backbone, pretrained, num_classes=512):
         model = torchvision.models.resnet50(pretrained=pretrained)
         model.fc = torch.nn.Linear(model.fc.in_features, num_classes)
     return model
+
+
+def load_model(model, model_path):
+    # 加快模型训练的效率
+    print('Loading weights into state dict...')
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    model_dict = model.state_dict()
+    pretrained_dict = torch.load(model_path, map_location=device)
+    a = {}
+    for k, v in pretrained_dict.items():
+        try:
+            if np.shape(model_dict[k]) == np.shape(v):
+                a[k] = v
+        except:
+            pass
+    model_dict.update(a)
+    model.load_state_dict(model_dict)
+    print('Finished!')
+    return model

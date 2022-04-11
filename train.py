@@ -34,7 +34,9 @@ def go_train(args):
     # 加载backbone,默认resnet50
     model = get_model(args.backbone, args.pretrained, num_classes=num_classes + len(dict_id_species))
     if args.model_path != "":
-        model.load_state_dict(torch.load(args.model_path, map_location=device), False)
+        # model.load_state_dict(torch.load(args.model_path, map_location=device), False)
+        model = load_model(model, args.model_path)
+        print('{} model loaded.'.format(args.model_path))
 
     # 加载模型的margin类型
     if args.metric == 'Arc':
