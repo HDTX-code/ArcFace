@@ -20,7 +20,8 @@ def make_train(model, metric_fc, criterion, optimizer, scheduler,
             model = model.train()
             model.to(device)
 
-            Loss = 0
+            Loss_target = 0
+            Loss_species = 0
 
             # 训练
             for iteration, (image_tensor, target_t, species_t) in enumerate(train_loader):
@@ -40,10 +41,13 @@ def make_train(model, metric_fc, criterion, optimizer, scheduler,
                 loss_species = criterion_species(feature_species.to(device), species_t.reshape(-1).long().to(device)).to(device)
 
                 loss = loss_target * 0.3 + loss_species * 0.7
-                Loss += loss
                 optimizer.zero_grad()
                 loss.backward()
                 optimizer.step()
+
+                Loss_target += loss_target.cpu().detach().numpy()
+                Loss_species += loss_species.cpu().detach().numpy()
+
                 pbar.set_postfix(**{'{}'.format(Str): loss_target.item(),
                                     'species': loss_species.item(),
                                     'lr': get_lr(optimizer)})
@@ -59,9 +63,11 @@ def make_train(model, metric_fc, criterion, optimizer, scheduler,
             metric_fc = metric_fc.eval()
             metric_fc.to(device)
 
-            Loss = Loss.cpu().detach().numpy() / len(train_loader)
+            Loss_target = Loss_target / len(train_loader)
+            Loss_species = Loss_species / len(train_loader)
 
-            print("第{}轮 : Loss_{} = {}".format(item, Str, Loss))
+            print("第{}轮 : Loss_{} = {}".format(item, Str, Loss_target))
+            print("第{}轮 : Loss_{} = {}".format(item, 'species', Loss_species))
 
             if (item % save_interval == 0 or item == max_epoch) and item > Freeze_Epoch:
                 # 开始验证，获取特征矩阵
