@@ -27,17 +27,17 @@ def make_train(model, metric_fc, criterion, optimizer, scheduler,
                 image_tensor = image_tensor.type(torch.FloatTensor).to(device)
 
                 feature = model(image_tensor).to(device)
-                print(feature.shape)
+                # print(feature.shape)
                 feature_target = feature[:, :512].to(device)
-                print(feature_target.shape)
+                # print(feature_target.shape)
                 feature_species = feature[:, 512:].to(device)
-                print(feature_species.shape)
+                # print(feature_species.shape)
 
                 output_target = metric_fc(feature_target, target_t).to(device)
                 loss_target = criterion(output_target.reshape(-1, num_classes).to(device),
                                         target_t.reshape(-1).long().to(device)).to(device)
 
-                loss_species = criterion_species(feature_species, species_t.reshape(-1)).to(device)
+                loss_species = criterion_species(feature_species.to(device), species_t.reshape(-1).to(device)).to(device)
 
                 loss = loss_target * 0.3 + loss_species * 0.7
                 Loss += loss
