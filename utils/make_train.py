@@ -37,7 +37,7 @@ def make_train(model, metric_fc, criterion, optimizer, scheduler,
                 loss_target = criterion(output_target.reshape(-1, num_classes).to(device),
                                         target_t.reshape(-1).long().to(device)).to(device)
 
-                loss_species = criterion_species(feature_species.to(device), species_t.reshape(-1).to(device)).to(device)
+                loss_species = criterion_species(feature_species.to(device), species_t.reshape(-1).long().to(device)).to(device)
 
                 loss = loss_target * 0.3 + loss_species * 0.7
                 Loss += loss
