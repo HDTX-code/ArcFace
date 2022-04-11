@@ -1,5 +1,7 @@
 import copy
 
+import numpy as np
+
 from __init__ import *
 
 
@@ -10,7 +12,8 @@ def go_predict(data_test_path, data_csv_path, save_path, model_path, dict_id_pat
                dict_id_path_1=None, dict_id_path_2=None,
                train_csv_train_path_1=None, train_csv_train_path_2=None,
                Feature_train_path=None, target_train_path=None,
-               Feature_test_path=None, target_test_path=None):
+               Feature_test_path=None, target_test_path=None,
+               Top_all_path=None, Top_index_all_path=None):
     with torch.no_grad():
         print(torch.cuda.is_available())
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -88,34 +91,38 @@ def go_predict(data_test_path, data_csv_path, save_path, model_path, dict_id_pat
             Feature_test_2 = None
 
         target_test = target_test.cpu().detach().numpy()
-        Top_all = np.zeros([len(path_list), 5])
-        Top_index_all = np.zeros([len(path_list), 5])
-        with tqdm(total=target_test.shape[0], postfix=dict) as pbar:
-            for item in range(target_test.shape[0]):
-                # Top, Top_index = get_pre(Feature_test[item, :], Feature_train, target_train, dict_id,
-                #                          dict_id_all,
-                #                          4, device)
-                if model_path_1 is not None and model_path_2 is not None:
-                    Top, Top_index = get_pre_num(Feature_test[item, :], Feature_train_num, dict_id, dict_id_all, 5,
-                                                 device,
-                                                 Feature_test_1[item, :], Feature_train_num_1,
-                                                 Feature_test_2[item, :], Feature_train_num_2)
-                elif model_path_1 is not None:
-                    Top, Top_index = get_pre_num(Feature_test[item, :], Feature_train_num, dict_id, dict_id_all, 5,
-                                                 device, Feature_test_1[item, :], Feature_train_num_1)
-                elif model_path_2 is not None:
-                    Top, Top_index = get_pre_num(Feature_test[item, :], Feature_train_num, dict_id, dict_id_all, 5,
-                                                 device,
-                                                 feature_test_2=Feature_test_2[item, :],
-                                                 Feature_train_num_2=Feature_train_num_2)
-                else:
-                    Top, Top_index = get_pre_num(Feature_test[item, :], Feature_train_num, dict_id, dict_id_all, 5,
-                                                 device)
-                Top_all[item, :] = copy.copy(Top)
-                Top_index_all[item, :] = copy.copy(Top_index)
-                pbar.update(1)
-        np.save(os.path.join(save_path, "Top.npy"), Top_all)
-        np.save(os.path.join(save_path, "Top_index.npy"), Top_index_all)
+        if Top_all_path is None:
+            Top_all = np.zeros([len(path_list), 5])
+            Top_index_all = np.zeros([len(path_list), 5])
+            with tqdm(total=target_test.shape[0], postfix=dict) as pbar:
+                for item in range(target_test.shape[0]):
+                    # Top, Top_index = get_pre(Feature_test[item, :], Feature_train, target_train, dict_id,
+                    #                          dict_id_all,
+                    #                          4, device)
+                    if model_path_1 is not None and model_path_2 is not None:
+                        Top, Top_index = get_pre_num(Feature_test[item, :], Feature_train_num, dict_id, dict_id_all, 5,
+                                                     device,
+                                                     Feature_test_1[item, :], Feature_train_num_1,
+                                                     Feature_test_2[item, :], Feature_train_num_2)
+                    elif model_path_1 is not None:
+                        Top, Top_index = get_pre_num(Feature_test[item, :], Feature_train_num, dict_id, dict_id_all, 5,
+                                                     device, Feature_test_1[item, :], Feature_train_num_1)
+                    elif model_path_2 is not None:
+                        Top, Top_index = get_pre_num(Feature_test[item, :], Feature_train_num, dict_id, dict_id_all, 5,
+                                                     device,
+                                                     feature_test_2=Feature_test_2[item, :],
+                                                     Feature_train_num_2=Feature_train_num_2)
+                    else:
+                        Top, Top_index = get_pre_num(Feature_test[item, :], Feature_train_num, dict_id, dict_id_all, 5,
+                                                     device)
+                    Top_all[item, :] = copy.copy(Top)
+                    Top_index_all[item, :] = copy.copy(Top_index)
+                    pbar.update(1)
+            np.save(os.path.join(save_path, "Top.npy"), Top_all)
+            np.save(os.path.join(save_path, "Top_index.npy"), Top_index_all)
+        else:
+            Top_all = np.load(Top_all_path)
+            Top_index_all = np.load(Top_index_all_path)
         with tqdm(total=target_test.shape[0], postfix=dict) as pbar2:
             New_data = Top_all[np.argsort(Top_all[:, 0])[math.floor(0.12 * len(path_list))], 0]
             # Is_new = 'new_whale' if Top[0] < 0.75 else new_d_all[Top_index[4]]
@@ -162,6 +169,8 @@ if __name__ == '__main__':
     parser.add_argument('--target_train_path', type=str, help='训练集标签矩阵路径', default=None)
     parser.add_argument('--Feature_test_path', type=str, help='测试集特征矩阵路径', default=None)
     parser.add_argument('--target_test_path', type=str, help='测试集标签矩阵路径', default=None)
+    parser.add_argument('--Top_all_path', type=str, help='测试集特征矩阵路径', default=None)
+    parser.add_argument('--Top_index_all_path', type=str, help='测试集标签矩阵路径', default=None)
     parser.add_argument('--data_test_path', type=str, help='测试集路径', required=True)
     parser.add_argument('--data_train_path', type=str, help='训练集路径', default="../input/data-do-cut/All/All")
     parser.add_argument('--data_csv_path', type=str, help='训练集csv路径',
@@ -193,6 +202,8 @@ if __name__ == '__main__':
                target_train_path=args.target_train_path,
                Feature_test_path=args.Feature_test_path,
                target_test_path=args.target_test_path,
+               Top_all_path=args.Top_all_path,
+               Top_index_all_path=args.Top_index_all_path,
                w=args.w,
                h=args.h)
     # # -------------------------------#
