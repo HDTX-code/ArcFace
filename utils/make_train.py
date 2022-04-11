@@ -12,7 +12,7 @@ from utils.utils import get_lr
 
 
 def make_train(model, metric_fc, criterion, optimizer, scheduler,
-               train_loader, device, Str, num_classes,
+               train_loader, device, Str, num_classes, criterion_species,
                max_epoch, save_interval, save_path, backbone, epoch_start, epoch_end, Freeze_Epoch, val_loader=None):
     for item in range(epoch_start, epoch_end + 1):
         with tqdm(total=(len(train_loader)), desc=f'Epoch {item}/{max_epoch}', postfix=dict) as pbar:
@@ -23,17 +23,27 @@ def make_train(model, metric_fc, criterion, optimizer, scheduler,
             Loss = 0
 
             # 训练
-            for iteration, (image_tensor, target_t) in enumerate(train_loader):
+            for iteration, (image_tensor, target_t, species_t) in enumerate(train_loader):
                 image_tensor = image_tensor.type(torch.FloatTensor).to(device)
+
                 feature = model(image_tensor).to(device)
-                output = metric_fc(feature, target_t).to(device)
-                loss = criterion(output.reshape(-1, num_classes).to(device),
-                                 target_t.reshape(-1).long().to(device)).to(device)
+                feature_target = feature[:, :num_classes]
+                feature_species = feature[:, num_classes:]
+
+                output_target = metric_fc(feature_target, target_t).to(device)
+                loss_target = criterion(output_target.reshape(-1, num_classes).to(device),
+                                        target_t.reshape(-1).long().to(device)).to(device)
+
+                loss_species = criterion_species(feature_species, species_t.reshape(-1)).to(device)
+
+                loss = loss_target * 0.3 + loss_species * 0.7
                 Loss += loss
                 optimizer.zero_grad()
                 loss.backward()
                 optimizer.step()
-                pbar.set_postfix(**{'loss_{}'.format(Str): loss.item(), 'lr': get_lr(optimizer)})
+                pbar.set_postfix(**{'loss_target{}'.format(Str): loss_target.item(),
+                                    'loss_species{}'.format(Str): loss_species.item(),
+                                    'lr': get_lr(optimizer)})
                 pbar.update(1)
                 # if iteration >= 1:
                 #     break
