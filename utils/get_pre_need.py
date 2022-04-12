@@ -29,7 +29,7 @@ def get_pre_need(model_path, dict_id_path, dict_id_species_path, train_csv_path,
         #     dict_id_path = os.path.join(root_path, "dict_id.txt")
 
         # 加载模型
-        model = get_model(backbone, pretrained)
+        model = get_model(backbone, pretrained, num_classes=512+ 30)
 
         model.load_state_dict(torch.load(model_path, map_location=device), False)
         model.eval()
