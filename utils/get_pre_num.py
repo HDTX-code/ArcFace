@@ -23,7 +23,6 @@ def get_pre_num(data_csv, feature_test, Feature_train_num, dict_id, dict_id_spec
     Top = np.zeros(5)
     Top_index = np.zeros(5)
 
-    id_index = np.array(range(Feature_train_num.shape[0]))
 
     feature_train_num = Feature_train_num[id_index, :]
 
