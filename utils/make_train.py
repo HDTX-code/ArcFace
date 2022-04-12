@@ -57,8 +57,10 @@ def make_train(model, metric_fc, criterion, optimizer, scheduler,
                     path_featureMap = os.path.join(save_path, "FeatureMap")
                     if not os.path.exists(path_featureMap):
                         os.mkdir(path_featureMap)
-                    np.save(os.path.join(path_featureMap, "Feature_train_{}.npy".format(item)), Feature_train.cpu().detach().numpy())
-                    np.save(os.path.join(path_featureMap, "target_train_{}.npy".format(item)), target_train.cpu().detach().numpy())
+                    np.save(os.path.join(path_featureMap, "Feature_train_{}.npy".format(item)),
+                            Feature_train.cpu().detach().numpy())
+                    np.save(os.path.join(path_featureMap, "target_train_{}.npy".format(item)),
+                            target_train.cpu().detach().numpy())
                 if val_loader is not None:
                     # 计算验证得分
                     Feature_val, target_val = get_feature(model, val_loader, device, 512)
