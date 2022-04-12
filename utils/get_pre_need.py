@@ -48,7 +48,7 @@ def get_pre_need(model_path, dict_id_path, dict_id_species_path, train_csv_path,
                                        dict_id_species, data_train_path, w, h)
             dataloader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=False,
                                     num_workers=num_workers)
-            Feature_train, target_train = get_feature(model, dataloader, device, 512 + 30)
+            Feature_train, target_train, species_train = get_feature(model, dataloader, device, 512 + 30)
             Feature_train = Feature_train.cpu().detach().numpy()
             target_train = target_train.cpu().detach().numpy()
             np.save(os.path.join(save_path, "Feature_train.npy"), Feature_train)
