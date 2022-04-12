@@ -46,7 +46,7 @@ def go_predict(args):
                                      num_workers=args.num_workers)
         # Feature_test, target_test = get_feature(model, test_dataloader, device, 512)
         if args.Feature_test_path is None:
-            Feature_test, target_test, target_species = get_feature(model, test_dataloader, device, 512)
+            Feature_test, target_test, target_species = get_feature(model, test_dataloader, device, 512 + 30)
             np.save(os.path.join(args.save_path, "Feature_test.npy"), Feature_test.cpu().detach().numpy())
             np.save(os.path.join(args.save_path, "target_test.npy"), target_test.cpu().detach().numpy())
         else:
