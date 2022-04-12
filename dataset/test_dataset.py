@@ -23,7 +23,9 @@ class TestDataset(Dataset):
         img_tensor = torch.from_numpy(img1)
         target_tensor = torch.ones([1])
         target_tensor[0] = target
-        return img_tensor, target_tensor
+        species_label = torch.ones([1])
+        species_label[0] = 1
+        return img_tensor, target_tensor, species_label
 
     def __len__(self):
         return len(self.csv)

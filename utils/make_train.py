@@ -74,29 +74,31 @@ def make_train(model, metric_fc, criterion, optimizer, scheduler,
             if (item % save_interval == 0 or item == max_epoch) and item > Freeze_Epoch:
                 # 开始验证，获取特征矩阵
                 if item == max_epoch:
-                    Feature_train, target_train = get_feature(model, train_loader, device, 512 + 30)
+                    Feature_train, target_train, species_train = get_feature(model, train_loader, device, 512 + 30)
                     path_featureMap = os.path.join(save_path, "FeatureMap")
                     if not os.path.exists(path_featureMap):
                         os.mkdir(path_featureMap)
                     Feature_train = Feature_train.cpu().detach().numpy()
                     target_train = target_train.cpu().detach().numpy()
+                    species_train = species_train.cpu().detach().numpy()
                     np.save(os.path.join(path_featureMap, "Feature_train_{}.npy".format(item)), Feature_train)
                     np.save(os.path.join(path_featureMap, "target_train_{}.npy".format(item)), target_train)
-                if val_loader is not None:
-                    # 计算验证得分
-                    Feature_val, target_val = get_feature(model, val_loader, device, 512 + 30)
-                    Score = make_val(Feature_train, target_train, Feature_val, target_val, device, num_classes)
-                else:
-                    Score = 0
+                    np.save(os.path.join(path_featureMap, "species_train_{}.npy".format(item)), species_train)
+                # if val_loader is not None:
+                #     # 计算验证得分
+                #     Feature_val, target_val = get_feature(model, val_loader, device, 512 + 30)
+                #     Score = make_val(Feature_train, target_train, Feature_val, target_val, device, num_classes)
+                #     Feature_val = Feature_val.cpu().detach().numpy()
+                #     target_val = target_val.cpu().detach().numpy()
+                #     np.save(os.path.join(path_featureMap, "Feature_val_{}.npy".format(epoch_now)), Feature_val)
+                #     np.save(os.path.join(path_featureMap, "target_val_{}.npy".format(epoch_now)), target_val)
+                #     print("第{}轮 : Score={}".format(i, Score))
+                # else:
+                #     Score = 0
                 path_model = os.path.join(save_path, "model")
                 if not os.path.exists(path_model):
                     os.mkdir(path_model)
                 save_model(model, path_model, str(backbone) + Str, item, Loss_target, Loss_species)
-                # Feature_val = Feature_val.cpu().detach().numpy()
-                # target_val = target_val.cpu().detach().numpy()
-                # np.save(os.path.join(path_featureMap, "Feature_val_{}.npy".format(epoch_now)), Feature_val)
-                # np.save(os.path.join(path_featureMap, "target_val_{}.npy".format(epoch_now)), target_val)
-                # print("第{}轮 : Score={}".format(i, Score))
         # if i >= 1:
         #     break
     return model

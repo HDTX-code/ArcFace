@@ -12,17 +12,20 @@ def get_feature(model, dataloader, device, feature_num):
     val = 0
     with tqdm(total=len(dataloader)) as pbar3:
         with torch.no_grad():
-            for iteration, (image_tensor, target_t) in enumerate(dataloader):
+            for iteration, (image_tensor, target_t, species_t) in enumerate(dataloader):
                 image_tensor = image_tensor.type(torch.FloatTensor).to(device)
                 feature = model(image_tensor.to(device))
                 feature.reshape(-1, feature_num).to(device)
                 target_t.reshape(-1, 1).to(device)
+                species_t.reshape(-1, 1).to(device)
                 if val == 0:
                     Feature = copy.copy(feature)
                     target = copy.copy(target_t)
+                    species = copy.copy(species_t)
                     val = 1
                 else:
                     Feature = torch.cat((Feature, feature), 0)
                     target = torch.cat((target, target_t), 0)
+                    species = torch.cat((species, species_t), 0)
                 pbar3.update(1)
-    return Feature, target
+    return Feature, target, species

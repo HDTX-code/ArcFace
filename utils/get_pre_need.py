@@ -13,7 +13,7 @@ from utils.get_feature import get_feature
 from utils.utils import get_model
 
 
-def get_pre_need(model_path, dict_id_path, train_csv_path,  device, w, h, data_train_path,
+def get_pre_need(model_path, dict_id_path, dict_id_species_path, train_csv_path,  device, w, h, data_train_path,
                  batch_size, num_workers, save_path, backbone='resnet50', Feature_train_path=None, target_train_path=None):
     with torch.no_grad():
         pretrained = False
@@ -38,6 +38,9 @@ def get_pre_need(model_path, dict_id_path, train_csv_path,  device, w, h, data_t
         f2 = open(dict_id_path, 'r')
         dict_id = json.load(f2)
 
+        f3 = open(dict_id_species_path, 'r')
+        dict_id_species = json.load(f3)
+
         # 加载Feature_train
         if Feature_train_path is None:
             train_csv_train = pd.read_csv(train_csv_path)
@@ -53,4 +56,4 @@ def get_pre_need(model_path, dict_id_path, train_csv_path,  device, w, h, data_t
             Feature_train = np.load(Feature_train_path)
             target_train = np.load(target_train_path)
 
-    return model, dict_id, Feature_train, target_train
+    return model, dict_id, dict_id_species, Feature_train, target_train
