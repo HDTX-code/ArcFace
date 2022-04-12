@@ -4,8 +4,7 @@ import torch.nn.functional as F
 
 
 def get_pre_num(data_csv, feature_test, Feature_train_num, dict_id, dict_id_species, dict_id_all, it, device):
-    Feature_train_num = torch.from_numpy(Feature_train_num).to(device)
-    feature_test = feature_test.to(device)
+    feature_test = feature_test.cpu().detach().numpy()
     new_d = {v: k for k, v in dict_id.items()}
     new_d_species = {v: k for k, v in dict_id_species.items()}
 
@@ -21,6 +20,9 @@ def get_pre_num(data_csv, feature_test, Feature_train_num, dict_id, dict_id_spec
     Top_index = np.zeros(5)
 
     feature_train_num = Feature_train_num[id_index, :]
+
+    feature_train_num = torch.from_numpy(feature_train_num).to(device)
+    feature_test = feature_test.to(device)
     with torch.no_grad():
         output = F.cosine_similarity(
             torch.mul(torch.ones(feature_train_num.shape).to(device), feature_test.T),
