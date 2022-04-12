@@ -10,8 +10,10 @@ def get_pre_num(data_csv, feature_test, Feature_train_num, dict_id, dict_id_spec
 
     feature_species = feature_test[512:]
     feature_target_test = feature_test[:512]
-    species = new_d_species[np.argmax(feature_species)]
-    Id_list = data_csv.loc[data_csv["species"] == species, "individual_id"].unique()
+    species = (new_d_species[np.argsort(feature_species)[-1]],
+               new_d_species[np.argsort(feature_species)[-2]],
+               new_d_species[np.argsort(feature_species)[-3]])
+    Id_list = data_csv.loc[data_csv["species"].isin(species), "individual_id"].unique()
     id_index = []
     for item2 in Id_list:
         id_index.append(dict_id[item2])
