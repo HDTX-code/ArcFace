@@ -153,7 +153,7 @@ if __name__ == '__main__':
     parser.add_argument('--pretrained', type=bool, help='是否需要预训练', default=True)
     parser.add_argument('--model_path', type=str, help='上次训练模型权重', default=r'')
     parser.add_argument('--num_workers', type=int, default=2)
-    parser.add_argument('--save_interval', type=int, help='保存间隔', default=3)
+    parser.add_argument('--save_interval', type=int, help='保存间隔', default=2)
     parser.add_argument('--Freeze_Epoch', type=int, help='冻结训练轮次', default=12)
     parser.add_argument('--Freeze_lr', type=float, help='冻结训练lr', default=0.1)
     parser.add_argument('--Freeze_gamma', type=float, help='冻结训练gamma', default=0.1)
