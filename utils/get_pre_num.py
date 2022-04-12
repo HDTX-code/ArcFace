@@ -9,6 +9,7 @@ def get_pre_num(data_csv, feature_test, Feature_train_num, dict_id, dict_id_spec
     new_d_species = {v: k for k, v in dict_id_species.items()}
 
     feature_species = feature_test[512:]
+    feature_target_test = feature_test[:512]
     species = new_d_species[np.argmax(feature_species)]
     Id_list = data_csv.loc[data_csv["species"] == species, "individual_id"].unique()
     id_index = []
@@ -22,10 +23,10 @@ def get_pre_num(data_csv, feature_test, Feature_train_num, dict_id, dict_id_spec
     feature_train_num = Feature_train_num[id_index, :]
 
     feature_train_num = torch.from_numpy(feature_train_num).to(device)
-    feature_test = torch.from_numpy(feature_test).to(device)
+    feature_target_test = torch.from_numpy(feature_target_test).to(device)
     with torch.no_grad():
         output = F.cosine_similarity(
-            torch.mul(torch.ones(feature_train_num.shape).to(device), feature_test.T),
+            torch.mul(torch.ones(feature_train_num.shape).to(device), feature_target_test.T),
             feature_train_num, dim=1).to(device)
         output = output.cpu().detach().numpy()
         Top_index[:It] = id_index[np.argsort(output)[-It:][::-1]]
