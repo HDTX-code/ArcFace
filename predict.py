@@ -112,8 +112,6 @@ if __name__ == '__main__':
     parser.add_argument('--dict_id_species_path', type=str, help='训练species类型对应字典路径', required=True)
     parser.add_argument('--model_path', type=str, help='模型路径', required=True)
     parser.add_argument('--train_csv_train_path', type=str, help='本次训练csv路径', required=True)
-    parser.add_argument('--train_csv_train_path_1', type=str, help='本次训练csv路径', default=None)
-    parser.add_argument('--train_csv_train_path_2', type=str, help='本次训练csv路径', default=None)
     parser.add_argument('--Feature_train_path', type=str, help='训练集特征矩阵路径', default=None)
     parser.add_argument('--target_train_path', type=str, help='训练集标签矩阵路径', default=None)
     parser.add_argument('--Feature_test_path', type=str, help='测试集特征矩阵路径', default=None)
