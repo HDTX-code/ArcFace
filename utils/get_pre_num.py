@@ -15,6 +15,7 @@ def get_pre_num(data_csv, feature_test, Feature_train_num, dict_id, dict_id_spec
     id_index = []
     for item2 in Id_list:
         id_index.append(dict_id[item2])
+    id_index = np.array(id_index)
 
     It = len(id_index) if len(id_index) < 5 else 5
     Top = np.zeros(5)
