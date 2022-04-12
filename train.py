@@ -1,21 +1,16 @@
+import pandas as pd
+
 from __init__ import *
 
 
-def go_train(backbone, data_train_path, save_path,
-             dict_id_path, train_csv_train_path,
-             model_path, metric, num_workers,
-             save_interval, Freeze_Epoch, Freeze_lr,
-             Freeze_lr_step, Freeze_batch_size,
-             Unfreeze_Epoch, Unfreeze_lr, Unfreeze_lr_step,
-             Unfreeze_batch_size, w, h, pretrained, Freeze_weight_decay,
-             Unfreeze_weight_decay, Freeze_gamma, Unfreeze_gamma, m):
+def go_train(args):
     # 训练设备
     print(torch.cuda.is_available())
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-    print("backbone = " + backbone)
+    print("backbone = " + args.backbone)
 
-    print("metric = " + metric)
+    print("metric = " + args.metric)
 
     # 清洗数据，生成训练所需csv及dict
     # train_csv_train, train_csv_val, dict_id_all = make_csv(data_csv_path,
@@ -23,10 +18,13 @@ def go_train(backbone, data_train_path, save_path,
     #                                                        high,
     #                                                        val_number,
     #                                                        save_path)
-    f2 = open(dict_id_path, 'r')
+    f2 = open(args.dict_id_path, 'r')
     dict_id_all = json.load(f2)
-    train_csv_train = pd.read_csv(train_csv_train_path)
-    train_csv_val = None
+    train_csv_train = pd.read_csv(args.train_csv_train_path)
+    if args.train_csv_train_path is None:
+        train_csv_val = None
+    else:
+        train_csv_val = pd.read_csv(args.train_csv_train_path)
 
     num_classes = len(dict_id_all)
 
@@ -34,26 +32,26 @@ def go_train(backbone, data_train_path, save_path,
     criterion = FocalLoss(gamma=2)
 
     # 加载backbone,默认resnet50
-    model = get_model(backbone, pretrained)
-    if model_path != "":
-        model.load_state_dict(torch.load(model_path, map_location=device), False)
+    model = get_model(args.backbone, args.pretrained)
+    if args.model_path != "":
+        model.load_state_dict(torch.load(args.model_path, map_location=device), False)
 
     # 加载模型的margin类型
-    if metric == 'Arc':
-        metric_fc = ArcMarginProduct(512, num_classes, m=m)
-    elif metric == 'Add':
-        metric_fc = AddMarginProduct(512, num_classes, m=m)
+    if args.metric == 'Arc':
+        metric_fc = ArcMarginProduct(512, num_classes, m=args.m)
+    elif args.metric == 'Add':
+        metric_fc = AddMarginProduct(512, num_classes, m=args.m)
     else:
         metric_fc = SphereProduct(512, num_classes)
 
     # dataset
-    train_dataset = ArcDataset(train_csv_train, dict_id_all, data_train_path, w,
-                               h)
+    train_dataset = ArcDataset(train_csv_train, dict_id_all, args.data_train_path, args.w,
+                               args.h)
     if train_csv_val is not None:
-        val_dataset = ArcDataset(train_csv_val, dict_id_all, data_train_path, w,
-                                 h)
-        val_dataloader = DataLoader(dataset=val_dataset, batch_size=Freeze_batch_size, shuffle=True,
-                                    num_workers=num_workers)
+        val_dataset = ArcDataset(train_csv_val, dict_id_all, args.data_train_path, args.w,
+                                 args.h)
+        val_dataloader = DataLoader(dataset=val_dataset, batch_size=args.Freeze_batch_size, shuffle=True,
+                                    num_workers=args.num_workers)
     else:
         val_dataloader = None
 
@@ -64,7 +62,7 @@ def go_train(backbone, data_train_path, save_path,
 
     criterion.to(device)
 
-    if Freeze_Epoch != 0:
+    if args.Freeze_Epoch != 0:
         # -------------------------------#
         #   开始冻结训练
         # -------------------------------#
@@ -73,13 +71,13 @@ def go_train(backbone, data_train_path, save_path,
         #   选择优化器
         # -------------------------------#
         Freeze_optimizer = torch.optim.SGD([{'params': model.parameters()}, {'params': metric_fc.parameters()}],
-                                           lr=Freeze_lr, weight_decay=Freeze_weight_decay)
-        Freeze_scheduler = StepLR(Freeze_optimizer, step_size=Freeze_lr_step, gamma=Freeze_gamma)
+                                           lr=args.Freeze_lr, weight_decay=args.Freeze_weight_decay)
+        Freeze_scheduler = StepLR(Freeze_optimizer, step_size=args.Freeze_lr_step, gamma=args.Freeze_gamma)
         # -------------------------------#
         #   生成冻结dataloader
         # -------------------------------#
-        Freeze_train_dataloader = DataLoader(dataset=train_dataset, batch_size=Freeze_batch_size, shuffle=True,
-                                             num_workers=num_workers)
+        Freeze_train_dataloader = DataLoader(dataset=train_dataset, batch_size=args.Freeze_batch_size, shuffle=True,
+                                             num_workers=args.num_workers)
         # -------------------------------#
         #   冻结措施
         # -------------------------------#
@@ -94,14 +92,14 @@ def go_train(backbone, data_train_path, save_path,
                            val_loader=val_dataloader,
                            device=device,
                            num_classes=num_classes,
-                           max_epoch=Freeze_Epoch + Unfreeze_Epoch,
-                           save_interval=save_interval,
-                           save_path=save_path,
-                           backbone=backbone,
+                           max_epoch=args.Freeze_Epoch + args.Unfreeze_Epoch,
+                           save_interval=args.save_interval,
+                           save_path=args.save_path,
+                           backbone=args.backbone,
                            epoch_start=1,
-                           epoch_end=Freeze_Epoch,
-                           Str=metric,
-                           Freeze_Epoch=Freeze_Epoch)
+                           epoch_end=args.Freeze_Epoch,
+                           Str=args.metric,
+                           Freeze_Epoch=args.Freeze_Epoch)
 
     # -------------------------------#
     #   开始解冻训练
@@ -111,13 +109,13 @@ def go_train(backbone, data_train_path, save_path,
     #   选择优化器
     # -------------------------------#
     Unfreeze_optimizer = torch.optim.SGD([{'params': model.parameters()}, {'params': metric_fc.parameters()}],
-                                         lr=Unfreeze_lr, weight_decay=Unfreeze_weight_decay)
-    Unfreeze_scheduler = StepLR(Unfreeze_optimizer, step_size=Unfreeze_lr_step, gamma=Unfreeze_gamma)
+                                         lr=args.Unfreeze_lr, weight_decay=args.Unfreeze_weight_decay)
+    Unfreeze_scheduler = StepLR(Unfreeze_optimizer, step_size=args.Unfreeze_lr_step, gamma=args.Unfreeze_gamma)
     # -------------------------------#
     #   生成解冻dataloader
     # -------------------------------#
-    Unfreeze_train_dataloader = DataLoader(dataset=train_dataset, batch_size=Unfreeze_batch_size, shuffle=True,
-                                           num_workers=num_workers)
+    Unfreeze_train_dataloader = DataLoader(dataset=train_dataset, batch_size=args.Unfreeze_batch_size, shuffle=True,
+                                           num_workers=args.num_workers)
     # -------------------------------#
     #   解冻措施
     # -------------------------------#
@@ -132,14 +130,14 @@ def go_train(backbone, data_train_path, save_path,
                val_loader=val_dataloader,
                device=device,
                num_classes=num_classes,
-               max_epoch=Freeze_Epoch + Unfreeze_Epoch,
-               save_interval=save_interval,
-               save_path=save_path,
-               backbone=backbone,
-               epoch_start=Freeze_Epoch + 1,
-               epoch_end=Freeze_Epoch + Unfreeze_Epoch,
-               Str=metric,
-               Freeze_Epoch=Freeze_Epoch)
+               max_epoch=args.Freeze_Epoch + args.Unfreeze_Epoch,
+               save_interval=args.save_interval,
+               save_path=args.save_path,
+               backbone=args.backbone,
+               epoch_start=args.Freeze_Epoch + 1,
+               epoch_end=args.Freeze_Epoch + args.Unfreeze_Epoch,
+               Str=args.metric,
+               Freeze_Epoch=args.Freeze_Epoch)
 
 
 if __name__ == '__main__':
@@ -150,6 +148,7 @@ if __name__ == '__main__':
     parser.add_argument('--save_path', type=str, help='存储路径', default=r'./')
     parser.add_argument('--dict_id_path', type=str, help='训练类型对应字典路径', required=True)
     parser.add_argument('--train_csv_train_path', type=str, help='需要训练数据csv路径', required=True)
+    parser.add_argument('--train_csv_val_path', type=str, help='需要测试数据csv路径', default=None)
     parser.add_argument('--metric', type=str, help='Arc/Add/Sph', default='Arc')
     parser.add_argument('--pretrained', type=bool, help='是否需要预训练', default=True)
     parser.add_argument('--model_path', type=str, help='上次训练模型权重', default=r'')
@@ -172,28 +171,4 @@ if __name__ == '__main__':
     parser.add_argument('--m', type=float, help='Arc参数', default=0.4)
     args = parser.parse_args()
 
-    go_train(backbone=args.backbone,
-             data_train_path=args.data_train_path,
-             save_path=args.save_path,
-             dict_id_path=args.dict_id_path,
-             train_csv_train_path=args.train_csv_train_path,
-             metric=args.metric,
-             pretrained=args.pretrained,
-             num_workers=args.num_workers,
-             save_interval=args.save_interval,
-             Freeze_Epoch=args.Freeze_Epoch,
-             Freeze_lr=args.Freeze_lr,
-             Freeze_lr_step=args.Freeze_lr_step,
-             Freeze_weight_decay=args.Freeze_weight_decay,
-             Freeze_batch_size=args.Freeze_batch_size,
-             Unfreeze_Epoch=args.Unfreeze_Epoch,
-             Unfreeze_lr=args.Unfreeze_lr,
-             model_path=args.model_path,
-             Unfreeze_lr_step=args.Unfreeze_lr_step,
-             Unfreeze_weight_decay=args.Unfreeze_weight_decay,
-             Unfreeze_batch_size=args.Unfreeze_batch_size,
-             w=args.w,
-             h=args.h,
-             Freeze_gamma=args.Freeze_gamma,
-             Unfreeze_gamma=args.Unfreeze_gamma,
-             m=args.m)
+    go_train(args)
