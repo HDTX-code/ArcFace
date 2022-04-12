@@ -46,10 +46,10 @@ def go_train(args):
 
     # dataset
     train_dataset = ArcDataset(train_csv_train, dict_id_all, args.data_train_path, args.w,
-                               args.h)
+                               args.h, IsNew=None, IsRotate=True)
     if train_csv_val is not None:
         val_dataset = ArcDataset(train_csv_val, dict_id_all, args.data_train_path, args.w,
-                                 args.h)
+                                 args.h, IsNew=None, IsRotate=None)
         val_dataloader = DataLoader(dataset=val_dataset, batch_size=args.Freeze_batch_size, shuffle=True,
                                     num_workers=args.num_workers)
     else:

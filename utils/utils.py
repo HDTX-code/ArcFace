@@ -67,11 +67,12 @@ def get_csv(path, label):
     return csv
 
 
-def get_img_for_tensor(path, w, h, isNew=False):
+def get_img_for_tensor(path, w, h, isNew=False, IsRotate=True):
     img = cv2.imread(path)
     if isNew:
         img = ImageNew(img)
-    img = ImageRotate(img)
+    if IsRotate:
+        img = ImageRotate(img)
     # 改变格式成规定的框和高
     if img.shape[2] != 3:
         img = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
