@@ -1,3 +1,5 @@
+import os
+
 import cv2
 import numpy as np
 import torch
@@ -8,16 +10,19 @@ from utils.utils import get_img_for_tensor
 
 
 class ClassesDataset(Dataset):
-    def __init__(self, csv, w, h, is_strength=1):
-        self.csv = csv
+    def __init__(self, csv, dict_id, data_train_path, w, h, IsNew=None, IsRotate=None):
+        self.data_train_path = data_train_path
         self.w = w
         self.h = h
-        self.is_strength = is_strength
+        self.csv = csv
+        self.dict_id = dict_id
+        self.IsNew = IsNew
+        self.IsRotate = IsRotate
 
     def __getitem__(self, index):
-        path = self.csv.loc[index, 'path']
-        target = self.csv.loc[index, 'individual_id']
-        img1 = get_img_for_tensor(path, self.w, self.h, isNew=True)
+        path = os.path.join(self.data_train_path, self.csv.loc[index, 'image'])
+        target = self.dict_id[self.csv.loc[index, 'individual_id']]
+        img1 = get_img_for_tensor(path, self.w, self.h, self.IsNew, self.IsRotate)
         img_tensor = torch.from_numpy(img1)
         target_tensor = torch.ones([1])
         target_tensor[0] = target
