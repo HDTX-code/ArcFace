@@ -7,15 +7,15 @@ from tqdm import tqdm
 
 
 def make_val(Feature_train, target_train, Feature_val, target_val, device, num):
-    Feature_train = Feature_train.to(device)
-    target_train = target_train.to(device)
+    # Feature_train = Feature_train.to(device)
+    # target_train = target_train.to(device)
     Feature_val = Feature_val.to(device)
     target_val = target_val.to(device)
     with torch.no_grad():
         Feature_train_num = np.zeros([num, 512])
         for item in range(num):
             Feature_train_num[item] = np.mean(Feature_train[target_train[:, 0] == item, :], axis=0)
-        Feature_train_num = torch.from_numpy(Feature_train_num)
+        Feature_train_num = torch.from_numpy(Feature_train_num).to(device)
         with tqdm(total=len(target_val), postfix=dict) as pbar2:
             Score = 0
             for item in range(len(target_val)):
@@ -27,7 +27,7 @@ def make_val(Feature_train, target_train, Feature_val, target_val, device, num):
                 #     kind[j] = output[target_train[:, 0] == j].mean().to(device)
                 # sorted, indices = torch.sort(kind, descending=True)
                 indices = output.argmax().to(device)
-                if indices == target_val[item]:
+                if indices.to(device) == target_val[item]:
                     Score = Score + 1
                 pbar2.update(1)
                 pbar2.set_postfix(**{'val_Score': Score / (item + 1)})
