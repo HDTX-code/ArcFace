@@ -66,7 +66,7 @@ def fit_one_epoch_classes(model, criterion, optimizer, scheduler,
                     target_val = target_val.cpu().detach().numpy()
                     with tqdm(total=len(target_val), postfix=dict) as pbar2:
                         for item2 in range(target_val.shape[0]):
-                            if np.argmax(Feature_val[item2, :] == target_val[item2]):
+                            if np.argmax(Feature_val[item2, :] == target_val[item2, 0]):
                                 Score = Score + 1
                             pbar2.update(1)
                             pbar2.set_postfix(**{'val_Score': Score / (item2 + 1)})
