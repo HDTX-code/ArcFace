@@ -50,7 +50,8 @@ def make_train(model, metric_fc, criterion, optimizer, scheduler,
 
             print("第{}轮 : Loss_{} = {}".format(item, Str, Loss))
 
-            if (item % save_interval == 0 or item == max_epoch) and item > Freeze_Epoch:
+            # if (item % save_interval == 0 or item == max_epoch) and item > Freeze_Epoch:
+            if True:
                 # 开始验证，获取特征矩阵
                 Feature_train, target_train = get_feature(model, train_loader, device, 512)
                 path_featureMap = os.path.join(save_path, "FeatureMap")
