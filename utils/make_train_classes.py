@@ -73,7 +73,7 @@ def fit_one_epoch_classes(model, criterion, optimizer, scheduler,
                                 Score = Score + 1
                             pbar2.update(1)
                             pbar2.set_postfix(**{'val_Score': Score / (item2 + 1)})
-                    print("第{}轮 : val_Score = {}".format(item, Score))
+                    print("第{}轮 : val_Score = {}".format(item, Score / target_val.shape[0]))
                 path_model = os.path.join(save_path, "model")
                 if not os.path.exists(path_model):
                     os.mkdir(path_model)
