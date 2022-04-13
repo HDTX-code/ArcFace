@@ -24,7 +24,7 @@ def go_train(args):
     if args.train_csv_train_path is None:
         train_csv_val = None
     else:
-        train_csv_val = pd.read_csv(args.train_csv_train_path)
+        train_csv_val = pd.read_csv(args.train_csv_val_path)
 
     num_classes = len(dict_id_all)
 
