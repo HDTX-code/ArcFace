@@ -41,9 +41,6 @@ def fit_one_epoch_classes(model, criterion, optimizer, scheduler,
             model = model.eval()
             model.to(device)
 
-            metric_fc = metric_fc.eval()
-            metric_fc.to(device)
-
             Loss = Loss.cpu().detach().numpy() / len(train_loader)
 
             print("第{}轮 : Loss_{} = {}".format(item, Str, Loss))
