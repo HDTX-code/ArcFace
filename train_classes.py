@@ -38,42 +38,42 @@ def go_train_classes(args):
     else:
         val_dataloader = None
 
-    if args.Freeze_Epoch != 0:
-        # -------------------------------#
-        #   开始冻结训练
-        # -------------------------------#
-        print("--------冻结训练--------")
-        # -------------------------------#
-        #   选择优化器
-        # -------------------------------#
-        Freeze_optimizer = torch.optim.SGD(model.parameters(), lr=args.Freeze_lr, weight_decay=args.Freeze_weight_decay)
-        Freeze_scheduler = StepLR(Freeze_optimizer, step_size=args.Freeze_lr_step, gamma=0.1)
-        # -------------------------------#
-        #   生成冻结dataloader
-        # -------------------------------#
-        Freeze_train_dataloader = DataLoader(dataset=train_dataset, batch_size=args.Freeze_batch_size, shuffle=True,
-                                             num_workers=args.num_workers)
-        # -------------------------------#
-        #   冻结措施
-        # -------------------------------#
-        for param in model.parameters():
-            param.requires_grad = False
-        fit_one_epoch_classes(model=model,
-                              criterion=criterion,
-                              optimizer=Freeze_optimizer,
-                              scheduler=Freeze_scheduler,
-                              train_loader=Freeze_train_dataloader,
-                              val_loader=val_dataloader,
-                              device=device,
-                              num_classes=num_classes,
-                              max_epoch=args.Freeze_Epoch + args.Unfreeze_Epoch,
-                              save_interval=args.save_interval,
-                              save_path=args.save_path,
-                              backbone=args.backbone,
-                              epoch_start=1,
-                              epoch_end=args.Freeze_Epoch,
-                              Str='Softmax',
-                              Freeze_Epoch=args.Freeze_Epoch)
+    # if args.Freeze_Epoch != 0:
+    #     # -------------------------------#
+    #     #   开始冻结训练
+    #     # -------------------------------#
+    #     print("--------冻结训练--------")
+    #     # -------------------------------#
+    #     #   选择优化器
+    #     # -------------------------------#
+    #     Freeze_optimizer = torch.optim.SGD(model.parameters(), lr=args.Freeze_lr, weight_decay=args.Freeze_weight_decay)
+    #     Freeze_scheduler = StepLR(Freeze_optimizer, step_size=args.Freeze_lr_step, gamma=0.1)
+    #     # -------------------------------#
+    #     #   生成冻结dataloader
+    #     # -------------------------------#
+    #     Freeze_train_dataloader = DataLoader(dataset=train_dataset, batch_size=args.Freeze_batch_size, shuffle=True,
+    #                                          num_workers=args.num_workers)
+    #     # -------------------------------#
+    #     #   冻结措施
+    #     # -------------------------------#
+    #     for param in model.parameters():
+    #         param.requires_grad = False
+    #     fit_one_epoch_classes(model=model,
+    #                           criterion=criterion,
+    #                           optimizer=Freeze_optimizer,
+    #                           scheduler=Freeze_scheduler,
+    #                           train_loader=Freeze_train_dataloader,
+    #                           val_loader=val_dataloader,
+    #                           device=device,
+    #                           num_classes=num_classes,
+    #                           max_epoch=args.Freeze_Epoch + args.Unfreeze_Epoch,
+    #                           save_interval=args.save_interval,
+    #                           save_path=args.save_path,
+    #                           backbone=args.backbone,
+    #                           epoch_start=1,
+    #                           epoch_end=args.Freeze_Epoch,
+    #                           Str='Softmax',
+    #                           Freeze_Epoch=args.Freeze_Epoch)
     # -------------------------------#
     #   开始解冻训练
     # -------------------------------#
