@@ -31,7 +31,7 @@ def fit_one_epoch_classes(model, criterion, optimizer, scheduler,
                 optimizer.zero_grad()
                 loss.backward()
                 optimizer.step()
-                pbar.set_postfix(**{'loss_{}'.format(Str): loss.item(), 'lr': get_lr(optimizer)})
+                pbar.set_postfix(**{'{}'.format(Str): loss.item(), 'lr': get_lr(optimizer)})
                 pbar.update(1)
                 # if iteration >= 1:
                 #     break
