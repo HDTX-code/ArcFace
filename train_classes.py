@@ -94,24 +94,22 @@ def go_train_classes(args):
     # -------------------------------#
     for param in model.parameters():
         param.requires_grad = True
-    for item in range(args.Freeze_Epoch + 1, args.Freeze_Epoch + args.Unfreeze_Epoch + 1):
-        fit_one_epoch_classes(model=model,
-                              criterion=criterion,
-                              optimizer=Unfreeze_optimizer,
-                              scheduler=Unfreeze_scheduler,
-                              train_loader=Unfreeze_train_dataloader,
-                              val_loader=val_dataloader,
-                              device=device,
-                              num_classes=num_classes,
-                              max_epoch=args.Freeze_Epoch + args.Unfreeze_Epoch,
-                              save_interval=args.save_interval,
-                              save_path=args.save_path,
-                              backbone=args.backbone,
-                              epoch_start=args.Freeze_Epoch + 1,
-                              epoch_end=args.Freeze_Epoch + args.Unfreeze_Epoch,
-                              Str='Softmax',
-                              Freeze_Epoch=args.Freeze_Epoch)
-        Unfreeze_scheduler.step()
+    fit_one_epoch_classes(model=model,
+                          criterion=criterion,
+                          optimizer=Unfreeze_optimizer,
+                          scheduler=Unfreeze_scheduler,
+                          train_loader=Unfreeze_train_dataloader,
+                          val_loader=val_dataloader,
+                          device=device,
+                          num_classes=num_classes,
+                          max_epoch=args.Freeze_Epoch + args.Unfreeze_Epoch,
+                          save_interval=args.save_interval,
+                          save_path=args.save_path,
+                          backbone=args.backbone,
+                          epoch_start=args.Freeze_Epoch + 1,
+                          epoch_end=args.Freeze_Epoch + args.Unfreeze_Epoch,
+                          Str='Softmax',
+                          Freeze_Epoch=args.Freeze_Epoch)
 
 
 if __name__ == '__main__':
