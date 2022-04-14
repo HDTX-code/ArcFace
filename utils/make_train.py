@@ -62,7 +62,7 @@ def make_train(model, metric_fc, criterion, optimizer, scheduler,
                         Feature_train)
                 np.save(os.path.join(path_featureMap, "target_train_{}.npy".format(item)),
                         target_train)
-                if item == max_epoch:
+                if (item % save_interval == 0 or item == max_epoch) and item > Freeze_Epoch:
                     if val_loader is not None:
                         # 计算验证得分
                         Feature_val, target_val = get_feature(model, val_loader, device, 512)
