@@ -7,11 +7,11 @@ from tqdm import tqdm
 
 
 def make_val(Feature_train, target_train, Feature_val, target_val, device, num):
-    # Feature_train = Feature_train.to(device)
-    # target_train = target_train.to(device)
-    Feature_val = Feature_val.to(device)
-    target_val = target_val.to(device)
     with torch.no_grad():
+        # Feature_train = Feature_train.to(device)
+        # target_train = target_train.to(device)
+        Feature_val = Feature_val.to(device)
+        target_val = target_val.to(device)
         Feature_train_num = np.zeros([num, 512])
         for item in range(num):
             Feature_train_num[item] = np.mean(Feature_train[target_train[:, 0] == item, :], axis=0)
