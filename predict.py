@@ -24,7 +24,8 @@ def go_predict(args):
         dict_id_all = dict(zip(train_csv_id, range(len(train_csv_id))))
         new_d_all = {v: k for k, v in dict_id_all.items()}
 
-        model, dict_id, Feature_train, target_train = get_pre_need(args.model_path, args.dict_id_path, args.train_csv_train_path,
+        model, dict_id, Feature_train, target_train = get_pre_need(args.model_path, args.dict_id_path,
+                                                                   args.train_csv_train_path,
                                                                    device, args.w, args.h,
                                                                    args.data_train_path, args.batch_size,
                                                                    args.num_workers, args.save_path, args.backbone,
@@ -61,40 +62,44 @@ def go_predict(args):
                     #                          dict_id_all,
                     #                          4, device)
                     Top, Top_index = get_pre_num(Feature_test[item, :], Feature_train_num, dict_id, dict_id_all, 5,
-                                                     device)
-                    Top_all[item, :] = copy.copy(Top)
-                    Top_index_all[item, :] = copy.copy(Top_index)
+                                                 device)
+                    submission.loc[
+                        submission[
+                            submission.image == new_d_test[target_test[item, 0]]].index.tolist(), "predictions"] = new_d_all[Top_index]
+                    # Top_all[item, :] = copy.copy(Top)
+                    # Top_index_all[item, :] = copy.copy(Top_index)
                     pbar.update(1)
-            np.save(os.path.join(args.save_path, "Top.npy"), Top_all)
-            np.save(os.path.join(args.save_path, "Top_index.npy"), Top_index_all)
+                    pbar.set_postfix(**{'Top': Top})
+            # np.save(os.path.join(args.save_path, "Top.npy"), Top_all)
+            # np.save(os.path.join(args.save_path, "Top_index.npy"), Top_index_all)
         else:
             Top_all = np.load(args.Top_all_path)
             Top_index_all = np.load(args.Top_index_all_path)
-        with tqdm(total=Top_all.shape[0], postfix=dict) as pbar2:
-            New_data = Top_all[np.argsort(Top_all[:, 0])[math.floor(0.12 * len(path_list))], 0]
-            # Is_new = 'new_whale' if Top[0] < 0.75 else new_d_all[Top_index[4]]
-            for item in range(len(path_list)):
-                # submission.loc[
-                #     submission[
-                #         submission.image == new_d_test[target_test[item, 0]]].index.tolist(), "predictions"] = \
-                #     new_d_all[Top_index_all[item, 0]] + ' ' + new_d_all[Top_index_all[item, 1]] + ' ' + new_d_all[
-                #         Top_index_all[item, 2]] + ' ' + new_d_all[Top_index_all[item, 3]] + ' ' + new_d_all[
-                #         Top_index_all[item, 4]]
-                if Top_all[item, 0] <= New_data:
-                    submission.loc[
-                        submission[
-                            submission.image == new_d_test[target_test[item, 0]]].index.tolist(), "predictions"] = \
-                        'new_individual' + ' ' + new_d_all[Top_index_all[item, 0]] + ' ' + new_d_all[
-                            Top_index_all[item, 1]] + ' ' + new_d_all[Top_index_all[item, 2]] + ' ' + new_d_all[Top_index_all[item, 3]]
-                else:
-                    submission.loc[
-                        submission[
-                            submission.image == new_d_test[target_test[item, 0]]].index.tolist(), "predictions"] = \
-                        new_d_all[Top_index_all[item, 0]] + ' ' + 'new_individual' + ' ' + new_d_all[Top_index_all[item, 1]] + ' ' + new_d_all[
-                            Top_index_all[item, 2]] + ' ' + new_d_all[Top_index_all[item, 3]]
-                pbar2.update(1)
-                pbar2.set_postfix(
-                    **{'Top': Top_all[item, 0], 'new': New_data})
+        # with tqdm(total=Top_all.shape[0], postfix=dict) as pbar2:
+        #     New_data = Top_all[np.argsort(Top_all[:, 0])[math.floor(0.12 * len(path_list))], 0]
+        #     # Is_new = 'new_whale' if Top[0] < 0.75 else new_d_all[Top_index[4]]
+        #     for item in range(len(path_list)):
+        #         # submission.loc[
+        #         #     submission[
+        #         #         submission.image == new_d_test[target_test[item, 0]]].index.tolist(), "predictions"] = \
+        #         #     new_d_all[Top_index_all[item, 0]] + ' ' + new_d_all[Top_index_all[item, 1]] + ' ' + new_d_all[
+        #         #         Top_index_all[item, 2]] + ' ' + new_d_all[Top_index_all[item, 3]] + ' ' + new_d_all[
+        #         #         Top_index_all[item, 4]]
+        #         if Top_all[item, 0] <= New_data:
+        #             submission.loc[
+        #                 submission[
+        #                     submission.image == new_d_test[target_test[item, 0]]].index.tolist(), "predictions"] = \
+        #                 'new_individual' + ' ' + new_d_all[Top_index_all[item, 0]] + ' ' + new_d_all[
+        #                     Top_index_all[item, 1]] + ' ' + new_d_all[Top_index_all[item, 2]] + ' ' + new_d_all[Top_index_all[item, 3]]
+        #         else:
+        #             submission.loc[
+        #                 submission[
+        #                     submission.image == new_d_test[target_test[item, 0]]].index.tolist(), "predictions"] = \
+        #                 new_d_all[Top_index_all[item, 0]] + ' ' + 'new_individual' + ' ' + new_d_all[Top_index_all[item, 1]] + ' ' + new_d_all[
+        #                     Top_index_all[item, 2]] + ' ' + new_d_all[Top_index_all[item, 3]]
+        #         pbar2.update(1)
+        #         pbar2.set_postfix(
+        #             **{'Top': Top_all[item, 0], 'new': New_data})
     submission.to_csv(os.path.join(args.save_path, "submission.csv"), index=False)
 
 
