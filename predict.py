@@ -63,9 +63,7 @@ def go_predict(args):
                     #                          4, device)
                     Top, Top_index = get_pre_num(Feature_test[item, :], Feature_train_num, dict_id, dict_id_all, 5,
                                                  device)
-                    submission.loc[
-                        submission[
-                            submission.image == new_d_test[target_test[item, 0]]].index.tolist(), "predictions"] = new_d_all[Top_index]
+                    submission.loc[submission['image'] == new_d_test[target_test[item, 0]], "predictions"] = new_d_all[Top_index]
                     # Top_all[item, :] = copy.copy(Top)
                     # Top_index_all[item, :] = copy.copy(Top_index)
                     pbar.update(1)
