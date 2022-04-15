@@ -63,11 +63,17 @@ def go_predict(args):
                     #                          4, device)
                     Top, Top_index = get_pre_num(Feature_test[item, :], Feature_train_num, dict_id, dict_id_all, 5,
                                                  device)
-                    submission.loc[submission['image'] == new_d_test[target_test[item, 0]], "predictions"] = new_d_all[Top_index]
+                    submission.loc[
+                        submission['image'] == new_d_test[target_test[item, 0]], "predictions"] = \
+                        new_d_all[Top_index[0]] + " " + \
+                        new_d_all[Top_index[1]] + " " + \
+                        new_d_all[Top_index[2]] + " " + \
+                        new_d_all[Top_index[3]] + " " + \
+                        new_d_all[Top_index[4]]
                     # Top_all[item, :] = copy.copy(Top)
                     # Top_index_all[item, :] = copy.copy(Top_index)
                     pbar.update(1)
-                    pbar.set_postfix(**{'Top': Top})
+                    pbar.set_postfix(**{'Top': Top[0]})
             # np.save(os.path.join(args.save_path, "Top.npy"), Top_all)
             # np.save(os.path.join(args.save_path, "Top_index.npy"), Top_index_all)
         else:
