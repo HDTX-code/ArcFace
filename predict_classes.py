@@ -4,7 +4,7 @@ if __name__ == '__main__':
     # -------------------
     # 参数设置
     # -------------------
-    model_path = r"D:\project\happyWhale\weights\res50-softmax-224\resnet50Softmax-8loss_ 0.0017252337808410327score_ 4993.pth"
+    model_path = r"D:\edge\resnet18Softmax-12loss_ 0.10518473038102259score_ 0.9573673870333989.pth"
     dict_id_path = r"D:\project\happyWhale\weights\res50-softmax-224\dict_id"
     data_test_path = r"D:\project\happyWhale\classes\CFL\test\test_all\test_all"
     data_path_list = [r"C:\Users\12529\Desktop\beluga", r"C:\Users\12529\Desktop\big_model",
@@ -12,9 +12,9 @@ if __name__ == '__main__':
     # path_0 = r"C:\Users\12529\Desktop\0"
     # path_1 = r"C:\Users\12529\Desktop\1"
     # path_2 = r"C:\Users\12529\Desktop\2"
-    backbone = 'resnet50'
-    w = 224
-    h = 224
+    backbone = 'resnet18'
+    w = 384
+    h = 384
     batch_size = 256
     num_workers = 4
     num_classes = len(data_path_list)
