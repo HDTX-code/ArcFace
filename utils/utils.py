@@ -70,7 +70,7 @@ def get_csv(path, label):
 def get_img_for_tensor(path, w, h, isNew=False):
     img = cv2.imread(path)
     if isNew:
-        label = random.randint(0, 4)
+        label = random.randint(0, 8)
         if label == 0:
             img = ImageNew(img)
         elif label == 1:
