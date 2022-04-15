@@ -69,10 +69,15 @@ def get_csv(path, label):
 
 def get_img_for_tensor(path, w, h, isNew=False, IsRotate=True):
     img = cv2.imread(path)
-    if isNew:
+    label = random.randint(0, 3)
+    if label == 0:
         img = ImageNew(img)
-    if IsRotate:
+    elif label == 1:
         img = ImageRotate(img)
+    elif label == 2:
+        img = Image_GaussianBlur(img)
+    elif label == 3:
+        img = Image_flip_hv(img)
     # 改变格式成规定的框和高
     if img.shape[2] != 3:
         img = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
