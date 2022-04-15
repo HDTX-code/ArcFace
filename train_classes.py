@@ -29,7 +29,7 @@ def go_train_classes(args):
 
     # 生成dataset
     train_dataset = ArcDataset(train_csv_train, dict_id_all, args.data_train_path, args.w,
-                               args.h, 'species', IsNew=None, IsRotate=None)
+                               args.h, 'species', IsNew=None, IsRotate=True)
     if train_csv_val is not None:
         val_dataset = ArcDataset(train_csv_val, dict_id_all, args.data_train_path, args.w,
                                  args.h, 'species', IsNew=None, IsRotate=None)
