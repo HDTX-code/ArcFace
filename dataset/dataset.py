@@ -10,7 +10,7 @@ from utils.utils import get_img_for_tensor
 
 
 class ArcDataset(Dataset):
-    def __init__(self, csv, dict_id, data_train_path, w, h, label='individual_id', IsNew=None):
+    def __init__(self, csv, dict_id, data_train_path, w, h, label='individual_id', IsNew=False):
         self.data_train_path = data_train_path
         self.w = w
         self.h = h
