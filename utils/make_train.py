@@ -69,6 +69,7 @@ def make_train(model, metric_fc, criterion, optimizer, scheduler,
                         Score = make_val(Feature_train, target_train, Feature_val, target_val, device, num_classes)
                 else:
                     Score = 0
+                print("第{}轮 : Score = {}".format(item, Score))
                 path_model = os.path.join(save_path, "model")
                 if not os.path.exists(path_model):
                     os.mkdir(path_model)
