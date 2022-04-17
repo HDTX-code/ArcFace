@@ -70,8 +70,10 @@ def analyse(args):
     analyse_error.to_csv(os.path.join(args.save_path, "analyse_error.csv"), index=False)
     print('----------analyse_right----------')
     print(analyse_right.head())
+    print(analyse_right.describe())
     print('----------analyse_error----------')
     print(analyse_error.head())
+    print(analyse_error.describe())
 
 
 if __name__ == '__main__':
