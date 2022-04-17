@@ -29,7 +29,7 @@ def make_train(model, metric_fc, criterion, optimizer, scheduler,
                 output = metric_fc(feature, target_t).to(device)
                 loss = criterion(output.reshape(-1, num_classes).to(device),
                                  target_t.reshape(-1).long().to(device)).to(device)
-                Loss += loss
+                Loss += loss.item()
                 optimizer.zero_grad()
                 loss.backward()
                 optimizer.step()
@@ -46,9 +46,10 @@ def make_train(model, metric_fc, criterion, optimizer, scheduler,
             metric_fc = metric_fc.eval()
             metric_fc.to(device)
 
-            Loss = Loss.cpu().detach().numpy() / len(train_loader)
+            Loss = Loss.item() / len(train_loader)
+            # Loss = Loss.cpu().detach().numpy() / len(train_loader)
 
-            print("第{}轮 : Loss_{} = {}".format(item, Str, Loss))
+            print("第{}轮 : Loss_{} = {}".format(item, Str, Loss.item()))
 
             if (item % save_interval == 0 or item == max_epoch) and item > Freeze_Epoch:
                 # 开始验证，获取特征矩阵
@@ -69,11 +70,10 @@ def make_train(model, metric_fc, criterion, optimizer, scheduler,
                 #         Score = make_val(Feature_train, target_train, Feature_val, target_val, device, num_classes)
                 # else:
                 #     Score = 0
-                Score = 0
                 path_model = os.path.join(save_path, "model")
                 if not os.path.exists(path_model):
                     os.mkdir(path_model)
-                save_model(model, path_model, str(backbone) + Str, item, Loss, Score)
+                save_model(model, path_model, str(backbone) + Str, item, Loss.item())
                 # Feature_val = Feature_val.cpu().detach().numpy()
                 # target_val = target_val.cpu().detach().numpy()
                 # np.save(os.path.join(path_featureMap, "Feature_val_{}.npy".format(epoch_now)), Feature_val)
