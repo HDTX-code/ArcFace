@@ -86,7 +86,7 @@ if __name__ == '__main__':
     parser.add_argument('--train_csv_val_path', type=str, help='需要测试数据csv路径', required=True)
     parser.add_argument('--model_path', type=str, help='上次训练模型权重', required=True)
     parser.add_argument('--num_workers', type=int, default=2)
-    parser.add_argument('--batch_size', type=int, help='冻结训练batch size', default=256)
+    parser.add_argument('--batch_size', type=int, help='冻结训练batch size', default=128)
     parser.add_argument('--Feature_train_path', type=str, help='训练集特征矩阵路径', default=None)
     parser.add_argument('--target_train_path', type=str, help='训练集标签矩阵路径', default=None)
     parser.add_argument('--Feature_val_path', type=str, help='验证集特征矩阵路径', default=None)
