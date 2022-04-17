@@ -8,7 +8,7 @@ from tqdm import tqdm
 
 
 def make_val(Feature_train, target_train, Feature_val, target_val, device, num, Img_id_val,
-             new_id_all, new_val_id, train_csv_val):
+             new_id_all, new_val_id, train_csv_val, data_csv):
     with torch.no_grad():
         # Feature_train = Feature_train.to(device)
         # target_train = target_train.to(device)
@@ -19,10 +19,10 @@ def make_val(Feature_train, target_train, Feature_val, target_val, device, num, 
             Feature_train_num[item] = np.mean(Feature_train[target_train[:, 0] == item, :], axis=0)
         Feature_train_num = torch.from_numpy(Feature_train_num).to(device)
 
-        analyse_right = pd.DataFrame(columns=['image', 'species', 'individual_id', 'score',
+        analyse_right = pd.DataFrame(columns=['image', 'species', 'individual_id', 'score', 'individual_id_num',
                                               'predictions_1', 'predictions_2', 'predictions_3', 'predictions_4',
                                               'predictions_5'])
-        analyse_error = pd.DataFrame(columns=['image', 'species', 'individual_id',
+        analyse_error = pd.DataFrame(columns=['image', 'species', 'individual_id', 'individual_id_num',
                                               'predictions_1', 'predictions_2', 'predictions_3', 'predictions_4',
                                               'predictions_5'])
         map_1, map_2, map_3, map_4, map_5 = 0, 0, 0, 0, 0
@@ -70,6 +70,12 @@ def make_val(Feature_train, target_train, Feature_val, target_val, device, num, 
                                                                         Img_id_val[item, 0]],
                                                                     'individual_id'].values[0],
                                                                 score,
+                                                                len(data_csv.loc[data_csv['individual_id']
+                                                                                 == train_csv_val.loc[
+                                                                                     train_csv_val['image'] ==
+                                                                                     new_val_id[
+                                                                                         Img_id_val[item, 0]],
+                                                                                     'individual_id'].values[0]]),
                                                                 new_id_all[indices[0]] + '-' + str(sorted[0]),
                                                                 new_id_all[indices[1]] + '-' + str(sorted[1]),
                                                                 new_id_all[indices[2]] + '-' + str(sorted[2]),
@@ -85,13 +91,19 @@ def make_val(Feature_train, target_train, Feature_val, target_val, device, num, 
                                                                     train_csv_val['image'] == new_val_id[
                                                                         Img_id_val[item, 0]],
                                                                     'individual_id'].values[0],
+                                                                len(data_csv.loc[data_csv['individual_id']
+                                                                                 == train_csv_val.loc[
+                                                                                     train_csv_val['image'] ==
+                                                                                     new_val_id[
+                                                                                         Img_id_val[item, 0]],
+                                                                                     'individual_id'].values[0]]),
                                                                 new_id_all[indices[0]] + '-' + str(sorted[0]),
                                                                 new_id_all[indices[1]] + '-' + str(sorted[1]),
                                                                 new_id_all[indices[2]] + '-' + str(sorted[2]),
                                                                 new_id_all[indices[3]] + '-' + str(sorted[3]),
                                                                 new_id_all[indices[4]] + '-' + str(sorted[4])]
-        print('val_Score: ' + map_1 / (len(target_val)))
-        print('MAP5: ' + MAP5 / (len(target_val)))
+        print('val_Score: ' + str(map_1 / (len(target_val))))
+        print('MAP5: ' + str(MAP5 / (len(target_val))))
         #             if item>100:
         #                 break
     return analyse_right, analyse_error

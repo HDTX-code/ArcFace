@@ -9,6 +9,7 @@ def analyse(args):
     dict_id_all = json.load(f2)
     new_id_all = {v: k for k, v in dict_id_all.items()}
 
+    data_csv = pd.read_csv(args.data_csv)
     train_csv_train = pd.read_csv(args.train_csv_train_path)
 
     train_csv_val = pd.read_csv(args.train_csv_val_path)
@@ -64,7 +65,7 @@ def analyse(args):
 
     analyse_right, analyse_error = make_val(Feature_train, target_train, Feature_val, target_val, device, num_classes,
                                             Img_id_val,
-                                            new_id_all, new_val_id, train_csv_val)
+                                            new_id_all, new_val_id, train_csv_val, data_csv)
     analyse_right.to_csv(os.path.join(args.save_path, "analyse_right.csv"), index=False)
     analyse_error.to_csv(os.path.join(args.save_path, "analyse_error.csv"), index=False)
     print('----------analyse_right----------')
@@ -89,6 +90,8 @@ if __name__ == '__main__':
     parser.add_argument('--Feature_val_path', type=str, help='验证集特征矩阵路径', default=None)
     parser.add_argument('--target_val_path', type=str, help='验证集标签矩阵路径', default=None)
     parser.add_argument('--Img_id_val_path', type=str, help='验证集image_id矩阵路径', default=None)
+    parser.add_argument('--data_csv_path', type=str, help='训练集csv路径',
+                        default=r'../input/happy-whale-and-dolphin/train.csv')
     parser.add_argument('--w', type=int, help='训练图片宽度', default=224)
     parser.add_argument('--h', type=int, help='训练图片高度', default=224)
     args = parser.parse_args()
