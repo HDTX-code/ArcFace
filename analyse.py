@@ -50,7 +50,7 @@ def analyse(args):
         Feature_train = np.load(args.Feature_train_path)
         target_train = np.load(args.target_train_path)
         # Img_id_train = np.load(args.Img_id_train_path)
-    if args.Feature_test_path is None:
+    if args.Feature_val_path is None:
         Feature_val, target_val, Img_id_val = get_feature(model, val_loader, device, 512, get_id=True)
         target_val = target_val.cpu().detach().numpy()
         Img_id_val = Img_id_val.cpu().detach().numpy()
