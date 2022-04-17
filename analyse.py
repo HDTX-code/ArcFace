@@ -18,11 +18,6 @@ def analyse(args):
     f2.write(info_json2)
     new_val_id = {v: k for k, v in dict_val_id.items()}
 
-    if args.train_csv_train_path is None:
-        train_csv_val = None
-    else:
-        train_csv_val = pd.read_csv(args.train_csv_val_path)
-        print(train_csv_val.head())
 
     num_classes = len(dict_id_all)
     # 加载backbone,默认resnet50
@@ -68,5 +63,30 @@ def analyse(args):
         Img_id_val = np.load(args.Img_id_val_path)
     # 计算验证得分
 
-    Score = make_val(Feature_train, target_train, Feature_val, target_val, device, num_classes, Img_id_val,
-                     new_id_all, new_val_id, train_csv_val)
+    analyse = make_val(Feature_train, target_train, Feature_val, target_val, device, num_classes, Img_id_val,
+                       new_id_all, new_val_id, train_csv_val)
+    analyse.to_csv(os.path.join(args.save_path, "analyse.csv"), index=False)
+    print(analyse.head())
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='训练参数设置')
+    parser.add_argument('--backbone', type=str, default='resnet50', help='特征网络选择，默认resnet50')
+    parser.add_argument('--data_train_path', type=str, help='训练集路径', required=True)
+    parser.add_argument('--save_path', type=str, help='存储路径', default=r'./')
+    parser.add_argument('--dict_id_path', type=str, help='训练类型对应字典路径', required=True)
+    parser.add_argument('--train_csv_train_path', type=str, help='需要训练数据csv路径', required=True)
+    parser.add_argument('--train_csv_val_path', type=str, help='需要测试数据csv路径', required=True)
+    parser.add_argument('--model_path', type=str, help='上次训练模型权重', required=True)
+    parser.add_argument('--num_workers', type=int, default=2)
+    parser.add_argument('--batch_size', type=int, help='冻结训练batch size', default=256)
+    parser.add_argument('--Feature_train_path', type=str, help='训练集特征矩阵路径', default=None)
+    parser.add_argument('--target_train_path', type=str, help='训练集标签矩阵路径', default=None)
+    parser.add_argument('--Feature_val_path', type=str, help='验证集特征矩阵路径', default=None)
+    parser.add_argument('--target_val_path', type=str, help='验证集标签矩阵路径', default=None)
+    parser.add_argument('--Img_id_val_path', type=str, help='验证集image_id矩阵路径', default=None)
+    parser.add_argument('--w', type=int, help='训练图片宽度', default=224)
+    parser.add_argument('--h', type=int, help='训练图片高度', default=224)
+    args = parser.parse_args()
+
+    analyse(args)
