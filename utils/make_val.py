@@ -49,9 +49,9 @@ def make_val(Feature_train, target_train, Feature_val, target_val, device, num, 
                 MAP5 = (1 / 5) * map_5 + (1 / 4) * map_4 + (1 / 3) * map_3 + (1 / 2) * map_2 + (1 / 1) * map_1
 
                 analyse.loc[item, :] = [new_val_id[Img_id_val[item, 0]],
-                                        train_csv_val.loc[target_val['image'] == new_val_id[Img_id_val[item, 0]],
+                                        train_csv_val.loc[train_csv_val['image'] == new_val_id[Img_id_val[item, 0]],
                                                           'species'].values[0],
-                                        train_csv_val.loc[target_val['image'] == new_val_id[Img_id_val[item, 0]],
+                                        train_csv_val.loc[train_csv_val['image'] == new_val_id[Img_id_val[item, 0]],
                                                           'individual_id'].values[0],
                                         new_id_all[indices[0]],
                                         new_id_all[indices[1]],
