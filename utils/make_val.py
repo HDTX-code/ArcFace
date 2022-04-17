@@ -12,7 +12,7 @@ def make_val(Feature_train, target_train, Feature_val, target_val, device, num, 
     with torch.no_grad():
         # Feature_train = Feature_train.to(device)
         # target_train = target_train.to(device)
-        Feature_val = torch.from_numpy(Feature_val).to(device)
+        Feature_val = Feature_val.to(device)
         # target_val = target_val.to(device)
         Feature_train_num = np.zeros([num, 512])
         for item in range(num):
