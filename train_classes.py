@@ -1,0 +1,146 @@
+from __init__ import *
+
+
+def go_train_classes(args):
+    print(torch.cuda.is_available())
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+    print("backbone = " + args.backbone)
+
+    f2 = open(args.dict_id_path, 'r')
+    dict_id_all = json.load(f2)
+    num_classes = len(dict_id_all)
+    print("num_classes = " + str(num_classes))
+
+    model = get_model(args.backbone, args.pretrained, num_classes)
+
+    model.to(device)
+    model.eval()
+
+    criterion = nn.CrossEntropyLoss()
+
+    # 获取csv
+    train_csv_train = pd.read_csv(args.train_csv_train_path)
+    if args.train_csv_train_path is None:
+        train_csv_val = None
+    else:
+        train_csv_val = pd.read_csv(args.train_csv_val_path)
+        print(train_csv_val.head())
+
+    # 生成dataset
+    train_dataset = ArcDataset(train_csv_train, dict_id_all, args.data_train_path, args.w,
+                               args.h, 'species', IsNew=None, IsRotate=True)
+    if train_csv_val is not None:
+        val_dataset = ArcDataset(train_csv_val, dict_id_all, args.data_train_path, args.w,
+                                 args.h, 'species', IsNew=None, IsRotate=None)
+        val_dataloader = DataLoader(dataset=val_dataset, batch_size=args.Freeze_batch_size, shuffle=True,
+                                    num_workers=args.num_workers)
+    else:
+        val_dataloader = None
+
+    # if args.Freeze_Epoch != 0:
+    #     # -------------------------------#
+    #     #   开始冻结训练
+    #     # -------------------------------#
+    #     print("--------冻结训练--------")
+    #     # -------------------------------#
+    #     #   选择优化器
+    #     # -------------------------------#
+    #     Freeze_optimizer = torch.optim.SGD(model.parameters(), lr=args.Freeze_lr, weight_decay=args.Freeze_weight_decay)
+    #     Freeze_scheduler = StepLR(Freeze_optimizer, step_size=args.Freeze_lr_step, gamma=0.1)
+    #     # -------------------------------#
+    #     #   生成冻结dataloader
+    #     # -------------------------------#
+    #     Freeze_train_dataloader = DataLoader(dataset=train_dataset, batch_size=args.Freeze_batch_size, shuffle=True,
+    #                                          num_workers=args.num_workers)
+    #     # -------------------------------#
+    #     #   冻结措施
+    #     # -------------------------------#
+    #     for param in model.parameters():
+    #         param.requires_grad = False
+    #     fit_one_epoch_classes(model=model,
+    #                           criterion=criterion,
+    #                           optimizer=Freeze_optimizer,
+    #                           scheduler=Freeze_scheduler,
+    #                           train_loader=Freeze_train_dataloader,
+    #                           val_loader=val_dataloader,
+    #                           device=device,
+    #                           num_classes=num_classes,
+    #                           max_epoch=args.Freeze_Epoch + args.Unfreeze_Epoch,
+    #                           save_interval=args.save_interval,
+    #                           save_path=args.save_path,
+    #                           backbone=args.backbone,
+    #                           epoch_start=1,
+    #                           epoch_end=args.Freeze_Epoch,
+    #                           Str='Softmax',
+    #                           Freeze_Epoch=args.Freeze_Epoch)
+    # -------------------------------#
+    #   开始解冻训练
+    # -------------------------------#
+    print("--------解冻训练--------")
+    # -------------------------------#
+    #   选择优化器
+    # -------------------------------#
+    Unfreeze_optimizer = torch.optim.SGD(model.parameters(), lr=args.Unfreeze_lr,
+                                         weight_decay=args.Unfreeze_weight_decay)
+    Unfreeze_scheduler = StepLR(Unfreeze_optimizer, step_size=args.Unfreeze_lr_step, gamma=0.2)
+    # -------------------------------#
+    #   生成解冻dataloader
+    # -------------------------------#
+    Unfreeze_train_dataloader = DataLoader(dataset=train_dataset, batch_size=args.Unfreeze_batch_size, shuffle=True,
+                                           num_workers=args.num_workers)
+    # -------------------------------#
+    #   解冻措施
+    # -------------------------------#
+    for param in model.parameters():
+        param.requires_grad = True
+    fit_one_epoch_classes(model=model,
+                          criterion=criterion,
+                          optimizer=Unfreeze_optimizer,
+                          scheduler=Unfreeze_scheduler,
+                          train_loader=Unfreeze_train_dataloader,
+                          val_loader=val_dataloader,
+                          device=device,
+                          num_classes=num_classes,
+                          max_epoch=args.Freeze_Epoch + args.Unfreeze_Epoch,
+                          save_interval=args.save_interval,
+                          save_path=args.save_path,
+                          backbone=args.backbone,
+                          epoch_start=args.Freeze_Epoch + 1,
+                          epoch_end=args.Freeze_Epoch + args.Unfreeze_Epoch,
+                          Str='Softmax',
+                          Freeze_Epoch=args.Freeze_Epoch)
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='训练训练参数设置')
+    parser.add_argument('--backbone', type=str, default='resnet50', help='特征网络选择，默认resnet50')
+    parser.add_argument('--data_train_path', type=str, help='训练集路径', required=True)
+    parser.add_argument('--data_csv_path', type=str, help='全体训练集csv路径',
+                        default=r'../input/happy-whale-and-dolphin/train.csv')
+    parser.add_argument('--save_path', type=str, help='存储路径', default=r'./')
+    parser.add_argument('--dict_id_path', type=str, help='训练类型对应字典路径', required=True)
+    parser.add_argument('--train_csv_train_path', type=str, help='需要训练数据csv路径', required=True)
+    parser.add_argument('--train_csv_val_path', type=str, help='需要测试数据csv路径', default=None)
+    parser.add_argument('--pretrained', type=bool, help='是否需要预训练', default=True)
+    parser.add_argument('--model_path', type=str, help='上次训练模型权重', default=r'')
+    parser.add_argument('--num_workers', type=int, default=2)
+    parser.add_argument('--save_interval', type=int, help='保存间隔', default=2)
+    parser.add_argument('--Freeze_Epoch', type=int, help='冻结训练轮次', default=12)
+    parser.add_argument('--Freeze_lr', type=float, help='冻结训练lr', default=0.1)
+    parser.add_argument('--Freeze_gamma', type=float, help='冻结训练gamma', default=0.1)
+    parser.add_argument('--Freeze_lr_step', type=int, help='冻结训练lr衰减周期', default=10)
+    parser.add_argument('--Freeze_weight_decay', type=float, help='冻结训练权重衰减率', default=5e-4)
+    parser.add_argument('--Freeze_batch_size', type=int, help='冻结训练batch size', default=256)
+    parser.add_argument('--Unfreeze_Epoch', type=int, help='解冻训练轮次', default=36)
+    parser.add_argument('--Unfreeze_lr', type=float, help='解冻训练lr', default=0.05)
+    parser.add_argument('--Unfreeze_gamma', type=float, help='解冻训练gamma', default=0.2)
+    parser.add_argument('--Unfreeze_lr_step', type=int, help='解冻训练lr衰减周期', default=10)
+    parser.add_argument('--Unfreeze_weight_decay', type=float, help='解冻训练权重衰减率', default=5e-4)
+    parser.add_argument('--Unfreeze_batch_size', type=int, help='解冻训练batch size', default=64)
+    parser.add_argument('--w', type=int, help='训练图片宽度', default=224)
+    parser.add_argument('--h', type=int, help='训练图片高度', default=224)
+    parser.add_argument('--m', type=float, help='Arc参数', default=0.4)
+    args = parser.parse_args()
+
+    go_train_classes(args)

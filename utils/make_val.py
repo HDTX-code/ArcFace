@@ -1,27 +1,33 @@
 import sys
 
+import numpy as np
 import torch
 import torch.nn.functional as F
 from tqdm import tqdm
 
 
 def make_val(Feature_train, target_train, Feature_val, target_val, device, num):
-    Feature_train = Feature_train.to(device)
-    target_train = target_train.to(device)
-    Feature_val = Feature_val.to(device)
-    target_val = target_val.to(device)
     with torch.no_grad():
+        # Feature_train = Feature_train.to(device)
+        # target_train = target_train.to(device)
+        Feature_val = Feature_val.to(device)
+        target_val = target_val.to(device)
+        Feature_train_num = np.zeros([num, 512])
+        for item in range(num):
+            Feature_train_num[item] = np.mean(Feature_train[target_train[:, 0] == item, :], axis=0)
+        Feature_train_num = torch.from_numpy(Feature_train_num).to(device)
         with tqdm(total=len(target_val), postfix=dict) as pbar2:
             Score = 0
             for item in range(len(target_val)):
                 output = F.cosine_similarity(
-                    torch.mul(torch.ones(Feature_train.shape).to(device), Feature_val[item, :].T),
-                    Feature_train, dim=1).to(device)
-                kind = torch.zeros([num]).to(device)
-                for j in range(num):
-                    kind[j] = output[target_train[:, 0] == j].mean().to(device)
-                sorted, indices = torch.sort(kind, descending=True)
-                if sum(indices[0].to(device) == target_val[item]) != 0:
+                    torch.mul(torch.ones(Feature_train_num.shape).to(device), Feature_val[item, :].T),
+                    Feature_train_num, dim=1).to(device)
+                # kind = torch.zeros([num]).to(device)
+                # for j in range(num):
+                #     kind[j] = output[target_train[:, 0] == j].mean().to(device)
+                # sorted, indices = torch.sort(kind, descending=True)
+                indices = output.argmax().to(device)
+                if indices.item() == target_val[item, 0]:
                     Score = Score + 1
                 pbar2.update(1)
                 pbar2.set_postfix(**{'val_Score': Score / (item + 1)})

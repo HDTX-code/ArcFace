@@ -1,114 +1,150 @@
+import copy
+
+import numpy as np
+
 from __init__ import *
 
 
-def go_predict(a, data_root_path, save_root_path, model_30_url, model_15_30_url, model_10_14_url, model_7_9_url,
-               model_5_6_url, model_0_4_url, th, th1, th2):
-    print(torch.cuda.is_available())
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    dict_id_all_30, new_d_all_30, Feature_train_30, target_train_30, opt_30, model_30 = get_pre_need(data_root_path,
-                                                                                                     save_root_path,
-                                                                                                     model_30_url, 31,
-                                                                                                     2000, 0, device)
-    dict_id_all_15_30, new_d_all_15_30, Feature_train_15_30, target_train_15_30, opt_15_30, model_15_30 = get_pre_need(
-        data_root_path,
-        save_root_path,
-        model_15_30_url, 15,
-        30, 2, device)
-    dict_id_all_10_14, new_d_all_10_14, Feature_train_10_14, target_train_10_14, opt_10_14, model_10_14 = get_pre_need(
-        data_root_path,
-        save_root_path,
-        model_10_14_url, 10,
-        14, 1, device)
-    dict_id_all_7_9, new_d_all_7_9, Feature_train_7_9, target_train_7_9, opt_7_9, model_7_9 = get_pre_need(
-        data_root_path,
-        save_root_path,
-        model_7_9_url, 7,
-        9, 1, device)
-    dict_id_all_5_6, new_d_all_5_6, Feature_train_5_6, target_train_5_6, opt_5_6, model_5_6 = get_pre_need(
-        data_root_path,
-        save_root_path,
-        model_5_6_url, 5,
-        6, 1, device)
-    dict_id_all_0_4, new_d_all_0_4, Feature_train_0_4, target_train_0_4, opt_0_4, model_0_4 = get_pre_need(
-        data_root_path,
-        save_root_path,
-        model_0_4_url, 0,
-        4, 0, device)
+def go_predict(args):
+    with torch.no_grad():
+        print(torch.cuda.is_available())
+        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-    train_csv = pd.read_csv(os.path.join(data_root_path, "train.csv"))
-    train_csv_id = train_csv['Id'].unique()
-    dict_id = dict(zip(train_csv_id, range(len(train_csv_id))))
-    new_d = {v: k for k, v in dict_id.items()}
-
-    path_list = os.listdir(os.path.join(data_root_path, "test"))
-    with tqdm(total=len(path_list), postfix=dict) as pbar:
-        l30 = 0
-        l15 = 0
-        l10 = 0
-        l7 = 0
-        l5 = 0
-        l0 = 0
-        submission = pd.DataFrame(columns=['Image', 'Id'])
+        path_list = os.listdir(args.data_test_path)
+        # 建立test_dataloader的csv文件
+        submission = pd.DataFrame(columns=['image', 'predictions'])
         for item in range(len(path_list)):
-            path = os.path.join(os.path.join(data_root_path, "test"), path_list[item])
-            top4_30, top4_index_30 = get_pre(path, dict_id, dict_id_all_30, new_d_all_30, Feature_train_30,
-                                             target_train_30, opt_30, model_30, device, float(th))
-            l30 = l30 + len(top4_30)
-            top4_15_30, top4_index_15_30 = get_pre(path, dict_id, dict_id_all_15_30, new_d_all_15_30,
-                                                   Feature_train_15_30,
-                                                   target_train_15_30, opt_15_30, model_15_30, device, float(th))
-            l15 = l15 + len(top4_15_30)
-            top4_10_14, top4_index_10_14 = get_pre(path, dict_id, dict_id_all_10_14, new_d_all_10_14,
-                                                   Feature_train_10_14,
-                                                   target_train_10_14, opt_10_14, model_10_14, device, float(th))
-            l10 = l10 + len(top4_10_14)
-            Top4 = np.concatenate((top4_30, top4_15_30, top4_10_14), axis=0)
-            Top4_index = np.concatenate((top4_index_30, top4_index_15_30, top4_index_10_14), axis=0)
-            if len(Top4) < 4:
-                top4_7_9, top4_index_7_9 = get_pre(path, dict_id, dict_id_all_7_9, new_d_all_7_9,
-                                                   Feature_train_7_9,
-                                                   target_train_7_9, opt_7_9, model_7_9, device, float(th1),
-                                                   len(Top4) - 4)
-                Top4 = np.concatenate((Top4, top4_7_9), axis=0)
-                Top4_index = np.concatenate((Top4_index, top4_index_7_9), axis=0)
-                l7 = l7 + len(top4_7_9)
-                if len(Top4) < 4:
-                    top4_5_6, top4_index_5_6 = get_pre(path, dict_id, dict_id_all_5_6, new_d_all_5_6,
-                                                       Feature_train_5_6,
-                                                       target_train_5_6, opt_5_6, model_5_6, device, float(th2),
-                                                       len(Top4) - 4)
-                    Top4 = np.concatenate((Top4, top4_5_6), axis=0)
-                    Top4_index = np.concatenate((Top4_index, top4_index_5_6), axis=0)
-                    l5 = l5 + len(top4_index_5_6)
-                    if len(Top4) < 4:
-                        top4_0_4, top4_index_0_4 = get_pre(path, dict_id, dict_id_all_0_4, new_d_all_0_4,
-                                                           Feature_train_0_4,
-                                                           target_train_0_4, opt_0_4, model_0_4, device, -100,
-                                                           4 - len(Top4))
-                        l0 = l0 + len(top4_0_4)
-                        Top4 = np.concatenate((Top4, top4_0_4), axis=0)
-                        Top4_index = np.concatenate((Top4_index, top4_index_0_4), axis=0)
-            else:
-                Top4_index = Top4.argsort()[-4:]
-                Top4 = Top4[Top4_index]
-            pbar.update(1)
-            pbar.set_postfix(
-                **{'model_num': [l7, l5, l0], 'Top4': Top4[3]})
-            submission.loc[item, "Image"] = path_list[item]
-            submission.loc[item, "Id"] = new_d[Top4_index[0]] + '\n' + new_d[Top4_index[1]] + '\n' + new_d[
-                Top4_index[2]] + '\n' + new_d[Top4_index[3]] + '\n' + "new_whale"
-        submission.to_csv(os.path.join(save_root_path, "submission.csv"), index=False)
+            submission.loc[item, "image"] = path_list[item]
+        # 建立测试集地址字典
+        dict_id_test = dict(zip(path_list, range(len(path_list))))
+        new_d_test = {v: k for k, v in dict_id_test.items()}
+        # 建立全局字典
+        train_csv = pd.read_csv(args.data_csv_path)
+        train_csv_id = train_csv['individual_id'].unique()
+        dict_id_all = dict(zip(train_csv_id, range(len(train_csv_id))))
+        new_d_all = {v: k for k, v in dict_id_all.items()}
+
+        model, dict_id, Feature_train, target_train = get_pre_need(args.model_path, args.dict_id_path,
+                                                                   args.train_csv_train_path,
+                                                                   device, args.w, args.h,
+                                                                   args.data_train_path, args.batch_size,
+                                                                   args.num_workers, args.save_path, args.backbone,
+                                                                   args.Feature_train_path, args.target_train_path)
+        model.eval()
+
+        test_dataset = TestDataset(submission, dict_id_test, args.data_test_path, args.w, args.h)
+        test_dataloader = DataLoader(dataset=test_dataset, batch_size=args.batch_size, shuffle=False,
+                                     num_workers=args.num_workers)
+        # Feature_test, target_test = get_feature(model, test_dataloader, device, 512)
+        if args.Feature_test_path is None:
+            Feature_test, target_test = get_feature(model, test_dataloader, device, 512)
+            # target_test = target_test.cpu().detach().numpy()
+            # Feature_test = Feature_test.cpu().detach().numpy()
+            np.save(os.path.join(args.save_path, "Feature_test.npy"), Feature_test.cpu().detach().numpy())
+            np.save(os.path.join(args.save_path, "target_test.npy"), target_test.cpu().detach().numpy())
+        else:
+            Feature_test = torch.from_numpy(np.load(args.Feature_test_path))
+            target_test = torch.from_numpy(np.load(args.target_test_path))
+
+        target_test = target_test.cpu().detach().numpy()
+
+        if args.Top_all_path is None:
+            # 获取各个总类中心点
+            Feature_train_num = np.zeros([len(dict_id), 512])
+            for item in range(len(dict_id)):
+                Feature_train_num[item] = np.mean(Feature_train[target_train[:, 0] == item, :], axis=0)
+
+            Top_all = np.zeros([len(path_list), 5])
+            Top_index_all = np.zeros([len(path_list), 5])
+            with tqdm(total=target_test.shape[0], postfix=dict) as pbar:
+                for item in range(target_test.shape[0]):
+                    # Top, Top_index = get_pre(Feature_test[item, :], Feature_train, target_train, dict_id,
+                    #                          dict_id_all,
+                    #                          4, device)
+                    Top, Top_index = get_pre_num(Feature_test[item, :], Feature_train_num, dict_id, dict_id_all, 5,
+                                                 device)
+                    submission.loc[
+                        submission['image'] == new_d_test[target_test[item, 0]], "predictions"] = \
+                        new_d_all[Top_index[0]] + " " + \
+                        new_d_all[Top_index[1]] + " " + \
+                        new_d_all[Top_index[2]] + " " + \
+                        new_d_all[Top_index[3]] + " " + \
+                        new_d_all[Top_index[4]]
+                    # Top_all[item, :] = copy.copy(Top)
+                    # Top_index_all[item, :] = copy.copy(Top_index)
+                    pbar.update(1)
+                    pbar.set_postfix(**{'Top': Top[0]})
+            # np.save(os.path.join(args.save_path, "Top.npy"), Top_all)
+            # np.save(os.path.join(args.save_path, "Top_index.npy"), Top_index_all)
+        else:
+            Top_all = np.load(args.Top_all_path)
+            Top_index_all = np.load(args.Top_index_all_path)
+        # with tqdm(total=Top_all.shape[0], postfix=dict) as pbar2:
+        #     New_data = Top_all[np.argsort(Top_all[:, 0])[math.floor(0.12 * len(path_list))], 0]
+        #     # Is_new = 'new_whale' if Top[0] < 0.75 else new_d_all[Top_index[4]]
+        #     for item in range(len(path_list)):
+        #         # submission.loc[
+        #         #     submission[
+        #         #         submission.image == new_d_test[target_test[item, 0]]].index.tolist(), "predictions"] = \
+        #         #     new_d_all[Top_index_all[item, 0]] + ' ' + new_d_all[Top_index_all[item, 1]] + ' ' + new_d_all[
+        #         #         Top_index_all[item, 2]] + ' ' + new_d_all[Top_index_all[item, 3]] + ' ' + new_d_all[
+        #         #         Top_index_all[item, 4]]
+        #         if Top_all[item, 0] <= New_data:
+        #             submission.loc[
+        #                 submission[
+        #                     submission.image == new_d_test[target_test[item, 0]]].index.tolist(), "predictions"] = \
+        #                 'new_individual' + ' ' + new_d_all[Top_index_all[item, 0]] + ' ' + new_d_all[
+        #                     Top_index_all[item, 1]] + ' ' + new_d_all[Top_index_all[item, 2]] + ' ' + new_d_all[Top_index_all[item, 3]]
+        #         else:
+        #             submission.loc[
+        #                 submission[
+        #                     submission.image == new_d_test[target_test[item, 0]]].index.tolist(), "predictions"] = \
+        #                 new_d_all[Top_index_all[item, 0]] + ' ' + 'new_individual' + ' ' + new_d_all[Top_index_all[item, 1]] + ' ' + new_d_all[
+        #                     Top_index_all[item, 2]] + ' ' + new_d_all[Top_index_all[item, 3]]
+        #         pbar2.update(1)
+        #         pbar2.set_postfix(
+        #             **{'Top': Top_all[item, 0], 'new': New_data})
+    submission.to_csv(os.path.join(args.save_path, "submission.csv"), index=False)
 
 
 if __name__ == '__main__':
-    go_predict(sys.argv[0], sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6],
-               sys.argv[7], sys.argv[8], sys.argv[9], sys.argv[10], sys.argv[11])
-    # go_predict(0, "D:\\project\\humpWhale\\data\\humpback-whale-identification",
-    #            "D:\\project\\humpWhale\\data\\humpback-whale-identification",
-    #            "D:\\edge\\gt30_model.pth",
-    #            "D:\\edge\\resnet50_15-30_loss_ 0.7051018987383161score_ 0.9230769230769231.pth",
-    #            "D:\\edge\\resnet50_10-14_loss_ 0.028108565703682278score_ 0.8936170212765957.pth",
-    #            "D:\\edge\\resnet50_7-9_loss_ 1.95732459243463score_ 0.78125.pth",
-    #            "D:\\edge\\resnet50_5-6_loss_ 2.8928167653638264score_ 0.5584415584415584.pth",
-    #            "D:\\edge\\resnet50Sph-29loss_ 8.339440341671137score_ 0.pth",
-    #            0.6)
+    parser = argparse.ArgumentParser(description='训练训练参数设置')
+    parser.add_argument('--backbone', type=str, default='resnet50', help='特征网络选择，默认resnet50', required=True)
+    parser.add_argument('--dict_id_path', type=str, help='字典路径', required=True)
+    parser.add_argument('--model_path', type=str, help='模型路径', required=True)
+    parser.add_argument('--train_csv_train_path', type=str, help='本次训练csv路径', default=None)
+    parser.add_argument('--Feature_train_path', type=str, help='训练集特征矩阵路径', default=None)
+    parser.add_argument('--target_train_path', type=str, help='训练集标签矩阵路径', default=None)
+    parser.add_argument('--Feature_test_path', type=str, help='测试集特征矩阵路径', default=None)
+    parser.add_argument('--target_test_path', type=str, help='测试集标签矩阵路径', default=None)
+    parser.add_argument('--Top_all_path', type=str, help='测试集特征矩阵路径', default=None)
+    parser.add_argument('--Top_index_all_path', type=str, help='测试集标签矩阵路径', default=None)
+    parser.add_argument('--data_test_path', type=str, help='测试集路径', required=True)
+    parser.add_argument('--data_train_path', type=str, help='训练集路径', default="../input/data-do-cut/All/All")
+    parser.add_argument('--data_csv_path', type=str, help='训练集csv路径',
+                        default=r'../input/happy-whale-and-dolphin/train.csv')
+    parser.add_argument('--save_path', type=str, help='存储路径', default=r'./')
+    parser.add_argument('--num_workers', type=int, default=2)
+    parser.add_argument('--batch_size', type=int, default=128)
+    parser.add_argument('--w', type=int, help='训练图片宽度', default=224)
+    parser.add_argument('--h', type=int, help='训练图片高度', default=224)
+    args = parser.parse_args()
+
+    go_predict(args)
+    # # -------------------------------#
+    # #   路径设置
+    # # -------------------------------#
+    # data_test_path = r'../input/unet-test/unet_test'
+    # data_csv_path = r'../input/humpback-whale-identification/train.csv'
+    # save_path = r'./'
+    # path = r'../input/arc-epoth-3'
+    # # -------------------------------#
+    # #   dataloader设置
+    # # -------------------------------#
+    # w = 256
+    # h = 256
+    # num_workers = 2
+    # batch_size = 128
+    # # -------------------------------#
+    # #   开始预测
+    # # -------------------------------#
