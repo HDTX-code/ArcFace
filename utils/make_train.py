@@ -62,13 +62,14 @@ def make_train(model, metric_fc, criterion, optimizer, scheduler,
                         Feature_train)
                 np.save(os.path.join(path_featureMap, "target_train_{}.npy".format(item)),
                         target_train)
-                if (item % save_interval == 0 or item == max_epoch) and item > Freeze_Epoch:
-                    if val_loader is not None:
-                        # 计算验证得分
-                        Feature_val, target_val = get_feature(model, val_loader, device, 512)
-                        Score = make_val(Feature_train, target_train, Feature_val, target_val, device, num_classes)
-                else:
-                    Score = 0
+                # if (item % save_interval == 0 or item == max_epoch) and item > Freeze_Epoch:
+                #     if val_loader is not None:
+                #         # 计算验证得分
+                #         Feature_val, target_val = get_feature(model, val_loader, device, 512)
+                #         Score = make_val(Feature_train, target_train, Feature_val, target_val, device, num_classes)
+                # else:
+                #     Score = 0
+                Score = 0
                 path_model = os.path.join(save_path, "model")
                 if not os.path.exists(path_model):
                     os.mkdir(path_model)
