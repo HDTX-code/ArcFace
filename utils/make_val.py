@@ -13,7 +13,6 @@ def make_val(Feature_train, target_train, Feature_val, target_val, device, num, 
         # Feature_train = Feature_train.to(device)
         # target_train = target_train.to(device)
         Feature_val = Feature_val.to(device)
-        target_val.dtype = 'int32'
         # target_val = target_val.to(device)
         Feature_train_num = np.zeros([num, 512])
         for item in range(num):
@@ -39,22 +38,20 @@ def make_val(Feature_train, target_train, Feature_val, target_val, device, num, 
                 sorted, indices = torch.sort(output, descending=True)
                 sorted = sorted.cpu().detach().numpy()
                 indices = indices.cpu().detach().numpy()
-                print(indices[0])
-                print(target_val[item, 0])
-                if indices[0] == target_val[item, 0]:
+                if int(indices[0]) == int(target_val[item, 0]):
                     Score = Score + 1
                     map_1 += 1
                     score = 0
-                elif indices[1] == target_val[item, 0]:
+                elif int(indices[1]) == int(target_val[item, 0]):
                     map_2 += 1
                     score = 1
-                elif indices[2] == target_val[item, 0]:
+                elif int(indices[2]) == int(target_val[item, 0]):
                     map_3 += 1
                     score = 2
-                elif indices[3] == target_val[item, 0]:
+                elif int(indices[3]) == int(target_val[item, 0]):
                     map_4 += 1
                     score = 3
-                elif indices[4] == target_val[item, 0]:
+                elif int(indices[4]) == int(target_val[item, 0]):
                     map_5 += 1
                     score = 4
                 else:
