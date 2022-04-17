@@ -1,23 +1,29 @@
 import sys
 
 import numpy as np
+import pandas as pd
 import torch
 import torch.nn.functional as F
 from tqdm import tqdm
 
 
-def make_val(Feature_train, target_train, Feature_val, target_val, device, num):
+def make_val(Feature_train, target_train, Feature_val, target_val, device, num, Img_id_val,
+             new_id_all, new_val_id, train_csv_val):
     with torch.no_grad():
         # Feature_train = Feature_train.to(device)
         # target_train = target_train.to(device)
-        Feature_val = Feature_val.to(device)
-        target_val = target_val.to(device)
+        Feature_val = torch.from_numpy(Feature_val).to(device)
+        # target_val = target_val.to(device)
         Feature_train_num = np.zeros([num, 512])
         for item in range(num):
             Feature_train_num[item] = np.mean(Feature_train[target_train[:, 0] == item, :], axis=0)
         Feature_train_num = torch.from_numpy(Feature_train_num).to(device)
+
+        Score, map_1, map_2, map_3, map_4, map_5, = 0, 0, 0, 0, 0, 0
+        analyse = pd.DataFrame(columns=['image', 'species', 'individual_id',
+                                        'predictions_1', 'predictions_2', 'predictions_3', 'predictions_4',
+                                        'predictions_5', 'sorted'])
         with tqdm(total=len(target_val), postfix=dict) as pbar2:
-            Score = 0
             for item in range(len(target_val)):
                 output = F.cosine_similarity(
                     torch.mul(torch.ones(Feature_train_num.shape).to(device), Feature_val[item, :].T),
@@ -26,11 +32,38 @@ def make_val(Feature_train, target_train, Feature_val, target_val, device, num):
                 # for j in range(num):
                 #     kind[j] = output[target_train[:, 0] == j].mean().to(device)
                 # sorted, indices = torch.sort(kind, descending=True)
-                indices = output.argmax().to(device)
-                if indices.item() == target_val[item, 0]:
+                sorted, indices = torch.sort(output, descending=True)
+                sorted = sorted.cpu().detach().numpy()
+                indices = indices.cpu().detach().numpy()
+                if indices[0] == target_val[item, 0]:
                     Score = Score + 1
+                    map_1 += 1
+                elif indices[1] == target_val[item, 0]:
+                    map_2 += 1
+                elif indices[2] == target_val[item, 0]:
+                    map_3 += 1
+                elif indices[3] == target_val[item, 0]:
+                    map_4 += 1
+                elif indices[4] == target_val[item, 0]:
+                    map_5 += 1
+                MAP5 = (1 / 5) * map_5 + (1 / 4) * map_4 + (1 / 3) * map_3 + (1 / 2) * map_2 + (1 / 1) * map_1
+
+                analyse.loc[item, :] = [new_val_id[Img_id_val[item, 0]],
+                                        train_csv_val.loc[target_val['image'] == new_val_id[Img_id_val[item, 0]],
+                                                          'species'].values[0],
+                                        train_csv_val.loc[target_val['image'] == new_val_id[Img_id_val[item, 0]],
+                                                          'individual_id'].values[0],
+                                        new_id_all[indices[0]],
+                                        new_id_all[indices[1]],
+                                        new_id_all[indices[2]],
+                                        new_id_all[indices[3]],
+                                        new_id_all[indices[4]],
+                                        sorted[:5]]
                 pbar2.update(1)
-                pbar2.set_postfix(**{'val_Score': Score / (item + 1)})
+                pbar2.set_postfix(**{'val_Score': (Score / (item + 1)) * 1000 // 1000,
+                                     'MAP5': (MAP5 / (item + 1)) * 1000 // 1000})
+        print('val_Score: ' + str((Score / (len(target_val))) * 1000 // 1000))
+        print('MAP5: ' + str((MAP5 / (len(target_val))) * 1000 // 1000))
         #             if item>100:
         #                 break
-    return Score / len(target_val)
+    return analyse
