@@ -18,7 +18,6 @@ def analyse(args):
     f2.write(info_json2)
     new_val_id = {v: k for k, v in dict_val_id.items()}
 
-
     num_classes = len(dict_id_all)
     # 加载backbone,默认resnet50
     model = get_model(args.backbone, pretrained=False)
@@ -63,10 +62,15 @@ def analyse(args):
         Img_id_val = np.load(args.Img_id_val_path)
     # 计算验证得分
 
-    analyse = make_val(Feature_train, target_train, Feature_val, target_val, device, num_classes, Img_id_val,
-                       new_id_all, new_val_id, train_csv_val)
-    analyse.to_csv(os.path.join(args.save_path, "analyse.csv"), index=False)
-    print(analyse.head())
+    analyse_right, analyse_error = make_val(Feature_train, target_train, Feature_val, target_val, device, num_classes,
+                                            Img_id_val,
+                                            new_id_all, new_val_id, train_csv_val)
+    analyse_right.to_csv(os.path.join(args.save_path, "analyse_right.csv"), index=False)
+    analyse_error.to_csv(os.path.join(args.save_path, "analyse_error.csv"), index=False)
+    print('----------analyse_right----------')
+    print(analyse_right.head())
+    print('----------analyse_error----------')
+    print(analyse_error.head())
 
 
 if __name__ == '__main__':
