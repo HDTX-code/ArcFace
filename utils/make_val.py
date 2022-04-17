@@ -58,7 +58,7 @@ def make_val(Feature_train, target_train, Feature_val, target_val, device, num, 
                                         new_id_all[indices[2]],
                                         new_id_all[indices[3]],
                                         new_id_all[indices[4]],
-                                        sorted[:5]]
+                                        sorted[:5].dtype('object')]
                 pbar2.update(1)
                 pbar2.set_postfix(**{'val_Score': (Score / (item + 1)) * 1000 // 1000,
                                      'MAP5': (MAP5 / (item + 1)) * 1000 // 1000})
