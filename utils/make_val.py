@@ -25,14 +25,9 @@ def make_val(Feature_train, target_train, Feature_val, target_val, device, num, 
         analyse_error = pd.DataFrame(columns=['image', 'species', 'individual_id',
                                               'predictions_1', 'predictions_2', 'predictions_3', 'predictions_4',
                                               'predictions_5'])
-        Score = 0
-        map_1 = 0
-        map_2 = 0
-        map_3 = 0
-        map_4 = 0
-        map_5 = 0
-        with tqdm(total=len(target_val), postfix=dict) as pbar2:
-            for item in range(len(target_val)):
+        map_1, map_2, map_3, map_4, map_5 = 0, 0, 0, 0, 0
+        for item in range(len(target_val)):
+            with tqdm(total=len(target_val), postfix=dict) as pbar2:
                 output = F.cosine_similarity(
                     torch.mul(torch.ones(Feature_train_num.shape).to(device), Feature_val[item, :].T),
                     Feature_train_num, dim=1).to(device)
@@ -44,26 +39,26 @@ def make_val(Feature_train, target_train, Feature_val, target_val, device, num, 
                 sorted = sorted.cpu().detach().numpy()
                 indices = indices.cpu().detach().numpy()
                 if int(indices[0]) == int(target_val[item, 0]):
-                    Score = Score + 1
-                    map_1 += 1
+                    map_1 = map_1 + 1
                     score = 0
                 elif int(indices[1]) == int(target_val[item, 0]):
-                    map_2 += 1
+                    map_2 = map_2 + 1
                     score = 1
                 elif int(indices[2]) == int(target_val[item, 0]):
-                    map_3 += 1
+                    map_3 = map_3 + 1
                     score = 2
                 elif int(indices[3]) == int(target_val[item, 0]):
-                    map_4 += 1
+                    map_4 = map_4 + 1
                     score = 3
                 elif int(indices[4]) == int(target_val[item, 0]):
-                    map_5 += 1
+                    map_5 = map_5 + 1
                     score = 4
                 else:
                     score = 5
                 MAP5 = (1 / 5) * map_5 + (1 / 4) * map_4 + (1 / 3) * map_3 + (1 / 2) * map_2 + (1 / 1) * map_1
-
-                print(score)
+                pbar2.update(1)
+                pbar2.set_postfix(**{'val_Score': (map_1 / (item + 1)) * 1000 // 1000,
+                                     'MAP5': (MAP5 / (item + 1)) * 1000 // 1000})
                 if score != 5:
                     analyse_right.loc[len(analyse_right), :] = [new_val_id[Img_id_val[item, 0]],
                                                                 train_csv_val.loc[
@@ -95,10 +90,7 @@ def make_val(Feature_train, target_train, Feature_val, target_val, device, num, 
                                                                 new_id_all[indices[2]] + '-' + str(sorted[2]),
                                                                 new_id_all[indices[3]] + '-' + str(sorted[3]),
                                                                 new_id_all[indices[4]] + '-' + str(sorted[4])]
-                pbar2.update(1)
-                pbar2.set_postfix(**{'val_Score': (Score / (item + 1)) * 1000 // 1000,
-                                     'MAP5': (MAP5 / (item + 1)) * 1000 // 1000})
-        print('val_Score: ' + str((Score / (len(target_val))) * 1000 // 1000))
+        print('val_Score: ' + str((map_1 / (len(target_val))) * 1000 // 1000))
         print('MAP5: ' + str((MAP5 / (len(target_val))) * 1000 // 1000))
         #             if item>100:
         #                 break
