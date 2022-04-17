@@ -38,6 +38,8 @@ def make_val(Feature_train, target_train, Feature_val, target_val, device, num, 
                 sorted, indices = torch.sort(output, descending=True)
                 sorted = sorted.cpu().detach().numpy()
                 indices = indices.cpu().detach().numpy()
+                print(int(indices[0]))
+                print(int(target_val[item, 0]))
                 if int(indices[0]) == int(target_val[item, 0]):
                     Score = Score + 1
                     map_1 += 1
