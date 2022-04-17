@@ -21,7 +21,7 @@ def analyse(args):
 
     num_classes = len(dict_id_all)
     # 加载backbone,默认resnet50
-    model = get_model(args.backbone, args.pretrained)
+    model = get_model(args.backbone, pretrained=False)
     if args.model_path != "":
         model.load_state_dict(torch.load(args.model_path, map_location=device), False)
     model.to(device)
