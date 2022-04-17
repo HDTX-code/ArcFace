@@ -9,7 +9,7 @@ def analyse(args):
     dict_id_all = json.load(f2)
     new_id_all = {v: k for k, v in dict_id_all.items()}
 
-    data_csv = pd.read_csv(args.data_csv)
+    data_csv = pd.read_csv(args.data_csv_path)
     train_csv_train = pd.read_csv(args.train_csv_train_path)
 
     train_csv_val = pd.read_csv(args.train_csv_val_path)
