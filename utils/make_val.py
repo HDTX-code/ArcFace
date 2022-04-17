@@ -25,13 +25,13 @@ def make_val(Feature_train, target_train, Feature_val, target_val, device, num, 
         analyse_error = pd.DataFrame(columns=['image', 'species', 'individual_id',
                                               'predictions_1', 'predictions_2', 'predictions_3', 'predictions_4',
                                               'predictions_5'])
+        Score = 0
+        map_1 = 0
+        map_2 = 0
+        map_3 = 0
+        map_4 = 0
+        map_5 = 0
         with tqdm(total=len(target_val), postfix=dict) as pbar2:
-            Score = 0
-            map_1 = 0
-            map_2 = 0
-            map_3 = 0
-            map_4 = 0
-            map_5 = 0
             for item in range(len(target_val)):
                 output = F.cosine_similarity(
                     torch.mul(torch.ones(Feature_train_num.shape).to(device), Feature_val[item, :].T),
@@ -44,7 +44,7 @@ def make_val(Feature_train, target_train, Feature_val, target_val, device, num, 
                 sorted = sorted.cpu().detach().numpy()
                 indices = indices.cpu().detach().numpy()
                 if int(indices[0]) == int(target_val[item, 0]):
-                    Score += 1
+                    Score = Score + 1
                     map_1 += 1
                     score = 0
                 elif int(indices[1]) == int(target_val[item, 0]):
@@ -63,6 +63,7 @@ def make_val(Feature_train, target_train, Feature_val, target_val, device, num, 
                     score = 5
                 MAP5 = (1 / 5) * map_5 + (1 / 4) * map_4 + (1 / 3) * map_3 + (1 / 2) * map_2 + (1 / 1) * map_1
 
+                print(score)
                 if score != 5:
                     analyse_right.loc[len(analyse_right), :] = [new_val_id[Img_id_val[item, 0]],
                                                                 train_csv_val.loc[
@@ -97,8 +98,8 @@ def make_val(Feature_train, target_train, Feature_val, target_val, device, num, 
                 pbar2.update(1)
                 pbar2.set_postfix(**{'val_Score': (Score / (item + 1)) * 1000 // 1000,
                                      'MAP5': (MAP5 / (item + 1)) * 1000 // 1000})
-            print('val_Score: ' + str((Score / (len(target_val))) * 1000 // 1000))
-            print('MAP5: ' + str((MAP5 / (len(target_val))) * 1000 // 1000))
+        print('val_Score: ' + str((Score / (len(target_val))) * 1000 // 1000))
+        print('MAP5: ' + str((MAP5 / (len(target_val))) * 1000 // 1000))
         #             if item>100:
         #                 break
     return analyse_right, analyse_error
