@@ -4,18 +4,17 @@ if __name__ == '__main__':
     # -------------------
     # 参数设置
     # -------------------
-    model_path = r"D:\edge\resnet18Softmax-12loss_ 0.10518473038102259score_ 0.9573673870333989.pth"
+    model_path = r"D:\project\happyWhale\weights\res18-softmax\resnet18Softmax-12loss_ 0.10518473038102259score_ 0.9573673870333989.pth"
     dict_id_path = r"D:\project\happyWhale\weights\res50-softmax-224\dict_id"
     data_test_path = r"D:\project\happyWhale\classes\CFL\test\test_all\test_all"
-    data_path_list = [r"C:\Users\12529\Desktop\beluga", r"C:\Users\12529\Desktop\big_model",
-                      r"C:\Users\12529\Desktop\hdb"]
+    data_path_list = [r"C:\Users\12529\Desktop\beluga_blue", r"C:\Users\12529\Desktop\big_model"]
     # path_0 = r"C:\Users\12529\Desktop\0"
     # path_1 = r"C:\Users\12529\Desktop\1"
     # path_2 = r"C:\Users\12529\Desktop\2"
     backbone = 'resnet18'
     w = 384
     h = 384
-    batch_size = 256
+    batch_size = 128
     num_workers = 4
     num_classes = len(data_path_list)
     # -------------------------------#
@@ -59,10 +58,7 @@ if __name__ == '__main__':
         for item in range(target_test.shape[0]):
             Feature = Feature_test[item, :]
             Str = new_d_test[target_test[item, 0]]
-            if np.argmax(Feature) == 1 or np.argmax(Feature) == 7 or np.argmax(Feature) == 3:
-                shutil.copyfile(os.path.join(data_test_path, Str),
-                                os.path.join(data_path_list[2], Str))
-            elif np.argmax(Feature) == 4:
+            if np.argmax(Feature) == 4 or np.argmax(Feature) == 7:
                 shutil.copyfile(os.path.join(data_test_path, Str),
                                 os.path.join(data_path_list[0], Str))
             else:
