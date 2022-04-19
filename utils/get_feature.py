@@ -46,3 +46,4 @@ def get_feature(model, dataloader, device, feature_num, get_id=False):
                     pbar3.update(1)
                 return Feature, target
 
+
